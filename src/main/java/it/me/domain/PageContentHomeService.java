@@ -8,25 +8,27 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 public class PageContentHomeService {
-
-    private final PageContentReadBySlugRepository pageContentReadBySlugRepository;
-    private final EntityManager em;
+    private static final Logger LOG = Logger.getLogger(PageContentHomeService.class.getName());
 
     @Inject
-    public PageContentHomeService(PageContentReadBySlugRepository pageContentReadBySlugRepository, EntityManager em) {
-        this.pageContentReadBySlugRepository = pageContentReadBySlugRepository;
-        this.em = em;
-    }
+    PageContentReadBySlugRepository pageContentReadBySlugRepository;
+
+    @Inject
+    EntityManager em;
 
     @Transactional
     public PageContent createHomeIfMissing() {
-        return pageContentReadBySlugRepository.readBySlug("home")
+        return pageContentReadBySlugRepository.readBySlug(Page.HOME.getSlug())
                 .orElseGet(() -> {
+                    LOG.info(() -> "PageContent with slug %s not found. Using the default one."
+                            .formatted(Page.HOME.getSlug()));
+
                     PageContent home = new PageContent()
-                            .setSlug("home")
+                            .setSlug(Page.HOME.getSlug())
                             .setTitle("Ciao, sono Andrea, ma per gli amici Ciamb!")
                             .setBody("""
                                     Benvenuto nel mio mini-portfolio, costruito con Quarkus - Qute - SQLite!
@@ -34,6 +36,7 @@ public class PageContentHomeService {
                                     Buona permanenza :)
                                     """)
                             .setUpdatedAt(LocalDateTime.now());
+
                     em.persist(home);
                     return home;
                 });

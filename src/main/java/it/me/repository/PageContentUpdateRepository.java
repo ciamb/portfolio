@@ -8,10 +8,11 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.logging.Logger;
 
 @ApplicationScoped
 public class PageContentUpdateRepository {
+    private static final Logger LOG = Logger.getLogger(PageContentUpdateRepository.class.getName());
 
     @Inject
     PageContentReadBySlugRepository pageContentReadBySlugRepository;
@@ -21,14 +22,19 @@ public class PageContentUpdateRepository {
         var pageContent = pageContentReadBySlugRepository.readBySlug(slug)
                 .orElseThrow(() -> new NotFoundException("Page not found with slug: %s".formatted(slug)));
 
+        LOG.info(() -> "PageContent found! Updating with the information of the request: %s"
+                .formatted(pageContentUpdateRequest));
+
         if (pageContentUpdateRequest.title() != null
                 && !pageContentUpdateRequest.title().isBlank()) {
             pageContent.setTitle(pageContentUpdateRequest.title());
         }
+
         if (pageContentUpdateRequest.subtitle() != null
                 && !pageContentUpdateRequest.subtitle().isBlank()) {
             pageContent.setSubtitle(pageContentUpdateRequest.subtitle());
         }
+
         if (pageContentUpdateRequest.body() != null
                 && !pageContentUpdateRequest.body().isBlank()) {
             pageContent.setBody(pageContentUpdateRequest.body());
