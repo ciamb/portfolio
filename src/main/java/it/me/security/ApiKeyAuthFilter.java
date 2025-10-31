@@ -15,7 +15,6 @@ import java.util.Objects;
 
 @Provider
 @Priority(Priorities.AUTHENTICATION)
-@ApplicationScoped
 @Unremovable
 public class ApiKeyAuthFilter implements ContainerRequestFilter {
 
