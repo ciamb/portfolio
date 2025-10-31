@@ -46,6 +46,7 @@ nb-configuration.xml
 
 # DB
 data/
+*.db
 
 # secrets
 .env
