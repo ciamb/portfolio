@@ -8,7 +8,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.logging.Logger;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class PageContentHomeService {
@@ -24,8 +24,7 @@ public class PageContentHomeService {
     public PageContent createHomeIfMissing() {
         return pageContentReadBySlugRepository.readBySlug(Page.HOME.getSlug())
                 .orElseGet(() -> {
-                    LOG.info(() -> "PageContent with slug %s not found. Using the default one."
-                            .formatted(Page.HOME.getSlug()));
+                    LOG.infof("PageContent slug=%s not found. Using default", Page.HOME.getSlug());
 
                     PageContent home = new PageContent()
                             .setSlug(Page.HOME.getSlug())

@@ -8,7 +8,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 
 import java.time.LocalDateTime;
-import java.util.logging.Logger;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class PageContentUpdateRepository {
@@ -22,8 +22,7 @@ public class PageContentUpdateRepository {
         var pageContent = pageContentReadBySlugRepository.readBySlug(slug)
                 .orElseThrow(() -> new NotFoundException("Page not found with slug: %s".formatted(slug)));
 
-        LOG.info(() -> "PageContent found! Updating with the information of the request: %s"
-                .formatted(pageContentUpdateRequest));
+        LOG.infof("Admin update slug=%s", slug);
 
         if (pageContentUpdateRequest.title() != null
                 && !pageContentUpdateRequest.title().isBlank()) {
