@@ -3,3 +3,11 @@
 !target/*-runner.jar
 !target/lib/*
 !target/quarkus-app/*
+
+target/
+.idea/
+*.iml
+data/
+.env
+*.db
+*.log
