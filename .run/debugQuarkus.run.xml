@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="portfolio debug" type="Remote">
+  <configuration default="false" name="debugQuarkus" type="Remote">
     <module name="portfolio" />
     <option name="USE_SOCKET_TRANSPORT" value="true" />
     <option name="SERVER_MODE" value="false" />
