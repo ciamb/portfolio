@@ -3,6 +3,7 @@ package it.me.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(
@@ -21,7 +22,7 @@ public class PageContent {
     public static final String READ_BY_SLUG = "PageContent.readBySlug";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //Autoincrement with sqlite
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 64)
@@ -37,7 +38,7 @@ public class PageContent {
     private String body;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private ZonedDateTime updatedAt;
 
     public Long id() {
         return id;
@@ -84,11 +85,11 @@ public class PageContent {
         return this;
     }
 
-    public LocalDateTime updatedAt() {
+    public ZonedDateTime updatedAt() {
         return updatedAt;
     }
 
-    public PageContent setUpdatedAt(LocalDateTime updatedAt) {
+    public PageContent setUpdatedAt(ZonedDateTime updatedAt) {
         this.updatedAt = updatedAt;
         return this;
     }

@@ -8,6 +8,8 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 import org.jboss.logging.Logger;
 
 @ApplicationScoped
@@ -39,7 +41,7 @@ public class PageContentUpdateRepository {
             pageContent.setBody(pageContentUpdateRequest.body());
         }
 
-        pageContent.setUpdatedAt(LocalDateTime.now());
+        pageContent.setUpdatedAt(ZonedDateTime.now());
         return pageContent;
     }
 }
