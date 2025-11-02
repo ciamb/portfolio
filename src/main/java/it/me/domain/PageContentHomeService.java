@@ -8,6 +8,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+
 import org.jboss.logging.Logger;
 
 @ApplicationScoped
@@ -34,7 +36,7 @@ public class PageContentHomeService {
                                     I testi che vedi arrivano direttamente dal database, e li aggiorno via api quando devo aggiornare le mie competenze!
                                     Buona permanenza :)
                                     """)
-                            .setUpdatedAt(LocalDateTime.now());
+                            .setUpdatedAt(ZonedDateTime.now());
 
                     em.persist(home);
                     return home;

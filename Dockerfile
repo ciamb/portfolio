@@ -12,9 +12,6 @@ WORKDIR /app
 
 COPY --from=build /app/target/quarkus-app /app/
 
-RUN mkdir -p /app/data
-VOLUME ["/app/data"]
-
 EXPOSE 8080
 
 ENV QUARKUS_PROFILE=prod
