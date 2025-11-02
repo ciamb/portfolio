@@ -65,22 +65,6 @@
             <artifactId>jakarta.validation-api</artifactId>
         </dependency>
 
-        <!-- SQL lite driver -> FOR REMOVAL -->
-       <!--
-        <dependency>
-            <groupId>org.xerial</groupId>
-            <artifactId>sqlite-jdbc</artifactId>
-            <version>3.50.3.0</version>
-        </dependency>
-        -->
-        <!-- Hibernate community language  -> FOR REMOVAL -->
-        <!--
-        <dependency>
-            <groupId>org.hibernate.orm</groupId>
-            <artifactId>hibernate-community-dialects</artifactId>
-        </dependency>
-        -->
-
         <!-- test -->
         <dependency>
             <groupId>io.quarkus</groupId>
