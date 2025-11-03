@@ -1,0 +1,28 @@
+name: main CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: action/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          version: '21'
+          cache: maven
+      - name: Build & Test (no secrets)
+        run: ./mvnw -B -ntp clean verify
