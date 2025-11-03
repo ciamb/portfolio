@@ -7,14 +7,13 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 import org.jboss.logging.Logger;
 
 @ApplicationScoped
-public class PageContentUpdateRepository {
-    private static final Logger LOG = Logger.getLogger(PageContentUpdateRepository.class.getName());
+public class PageContentUpdateBySlugRepository {
+    private static final Logger LOG = Logger.getLogger(PageContentUpdateBySlugRepository.class.getName());
 
     @Inject
     PageContentReadBySlugRepository pageContentReadBySlugRepository;
@@ -28,11 +27,17 @@ public class PageContentUpdateRepository {
 
         if (pageContentUpdateRequest.title() != null
                 && !pageContentUpdateRequest.title().isBlank()) {
+            if (pageContentUpdateRequest.title().length() > 120) {
+                throw new IllegalArgumentException("title is longer than 120 characters");
+            }
             pageContent.setTitle(pageContentUpdateRequest.title());
         }
 
         if (pageContentUpdateRequest.subtitle() != null
                 && !pageContentUpdateRequest.subtitle().isBlank()) {
+            if (pageContentUpdateRequest.subtitle().length() > 240) {
+                throw new IllegalArgumentException("subtitle is longer than 240 characters");
+            }
             pageContent.setSubtitle(pageContentUpdateRequest.subtitle());
         }
 

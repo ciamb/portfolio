@@ -1,19 +1,20 @@
 package it.me.domain;
 
 import it.me.entity.PageContent;
-import it.me.repository.PageContentUpdateRepository;
+import it.me.repository.PageContentUpdateBySlugRepository;
 import it.me.web.dto.PageContentUpdateRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 
 @ApplicationScoped
-public class PageContentUpdateService {
+public class PageContentUpdateBySlugService {
 
     @Inject
-    PageContentUpdateRepository pageContentUpdateRepository;
+    PageContentUpdateBySlugRepository pageContentUpdateBySlugRepository;
 
     public PageContent updatePageContentBySlug(
             String slug, PageContentUpdateRequest pageContentUpdateRequest) {
-        return pageContentUpdateRepository.updateBySlug(slug, pageContentUpdateRequest);
+        return pageContentUpdateBySlugRepository.updateBySlug(slug, pageContentUpdateRequest);
     }
 }
