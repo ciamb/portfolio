@@ -1,6 +1,6 @@
-package it.me.web;
+package it.me.web.api;
 
-import it.me.domain.PageContentUpdateService;
+import it.me.domain.PageContentUpdateBySlugService;
 import it.me.web.dto.PageContentUpdateRequest;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -8,20 +8,20 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/api/admin/pages")
+@Path("/api/admin/page")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class PageContentUpdateAdminResource {
 
     @Inject
-    PageContentUpdateService  pageContentUpdateService;
+    PageContentUpdateBySlugService pageContentUpdateBySlugService;
 
     @PUT
-    @Path("/{slug}")
+    @Path("/update/{slug}")
     public Response updatePageContentBySlug(
             @PathParam("slug") String slug,
-            @Valid PageContentUpdateRequest pageContentUpdateRequest) {
-        var updated = pageContentUpdateService.updatePageContentBySlug(slug, pageContentUpdateRequest);
+            PageContentUpdateRequest pageContentUpdateRequest) {
+        var updated = pageContentUpdateBySlugService.updatePageContentBySlug(slug, pageContentUpdateRequest);
         return Response.ok(updated).build();
     }
 
