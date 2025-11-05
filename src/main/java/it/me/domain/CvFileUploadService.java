@@ -50,7 +50,7 @@ public class CvFileUploadService {
         }
 
         if (cvFileUploadRequest.filename() == null || cvFileUploadRequest.filename().isBlank()) {
-            throw new IllegalArgumentException("filename is null or empty");
+            throw new IllegalArgumentException("filename is null or blank");
         }
 
         var sha256 = fileDataToSha256Mapper.apply(cvFileUploadRequest.fileData());

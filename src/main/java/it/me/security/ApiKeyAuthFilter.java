@@ -2,7 +2,6 @@ package it.me.security;
 
 import io.quarkus.arc.Unremovable;
 import jakarta.annotation.Priority;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.Priorities;
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.container.ContainerRequestFilter;
@@ -24,7 +23,7 @@ public class ApiKeyAuthFilter implements ContainerRequestFilter {
     @ConfigProperty(name = "app.admin.api-key", defaultValue = "")
     String apiKey;
 
-    @ConfigProperty(name = "app.admin.header", defaultValue = "X-API-Key")
+    @ConfigProperty(name = "app.admin.header", defaultValue = "x-api-key")
     String header;
 
     @Override

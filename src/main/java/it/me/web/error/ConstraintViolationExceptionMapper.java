@@ -24,6 +24,7 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
 
         var message = exception.getConstraintViolations().stream()
                 .map(ConstraintViolation::getMessage)
+                .sorted()
                 .collect(Collectors.joining("; "));
         if (message.isBlank()) {
             message= "Validation error";
