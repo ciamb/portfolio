@@ -19,7 +19,7 @@ public class CvFileUploadAdminResource {
     CvFileUploadService cvFileUploadService;
 
     @POST
-    @Path("upload/json")
+    @Path("/upload/json")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response uploadCv(CvFileUploadRequest cvFileUploadRequest) {
