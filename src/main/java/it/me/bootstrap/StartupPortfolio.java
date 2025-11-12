@@ -1,7 +1,7 @@
 package it.me.bootstrap;
 
 import io.quarkus.runtime.StartupEvent;
-import it.me.domain.PageContentHomeService;
+import it.me.domain.service.PageContentHomeService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 

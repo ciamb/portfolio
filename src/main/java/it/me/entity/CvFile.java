@@ -28,9 +28,15 @@ import java.time.ZonedDateTime;
                 " cv.updatedAt = :updatedAt" +
                 " where cv.isActive = true "
 )
+@NamedQuery(
+        name = CvFile.READ_BY_IS_ACTIVE,
+        query = " select cv from CvFile cv" +
+                " where cv.is_active = true"
+)
 public class CvFile {
     public static final String READ_BY_SHA256 = "CvFile.readBySha256";
     public static final String UPDATE_IS_ACTIVE_TO_FALSE_IF_ANY = "CvFile.updateIsActiveToFalseIfAny";
+    public static final String READ_BY_IS_ACTIVE = "CvFile.readByIsActive";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

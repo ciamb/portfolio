@@ -1,4 +1,4 @@
-package it.me.domain;
+package it.me.domain.service;
 
 import it.me.entity.PageContent;
 import it.me.repository.PageContentReadBySlugRepository;

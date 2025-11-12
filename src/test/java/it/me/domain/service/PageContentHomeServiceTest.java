@@ -1,15 +1,13 @@
-package it.me.domain;
+package it.me.domain.service;
 
+import it.me.domain.Page;
 import it.me.entity.PageContent;
 import it.me.repository.PageContentReadBySlugRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -37,7 +35,7 @@ class PageContentHomeServiceTest {
     void createHomeIfMissing_returnsHome_whenIsPresent() {
         // given
         var pageContent = new PageContent();
-        given(pageContentReadBySlugRepository.readBySlug(eq(Page.HOME.getSlug())))
+        given(pageContentReadBySlugRepository.readBySlug(ArgumentMatchers.eq(Page.HOME.getSlug())))
                 .willReturn(Optional.of(pageContent));
 
         //when
