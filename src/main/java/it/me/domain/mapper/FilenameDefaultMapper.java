@@ -13,9 +13,10 @@ public class FilenameDefaultMapper implements Function<String, String> {
         }
 
         var trimmed = filename.trim();
-        if (!trimmed.toLowerCase().endsWith(".pdf")) {
-            return trimmed.concat(".pdf");
+        if (trimmed.toLowerCase().endsWith(".pdf")) {
+            trimmed = trimmed.replace(".pdf", "").trim();
         }
+        trimmed = trimmed.concat(".pdf");
 
         return trimmed;
     }
