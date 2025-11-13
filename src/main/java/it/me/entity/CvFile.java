@@ -31,7 +31,7 @@ import java.time.ZonedDateTime;
 @NamedQuery(
         name = CvFile.READ_BY_IS_ACTIVE,
         query = " select cv from CvFile cv" +
-                " where cv.is_active = true"
+                " where cv.isActive = true "
 )
 public class CvFile {
     public static final String READ_BY_SHA256 = "CvFile.readBySha256";
@@ -50,22 +50,22 @@ public class CvFile {
 
     @JdbcTypeCode(SqlTypes.BINARY)
     @Column(name = "file_data", nullable = false)
-    public byte[] fileData;
+    private byte[] fileData;
 
     @Column(name = "filesize_bytes", insertable = false, updatable = false)
-    public Long filesizeBytes;
+    private Long filesizeBytes;
 
     @Column(nullable = false, length = 64)
-    public String sha256;
+    private String sha256;
 
     @Column(nullable = false, name = "is_active")
-    public boolean isActive = false;
+    private boolean isActive = false;
 
     @Column(name = "created_at", nullable = false, columnDefinition = "timestamptz")
-    public ZonedDateTime createdAt;
+    private ZonedDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false, columnDefinition = "timestamptz")
-    public ZonedDateTime updatedAt;
+    private ZonedDateTime updatedAt;
 
     public Long id() {
         return id;
