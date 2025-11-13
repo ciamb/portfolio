@@ -10,11 +10,11 @@ import java.time.ZonedDateTime;
 @Table(name = "contact_me")
 @NamedQueries({
         @NamedQuery(
-                name = ContactMe.FIND_BY_STATUS,
+                name = ContactMe.READ_BY_STATUS,
                 query = "SELECT cm FROM ContactMe cm WHERE cm.status = :status ORDER BY cm.createdAt DESC"
         ),
         @NamedQuery(
-                name = ContactMe.FIND_PENDING,
+                name = ContactMe.READ_PENDING,
                 query = "SELECT cm FROM ContactMe cm WHERE cm.status = 'PENDING' ORDER BY cm.createdAt ASC"
         ),
         @NamedQuery(
@@ -25,8 +25,8 @@ import java.time.ZonedDateTime;
 public class ContactMe {
 
     // Named query constants
-    public static final String FIND_BY_STATUS = "ContactMe.findByStatus";
-    public static final String FIND_PENDING = "ContactMe.findPending";
+    public static final String READ_BY_STATUS = "ContactMe.readByStatus";
+    public static final String READ_PENDING = "ContactMe.readPending";
     public static final String COUNT_BY_STATUS = "ContactMe.countByStatus";
 
     // Status enum
@@ -42,7 +42,7 @@ public class ContactMe {
     private String email;
 
     @NotBlank
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false, length = 150)
     private String name;
 
     @NotBlank
@@ -73,15 +73,13 @@ public class ContactMe {
     @Column(name = "updated_at", nullable = false)
     private ZonedDateTime updatedAt;
 
-    // PrePersist callback to set creation timestamp
-    @PrePersist
+
     protected void onCreate() {
         createdAt = ZonedDateTime.now();
         updatedAt = ZonedDateTime.now();
     }
 
-    // PreUpdate callback to update timestamp
-    @PreUpdate
+
     protected void onUpdate() {
         updatedAt = ZonedDateTime.now();
     }
