@@ -73,17 +73,6 @@ public class ContactMe {
     @Column(name = "updated_at", nullable = false)
     private ZonedDateTime updatedAt;
 
-
-    protected void onCreate() {
-        createdAt = ZonedDateTime.now();
-        updatedAt = ZonedDateTime.now();
-    }
-
-
-    protected void onUpdate() {
-        updatedAt = ZonedDateTime.now();
-    }
-
     // Constructors
     public ContactMe() {
 
