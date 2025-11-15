@@ -23,26 +23,34 @@
 </head>
 
 <body>
-    <div class="wrap">
-        <div class="card">
-            {#if home}
-                <h1>{home.title}</h1>
-                {#if home.subtitle}
-                    <p class="subtitle">{home.subtitle}</p>
-                {/if}
-                <div class="body">{home.body}</div>
-                {#if updatedAt}
-                    <div class="footer">
-                        <span>Ultimo aggiornamento:</span>
-                        <time datetime="{home.updatedAt}">{updatedAt}</time>
-                    </div>
-                {/if}
-            {#else}
-                <h1>Pagina non trovata</h1>
-                <p class="subtitle">Nessun contenuto per "home".</p>
-            {/if}
+<div class="wrap">
+    <div class="card">
+        {#if home}
+        <h1>{home.title}</h1>
+        {#if home.subtitle}
+        <p class="subtitle">{home.subtitle}</p>
+        {/if}
+        <div class="body">{home.body}</div>
+
+        <!-- download CV -->
+        <div class="actions">
+            <a class="btn-download" href="/api/cv/download">
+                Scarica il mio CV
+            </a>
         </div>
+
+        {#if updatedAt}
+        <div class="footer">
+            <span>Ultimo aggiornamento:</span>
+            <time datetime="{home.updatedAt}">{updatedAt}</time>
+        </div>
+        {/if}
+        {#else}
+        <h1>Pagina non trovata</h1>
+        <p class="subtitle">Nessun contenuto per "home".</p>
+        {/if}
     </div>
+</div>
 </body>
 
 </html>
