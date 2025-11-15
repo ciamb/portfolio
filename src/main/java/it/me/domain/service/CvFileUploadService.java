@@ -1,4 +1,4 @@
-package it.me.domain;
+package it.me.domain.service;
 
 import it.me.domain.mapper.FileDataToSha256Mapper;
 import it.me.entity.CvFile;

@@ -1,5 +1,6 @@
-package it.me.domain;
+package it.me.domain.service;
 
+import it.me.domain.Page;
 import it.me.entity.PageContent;
 import it.me.repository.PageContentReadBySlugRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -7,7 +8,6 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 import org.jboss.logging.Logger;

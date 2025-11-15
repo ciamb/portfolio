@@ -1,6 +1,6 @@
 package it.me.web.api;
 
-import it.me.domain.PageContentUpdateBySlugService;
+import it.me.domain.service.PageContentUpdateBySlugService;
 import it.me.entity.PageContent;
 import it.me.web.dto.PageContentUpdateRequest;
 import jakarta.ws.rs.core.Response;

@@ -23,13 +23,14 @@ import java.time.ZonedDateTime;
         )
 })
 public class ContactMe {
-
-    // Named query constants
     public static final String READ_BY_STATUS = "ContactMe.readByStatus";
     public static final String READ_PENDING = "ContactMe.readPending";
     public static final String COUNT_BY_STATUS = "ContactMe.countByStatus";
 
-    // Status enum
+    /**
+     * Represent the status of a ContactMe record of DB. Actual mapped status are
+     * {@code PENDING}, {@code PROCESSED}, {@code ERROR}
+     */
     public enum Status {
         PENDING, PROCESSED, ERROR
     }
@@ -73,9 +74,7 @@ public class ContactMe {
     @Column(name = "updated_at", nullable = false)
     private ZonedDateTime updatedAt;
 
-    // Constructors
     public ContactMe() {
-
     }
 
     public ContactMe(String email, String name, String message, Boolean contactBack) {
