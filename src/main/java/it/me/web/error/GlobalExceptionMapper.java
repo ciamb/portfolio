@@ -11,7 +11,7 @@ import org.jboss.logging.MDC;
 
 @Provider
 public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
-    private static final Logger LOG = Logger.getLogger(GlobalExceptionMapper.class.getName());
+    private static final Logger logger = Logger.getLogger(GlobalExceptionMapper.class.getName());
 
     @Inject
     UriInfo uriInfo;
@@ -25,7 +25,7 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
         var path = uriInfo != null ? uriInfo.getPath() : "";
         var method = request != null ? request.getMethod() : "?";
 
-        LOG.errorf(exception, "Unhandled error on %s %s [requestId=%s]", method, path, requestId);
+        logger.errorf(exception, "Unhandled error on %s %s [requestId=%s]", method, path, requestId);
 
         var errorResponse = new ErrorResponse(
                 "internal_error", "Unhandled error", path, requestId);

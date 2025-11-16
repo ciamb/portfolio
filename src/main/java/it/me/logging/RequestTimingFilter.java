@@ -17,7 +17,7 @@ import java.io.IOException;
 @Provider
 @Priority(Priorities.USER)
 public class RequestTimingFilter implements ContainerRequestFilter, ContainerResponseFilter {
-    private static final Logger LOG = Logger.getLogger(RequestTimingFilter.class.getName());
+    private static final Logger logger = Logger.getLogger(RequestTimingFilter.class.getName());
 
     @ConfigProperty(name = "app.timing.enabled", defaultValue = "true")
     boolean isTimingEnabled;
@@ -57,9 +57,9 @@ public class RequestTimingFilter implements ContainerRequestFilter, ContainerRes
         var formattedMessage = String.format("%s %s -> %d in %d ms", method, requestUri, status, elapsedInMillis);
 
         if (elapsedInMillis >= slowThresholdMs) {
-            LOG.warn(formattedMessage);
+            logger.warn(formattedMessage);
         } else  {
-            LOG.info(formattedMessage);
+            logger.info(formattedMessage);
         }
     }
 }
