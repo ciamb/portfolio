@@ -1,5 +1,6 @@
 package it.me.web.api;
 
+import it.me.domain.mapper.ContactBackToMessageMapper;
 import it.me.domain.service.ContactMeCreateService;
 import it.me.web.dto.ContactMeRequest;
 import jakarta.inject.Inject;
@@ -17,6 +18,9 @@ public class ContactMeCreateResource {
     @Inject
     ContactMeCreateService contactMeCreateService;
 
+    @Inject
+    ContactBackToMessageMapper contactBackToMessageMapper;
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -32,22 +36,8 @@ public class ContactMeCreateResource {
                         """.formatted(
                         contactMe.id(),
                         contactMe.status(),
-                        mapContactBackMessage(contactMe.contactBack())
+                        contactBackToMessageMapper.apply(contactMe.contactBack())
                 ))
                 .build();
-    }
-
-    private String mapContactBackMessage(boolean contactBack) {
-        return contactBack ?
-                """
-                        Grazie per aver registrato un messaggio.
-                        Il messaggio sar\u00E0 processato durante il fine settimana.
-                        Ci sentiamo presto!
-                        """
-                :
-                """
-                        Grazie per aver registrato un messaggio per me.
-                        Ti auguro una buona giornata!
-                        """;
     }
 }
