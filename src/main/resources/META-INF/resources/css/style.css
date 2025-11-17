@@ -74,8 +74,10 @@ p.subtitle {
 /* ------------------------------------------------- */
 /* download btn --- start */
 .actions {
-  margin-top: 1.5rem;
-  text-align: center;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
 }
 
 .btn-download {
@@ -99,6 +101,181 @@ p.subtitle {
   transform: translateY(0);
 }
 /* download btn --- end */
+/* ------------------------------------------------- */
+/* ------------------------------------------------- */
+/* ------------------------------------------------- */
+/* contact me --- start */
+.btn-contact {
+    display: inline-block;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+
+    font: inherit; /* <— usa lo stesso font del body/card */
+    border: none; /* <— toglie il bordo grigio del button */
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-contact:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.btn-contact:active {
+  background-color: #004494;
+  transform: translateY(0);
+}
+
+.btn-primary {
+    border: none;
+    border-radius: 0.5rem;
+    background: #007bff;
+    color: white;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-secondary {
+    border-radius: 0.5rem;
+    border: 1px solid #4b5563;
+    background: #111827;
+    color: #e5e7eb;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.btn-secondary:hover {
+    background: #1f2937;
+}
+
+.contact-me-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.contact-me-backdrop[hidden] {
+    display: none !important;
+}
+
+.contact-me {
+    background: #151923;
+    max-width: 680px;
+    width: 100%;
+    margin: 1rem;
+    padding: 1.25rem 1.5rem 1.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 24px 80px rgba(15, 23, 42, 0.8);
+    color: #e5e7eb;
+    border: 1px solid #1f2937;
+}
+
+.contact-me__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.contact-me__header h2 {
+    font-size: 1.25 rem;
+    font-weight: 700;
+    color: #e5e7eb;
+    margin: 0;
+}
+
+.contact-me__close-btn {
+    border: none;
+    background: transparent;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #9ca3af;
+}
+
+.contact-me__close-btn:hover {
+    color: #f9fafb;
+}
+
+.contact-me__body {
+    margin-bottom: 0.75rem;
+}
+
+.contact-me__help {
+    font-size: 0.9rem;
+    color: #9ca3af;
+    margin-bottom: 0.75rem;
+}
+
+.contact-me__label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #d1d5db;
+    margin-bottom: 0.35rem;
+}
+
+.contact-me__textarea {
+    width: 100%;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.9rem;
+    border-radius: 0.5rem;
+    border: 1px solid  #374151;
+    padding: 0.6rem 0.7rem;
+    resize: vertical;
+    min-height: 220px;
+    background: #0f1115;
+    color: #e5e7eb;
+}
+
+.contact-me__textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 1px #2563eb33;
+}
+
+.contact-me__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.contact-me__feedback {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.contact-me__feedback--success {
+    color: #22c55e;
+}
+
+.contact-me__feedback--error {
+    color: #f97373;
+}
+
+.contact-me__feedback--info {
+    color: #60a5fa;
+}
+/* contact me --- start */
 /* ------------------------------------------------- */
 /* ------------------------------------------------- */
 /* ------------------------------------------------- */

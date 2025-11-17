@@ -1,0 +1,49 @@
+<!-- contact me modal -->
+<div class="contact-me-backdrop" id="contact-me-backdrop" hidden>
+    <div class="contact-me">
+        <div class="contact-me__header">
+            <h2>Contact Me (by JSON)</h2>
+            <button type="button"
+                    class="contact-me__close-btn"
+                    id="contact-me-close-btn"
+                    aria-label="Chiudi">
+                ×
+            </button>
+        </div>
+
+        <div class="contact-me__body">
+            <p class="contact-me__help">
+                Compila questo JSON con i tuoi dati.
+                Sara validato e inviato al mio backend cosi com'e!
+            </p>
+
+            <label for="contact-json" class="contact-me__label">
+                JSON
+            </label>
+            <textarea id="contact-json"
+                      class="contact-me__textarea"
+                      rows="10">
+{
+    "email": "example@mail.com",
+    "name": "Andrea Ciambella",
+    "message": "Ciao Andrea, mi farebbe piacere entrare in contatto con te!",
+    "contactBack": true
+}
+            </textarea>
+
+            <div class="contact-me__feedback"
+                 id="contact-feedback"
+                 aria-live="polite">
+            </div>
+        </div>
+
+        <div class="contact-me__footer">
+            <button type="button" class="btn-secondary" id="contact-me-cancel-btn">
+                Annulla
+            </button>
+            <button type="button" class="btn-primary" id="contact-me-submit-btn">
+                Invia
+            </button>
+        </div>
+    </div>
+</div>

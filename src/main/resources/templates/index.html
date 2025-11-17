@@ -32,11 +32,16 @@
         {/if}
         <div class="body">{home.body}</div>
 
-        <!-- download CV -->
         <div class="actions">
+            <!-- download CV -->
             <a class="btn-download" href="/api/cv/download">
                 Scarica il mio CV
             </a>
+
+            <!-- contact me -->
+            <button type="button" class="btn-contact" id="contact-me-open-btn">
+                Contattami
+            </button>
         </div>
 
         {#if updatedAt}
@@ -51,6 +56,9 @@
         {/if}
     </div>
 </div>
-</body>
 
+{#include contact-me /}
+
+<script src="/js/contact-me.js"></script>
+</body>
 </html>
