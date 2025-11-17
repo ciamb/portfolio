@@ -15,7 +15,7 @@ import java.time.ZonedDateTime;
 
 @ApplicationScoped
 public class CvFileUploadService {
-    private static final Logger LOG = Logger.getLogger(CvFileUploadService.class.getName());
+    private static final Logger logger = Logger.getLogger(CvFileUploadService.class.getName());
 
     @Inject
     CvFileReadBySha256Repository cvFileReadBySha256Repository;
@@ -59,7 +59,7 @@ public class CvFileUploadService {
             throw new IllegalStateException("This CV already exists (sha256 duplicated)");
         }
 
-        LOG.info("Set every CV with is_active = true to false");
+        logger.info("Set every CV with is_active = true to false");
         cvFileUpdateIsActiveToFalseIfAnyRepository.updateIsActiveToFalseIfAny();
 
         CvFile cvFileToPersist = new CvFile()
@@ -71,7 +71,7 @@ public class CvFileUploadService {
                 .setCreatedAt(ZonedDateTime.now())
                 .setUpdatedAt(ZonedDateTime.now());
 
-        LOG.infof("Persisting new CvFile filename=%s", cvFileToPersist.filename());
+        logger.infof("Persisting new CvFile filename=%s", cvFileToPersist.filename());
         return cvFilePersistRepository.persistCvFile(cvFileToPersist);
     }
 }

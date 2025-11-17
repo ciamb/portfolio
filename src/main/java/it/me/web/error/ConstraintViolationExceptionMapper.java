@@ -8,10 +8,12 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
+import jakarta.ws.rs.ext.Provider;
 import org.slf4j.MDC;
 
 import java.util.stream.Collectors;
 
+@Provider
 public class ConstraintViolationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
 
     @Inject
@@ -27,7 +29,7 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
                 .sorted()
                 .collect(Collectors.joining("; "));
         if (message.isBlank()) {
-            message= "Validation error";
+            message = "Validation error";
         }
 
         var errorResponse = new ErrorResponse("bad_request", message, path, requestId);

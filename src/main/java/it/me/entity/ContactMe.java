@@ -3,6 +3,10 @@ package it.me.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.JdbcTypeRegistration;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 
 import java.time.ZonedDateTime;
 
@@ -54,7 +58,7 @@ public class ContactMe {
     @Column(name = "contact_back")
     private Boolean contactBack = false;
 
-    @Enumerated(EnumType.STRING)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(columnDefinition = "contact_me_status")
     private Status status = Status.PENDING;
 
@@ -73,16 +77,6 @@ public class ContactMe {
 
     @Column(name = "updated_at", nullable = false)
     private ZonedDateTime updatedAt;
-
-    public ContactMe() {
-    }
-
-    public ContactMe(String email, String name, String message, Boolean contactBack) {
-        this.email = email;
-        this.name = name;
-        this.message = message;
-        this.contactBack = contactBack;
-    }
 
     public Long id() {
         return id;
@@ -180,24 +174,6 @@ public class ContactMe {
 
     public ContactMe setUpdatedAt(ZonedDateTime updatedAt) {
         this.updatedAt = updatedAt;
-        return this;
-    }
-
-    // Helper methods for business logic
-    public ContactMe incrementAttempts() {
-        this.attempts++;
-        this.lastAttemptAt = ZonedDateTime.now();
-        return this;
-    }
-
-    public ContactMe markAsProcessed() {
-        this.status = Status.PROCESSED;
-        return this;
-    }
-
-    public ContactMe markAsError(String errorReason) {
-        this.status = Status.ERROR;
-        this.errorReason = errorReason;
         return this;
     }
 }

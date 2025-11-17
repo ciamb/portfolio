@@ -13,7 +13,7 @@ import java.time.ZonedDateTime;
 
 @ApplicationScoped
 public class PageContentUpdateBySlugService {
-    private static final Logger LOG = Logger.getLogger(PageContentUpdateBySlugService.class.getName());
+    private static final Logger logger = Logger.getLogger(PageContentUpdateBySlugService.class.getName());
 
     @Inject
     PageContentReadBySlugRepository pageContentReadBySlugRepository;
@@ -24,7 +24,7 @@ public class PageContentUpdateBySlugService {
         var pageContent = pageContentReadBySlugRepository.readBySlug(slug)
                 .orElseThrow(() -> new NotFoundException("Page not found with slug: %s".formatted(slug)));
 
-        LOG.infof("Admin update slug=%s", slug);
+        logger.infof("Admin update slug=%s", slug);
 
         if (pageContentUpdateRequest.title() != null
                 && !pageContentUpdateRequest.title().isBlank()) {

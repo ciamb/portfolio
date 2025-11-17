@@ -14,7 +14,7 @@ import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class PageContentHomeService {
-    private static final Logger LOG = Logger.getLogger(PageContentHomeService.class.getName());
+    private static final Logger logger = Logger.getLogger(PageContentHomeService.class.getName());
 
     @Inject
     PageContentReadBySlugRepository pageContentReadBySlugRepository;
@@ -26,7 +26,7 @@ public class PageContentHomeService {
     public PageContent createHomeIfMissing() {
         return pageContentReadBySlugRepository.readBySlug(Page.HOME.getSlug())
                 .orElseGet(() -> {
-                    LOG.infof("PageContent slug=%s not found. Using default", Page.HOME.getSlug());
+                    logger.infof("PageContent slug=%s not found. Using default", Page.HOME.getSlug());
 
                     PageContent home = new PageContent()
                             .setSlug(Page.HOME.getSlug())
