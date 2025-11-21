@@ -9,12 +9,14 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import org.jboss.logging.Logger;
 import org.slf4j.MDC;
 
 import java.util.stream.Collectors;
 
 @Provider
 public class ConstraintViolationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
+    private final Logger logger = Logger.getLogger(ConstraintViolationExceptionMapper.class.getName());
 
     @Inject
     UriInfo uriInfo;
@@ -33,6 +35,8 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
         }
 
         var errorResponse = new ErrorResponse("bad_request", message, path, requestId);
+
+        logger.errorf("%s: %s", errorResponse.error(), errorResponse.message());
 
         return Response.status(Response.Status.BAD_REQUEST)
                 .type(MediaType.APPLICATION_JSON)

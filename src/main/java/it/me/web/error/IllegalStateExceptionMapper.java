@@ -7,10 +7,12 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
+import org.jboss.logging.Logger;
 import org.jboss.logging.MDC;
 
 @Provider
 public class IllegalStateExceptionMapper implements ExceptionMapper<IllegalStateException> {
+    private static final Logger logger = Logger.getLogger(IllegalStateExceptionMapper.class.getName());
 
     @Inject
     UriInfo uriInfo;
@@ -26,6 +28,8 @@ public class IllegalStateExceptionMapper implements ExceptionMapper<IllegalState
                 path,
                 requestId
         );
+
+        logger.errorf("%s: %s", errorResponse.error(), exception.getMessage());
 
         return Response.status(Response.Status.CONFLICT)
                 .type(MediaType.APPLICATION_JSON)

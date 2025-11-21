@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.JdbcType;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.JdbcTypeRegistration;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 
 import java.time.ZonedDateTime;
@@ -14,22 +12,17 @@ import java.time.ZonedDateTime;
 @Table(name = "contact_me")
 @NamedQueries({
         @NamedQuery(
-                name = ContactMe.READ_BY_STATUS,
-                query = "SELECT cm FROM ContactMe cm WHERE cm.status = :status ORDER BY cm.createdAt DESC"
-        ),
-        @NamedQuery(
                 name = ContactMe.READ_PENDING,
                 query = "SELECT cm FROM ContactMe cm WHERE cm.status = 'PENDING' ORDER BY cm.createdAt ASC"
         ),
         @NamedQuery(
-                name = ContactMe.COUNT_BY_STATUS,
-                query = "SELECT COUNT(cm) FROM ContactMe cm WHERE cm.status = :status"
+                name = ContactMe.COUNT_BY_EMAIL_AND_STATUS,
+                query = "SELECT COUNT(cm) FROM ContactMe cm WHERE cm.email = :email and cm.status = :status"
         )
 })
 public class ContactMe {
-    public static final String READ_BY_STATUS = "ContactMe.readByStatus";
     public static final String READ_PENDING = "ContactMe.readPending";
-    public static final String COUNT_BY_STATUS = "ContactMe.countByStatus";
+    public static final String COUNT_BY_EMAIL_AND_STATUS = "ContactMe.countByEmailAndStatus";
 
     /**
      * Represent the status of a ContactMe record of DB. Actual mapped status are
