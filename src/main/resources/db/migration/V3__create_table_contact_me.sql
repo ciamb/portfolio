@@ -2,7 +2,7 @@
 CREATE TYPE contact_me_status AS ENUM ('PENDING', 'PROCESSED', 'ERROR');
 
 -- Create contact_me table
-CREATE TABLE contact_me (
+CREATE TABLE if not exists contact_me (
                             id BIGSERIAL PRIMARY KEY,
                             email VARCHAR(255) NOT NULL,
                             name VARCHAR(150) NOT NULL,
