@@ -2,7 +2,7 @@ package it.me.web.api;
 
 import it.me.domain.service.PageContentUpdateBySlugService;
 import it.me.entity.PageContent;
-import it.me.web.dto.PageContentUpdateRequest;
+import it.me.web.dto.request.PageContentUpdateRequest;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

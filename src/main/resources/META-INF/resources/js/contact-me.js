@@ -24,63 +24,70 @@
       'contact-me__feedback contact-me__feedback--' + type;
   }
 
-  async function submitContact() {
-    const raw = textarea.value.trim();
+    async function submitContact() {
+        setFeedback('✏️ Scrittura in corso...', 'info');
+        const textareaValue = textarea.value.trim();
 
-    if (!raw) {
-      setFeedback('Inserisci un JSON prima di inviare.', 'error');
-      return;
-    }
-
-    let parsed;
-    try {
-      parsed = JSON.parse(raw);
-    } catch (e) {
-      setFeedback(
-        'Il JSON non è valido. Controlla virgolette, virgole e parentesi!',
-        'error'
-      );
-      return;
-    }
-
-    submitBtn.disabled = true;
-    setFeedback('Invio in corso...', 'info');
-
-    try {
-      const response = await fetch('/api/contact-me', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(parsed)
-      });
-
-      if (response.ok) {
-        setFeedback('Messaggio inviato correttamente, grazie!', 'success');
-      } else if (response.status === 400) {
-        let errorText = 'Richiesta non valida.';
-        try {
-          const data = await response.json();
-          if (data && Array.isArray(data.violations)) {
-            errorText = data.violations.map(v => v.message).join(' | ');
-          }
-        } catch (e) {
-          // lascio il generico
+        if (!textareaValue) {
+            setFeedback('Ti stai dimenticando di lasciare un messaggio! 😤', 'error');
+            return;
         }
-        setFeedback(errorText, 'error');
-      } else {
-        setFeedback(
-          'Errore inatteso. Riprova più tardi.',
-          'error'
-        );
-      }
-    } catch (e) {
-      setFeedback(
-        'Impossibile contattare il server. Sei connesso a internet?',
-        'error'
-      );
-    } finally {
-      submitBtn.disabled = false;
+
+        let parsed;
+        try {
+            parsed = JSON.parse(textareaValue);
+        } catch (e) {
+            setFeedback(
+                'Aia! Il JSON non è valido. 😶‍🌫️ Controlla virgolette, virgole e parentesi..',
+                'error'
+            );
+            return;
+        }
+
+        submitBtn.disabled = true;
+
+        try {
+            const response = await fetch('/api/contact-me', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(parsed)
+            });
+
+            // response ok
+            if (response.ok) {
+                let msgDefault = 'Messaggio inserito nel sistema correttamente!';
+                try {
+                    const successData = await response.json();
+                    if (successData && typeof successData.message === 'string') {
+                        setFeedback(successData.message, 'success');
+                    } else {
+                        setFeedback(msgDefault, 'success');
+                    }
+                } catch (ignored) {
+                    console.debug('parsing response.json failed')
+                    setFeedback(msgDefault, 'success');
+                }
+                return;
+            }
+
+            // bad response
+            let errorMsgDefault = 'Qualcosa non quadra, riprova piu tardi.';
+            try {
+                const data = await response.json();
+                if (data && typeof data.message === 'string') {
+                    errorMsgDefault = data.message;
+                }
+            } catch (ignored) {
+            }
+            setFeedback(errorMsgDefault, 'error');
+
+        } catch (e) {
+            let msg500 = 'Impossibile contattare il server. Controlla la connessione'
+            setFeedback(msg500, 'error');
+        } finally {
+            submitBtn.disabled = false;
+        }
     }
-  }
 
   if (openBtn) {
     openBtn.addEventListener('click', openModal);

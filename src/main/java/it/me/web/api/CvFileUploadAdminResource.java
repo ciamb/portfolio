@@ -2,7 +2,7 @@ package it.me.web.api;
 
 import it.me.domain.service.CvFileUploadService;
 import it.me.entity.CvFile;
-import it.me.web.dto.CvFileUploadRequest;
+import it.me.web.dto.request.CvFileUploadRequest;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;

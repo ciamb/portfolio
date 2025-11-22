@@ -3,7 +3,7 @@ package it.me.domain.service;
 import it.me.entity.ContactMe;
 import it.me.repository.ContactMeCountByEmailAndStatusPendingRepository;
 import it.me.repository.ContactMePersistRepository;
-import it.me.web.dto.ContactMeRequest;
+import it.me.web.dto.request.ContactMeRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -28,7 +28,11 @@ public class ContactMeCreateService {
         var count = contactMeCountByEmailAndStatusPendingRepository
                 .countContactMeByEmailAndStatusPending(contactMeRequest.email());
         if (count > 0) {
-            throw new IllegalStateException("There is already a contact me request with that email that need to be processed");
+            throw new IllegalStateException("""
+                    Hai gi\u00E0 inserito un messaggio!
+                    Attendi che sia elaborato dal batch durante il fine settimana.
+                    Ci sentiamo presto!
+                    """);
         }
 
         var contactMe = new ContactMe()

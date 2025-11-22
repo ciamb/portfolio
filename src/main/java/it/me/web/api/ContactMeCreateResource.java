@@ -2,7 +2,8 @@ package it.me.web.api;
 
 import it.me.domain.mapper.ContactBackToMessageMapper;
 import it.me.domain.service.ContactMeCreateService;
-import it.me.web.dto.ContactMeRequest;
+import it.me.web.dto.request.ContactMeRequest;
+import it.me.web.dto.response.ContactMeResponse;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -26,18 +27,14 @@ public class ContactMeCreateResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response contactMe(@Valid ContactMeRequest contactMeRequest) {
         var contactMe = contactMeCreateService.createContactMe(contactMeRequest);
+        var contactMeResponse = new ContactMeResponse(
+                contactMe.id(),
+                contactMe.status(),
+                contactBackToMessageMapper.apply(contactMe.contactBack())
+        );
+
         return Response.status(Response.Status.CREATED)
-                .entity("""
-                        {
-                          "id":"%s",
-                          "status":"%s",
-                          "message": "%s"
-                        }
-                        """.formatted(
-                        contactMe.id(),
-                        contactMe.status(),
-                        contactBackToMessageMapper.apply(contactMe.contactBack())
-                ))
+                .entity(contactMeResponse)
                 .build();
     }
 }

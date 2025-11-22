@@ -1,4 +1,4 @@
-package it.me.web.dto;
+package it.me.web.dto.request;
 
 public record CvFileUploadRequest(
         byte[] fileData,
