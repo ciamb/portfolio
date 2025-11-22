@@ -5,7 +5,7 @@ import it.me.entity.CvFile;
 import it.me.repository.CvFilePersistRepository;
 import it.me.repository.CvFileReadBySha256Repository;
 import it.me.repository.CvFileUpdateIsActiveToFalseIfAnyRepository;
-import it.me.web.dto.CvFileUploadRequest;
+import it.me.web.dto.request.CvFileUploadRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

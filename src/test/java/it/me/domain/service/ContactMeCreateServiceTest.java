@@ -2,7 +2,7 @@ package it.me.domain.service;
 
 import it.me.entity.ContactMe;
 import it.me.repository.ContactMePersistRepository;
-import it.me.web.dto.ContactMeRequest;
+import it.me.web.dto.request.ContactMeRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

@@ -1,7 +1,7 @@
 package it.me.web.api;
 
 import it.me.domain.service.PageContentUpdateBySlugService;
-import it.me.web.dto.PageContentUpdateRequest;
+import it.me.web.dto.request.PageContentUpdateRequest;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;

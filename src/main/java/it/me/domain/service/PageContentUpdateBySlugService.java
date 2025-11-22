@@ -2,7 +2,7 @@ package it.me.domain.service;
 
 import it.me.entity.PageContent;
 import it.me.repository.PageContentReadBySlugRepository;
-import it.me.web.dto.PageContentUpdateRequest;
+import it.me.web.dto.request.PageContentUpdateRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;

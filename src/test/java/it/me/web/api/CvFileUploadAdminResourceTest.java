@@ -2,7 +2,7 @@ package it.me.web.api;
 
 import it.me.domain.service.CvFileUploadService;
 import it.me.entity.CvFile;
-import it.me.web.dto.CvFileUploadRequest;
+import it.me.web.dto.request.CvFileUploadRequest;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

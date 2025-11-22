@@ -262,6 +262,7 @@ p.subtitle {
 .contact-me__feedback {
     margin-top: 0.5rem;
     font-size: 0.9rem;
+    white-space: pre-line;
 }
 
 .contact-me__feedback--success {
