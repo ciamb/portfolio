@@ -33,7 +33,7 @@ class RequestIdFilterTest {
     @DisplayName("1. Should put requestId inside MDC")
     void filter_shouldPutRequestIdInMDC() {
         //given request
-        given(requestContext.getHeaderString(Header.X_REQUEST_ID.getValue()))
+        given(requestContext.getHeaderString(Header.C_REQUEST_ID.getValue()))
                 .willReturn("kfdja8uc381gvbjdvb");
         ArgumentCaptor<String> key = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Object> value = ArgumentCaptor.forClass(Object.class);
@@ -62,7 +62,7 @@ class RequestIdFilterTest {
     @DisplayName("2. Should put requestId inside MDC with UUID generated")
     void filter_shouldPutRequestIdInMDC_withUUIDGenerated_whenRequestIdIsNull() {
         //given request
-        given(requestContext.getHeaderString(Header.X_REQUEST_ID.getValue()))
+        given(requestContext.getHeaderString(Header.C_REQUEST_ID.getValue()))
                 .willReturn(null);
         ArgumentCaptor<String> key = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Object> value = ArgumentCaptor.forClass(Object.class);
@@ -90,7 +90,7 @@ class RequestIdFilterTest {
     @DisplayName("2.1. Should put requestId inside MDC with UUID generated")
     void filter_shouldPutRequestIdInMDC_withUUIDGenerated_whenRequestIdIsBlank() {
         //given request
-        given(requestContext.getHeaderString(Header.X_REQUEST_ID.getValue()))
+        given(requestContext.getHeaderString(Header.C_REQUEST_ID.getValue()))
                 .willReturn("");
         ArgumentCaptor<String> key = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<Object> value = ArgumentCaptor.forClass(Object.class);

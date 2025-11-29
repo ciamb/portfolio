@@ -46,7 +46,7 @@ class GlobalExceptionMapperTest {
 
         // then
         assertThat(result.getStatus()).isEqualTo(500);
-        assertThat(result.getHeaderString(Header.X_REQUEST_ID.getValue()))
+        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue()))
                 .isEqualTo("sjiovn989082029ireuivwisnhf029");
 
         var entity = (ErrorResponse) result.getEntity();
@@ -70,7 +70,7 @@ class GlobalExceptionMapperTest {
 
         // then
         assertThat(resp.getStatus()).isEqualTo(500);
-        assertThat(resp.getHeaderString(Header.X_REQUEST_ID.getValue()))
+        assertThat(resp.getHeaderString(Header.C_REQUEST_ID.getValue()))
                 .isEqualTo("djhc23874y93094093jinif2");
 
         var entity = (ErrorResponse) resp.getEntity();

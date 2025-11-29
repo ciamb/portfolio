@@ -40,7 +40,7 @@ public class ConstraintViolationExceptionMapper implements ExceptionMapper<Const
 
         return Response.status(Response.Status.BAD_REQUEST)
                 .type(MediaType.APPLICATION_JSON)
-                .header(Header.X_REQUEST_ID.getValue(), requestId)
+                .header(Header.C_REQUEST_ID.getValue(), requestId)
                 .entity(errorResponse)
                 .build();
     }

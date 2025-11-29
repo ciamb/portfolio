@@ -33,7 +33,7 @@ public class IllegalStateExceptionMapper implements ExceptionMapper<IllegalState
 
         return Response.status(Response.Status.CONFLICT)
                 .type(MediaType.APPLICATION_JSON)
-                .header(Header.X_REQUEST_ID.getValue(), requestId)
+                .header(Header.C_REQUEST_ID.getValue(), requestId)
                 .entity(errorResponse)
                 .build();
     }

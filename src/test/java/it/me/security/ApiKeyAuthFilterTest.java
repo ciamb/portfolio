@@ -52,7 +52,7 @@ class ApiKeyAuthFilterTest {
         //given
         sut.isAdmin = true;
         sut.apiKey = "";
-        sut.header = "x-api-key";
+        sut.header = "c-api-key";
 
         given(requestContext.getUriInfo()).willReturn(uriInfo);
         given(uriInfo.getPath()).willReturn("/api/admin/test/double");
@@ -75,11 +75,11 @@ class ApiKeyAuthFilterTest {
         //given
         sut.isAdmin = true;
         sut.apiKey = "wrong_apikey";
-        sut.header = "x-api-key";
+        sut.header = "c-api-key";
 
         given(requestContext.getUriInfo()).willReturn(uriInfo);
         given(uriInfo.getPath()).willReturn("/api/admin/test/double");
-        given(requestContext.getHeaderString("x-api-key")).willReturn("very_wrong_apikey");
+        given(requestContext.getHeaderString("c-api-key")).willReturn("very_wrong_apikey");
 
         ArgumentCaptor<Response> response = ArgumentCaptor.forClass(Response.class);
 

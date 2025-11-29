@@ -31,7 +31,7 @@ class ContactMeCountByEmailAndStatusPendingRepositoryTest {
     @Test
     void countByEmailAndStatusPending() {
         //given
-        given(em.createNamedQuery(eq(ContactMe.COUNT_BY_EMAIL_AND_STATUS), eq(Long.class)))
+        given(em.createNamedQuery(eq(ContactMe.COUNT_BY_EMAIL_AND_STATUS_PENDING), eq(Long.class)))
                 .willReturn(query);
         given(query.setParameter(eq("email"), anyString())).willReturn(query);
         given(query.setParameter(eq("status"), eq(ContactMe.Status.PENDING))).willReturn(query);
@@ -44,6 +44,6 @@ class ContactMeCountByEmailAndStatusPendingRepositoryTest {
         assertNotNull(count);
         assertEquals(0L, count);
         verify(em, times(1))
-                .createNamedQuery(eq(ContactMe.COUNT_BY_EMAIL_AND_STATUS), eq(Long.class));
+                .createNamedQuery(eq(ContactMe.COUNT_BY_EMAIL_AND_STATUS_PENDING), eq(Long.class));
     }
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.sql.SQLType;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -126,8 +125,8 @@ public class CvFile {
         return isActive;
     }
 
-    public CvFile setActive(boolean active) {
-        isActive = active;
+    public CvFile setIsActive(boolean isActive) {
+        this.isActive = isActive;
         return this;
     }
 

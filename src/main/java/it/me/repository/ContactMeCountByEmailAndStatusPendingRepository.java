@@ -11,7 +11,7 @@ public class ContactMeCountByEmailAndStatusPendingRepository {
     EntityManager em;
 
     public Long countContactMeByEmailAndStatusPending(String email) {
-        return em.createNamedQuery(ContactMe.COUNT_BY_EMAIL_AND_STATUS, Long.class)
+        return em.createNamedQuery(ContactMe.COUNT_BY_EMAIL_AND_STATUS_PENDING, Long.class)
                 .setParameter("email", email)
                 .setParameter("status", ContactMe.Status.PENDING)
                 .getSingleResult();

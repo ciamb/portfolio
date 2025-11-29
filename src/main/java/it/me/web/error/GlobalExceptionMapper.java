@@ -32,7 +32,7 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
 
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .type(MediaType.APPLICATION_JSON)
-                .header(Header.X_REQUEST_ID.getValue(), requestId)
+                .header(Header.C_REQUEST_ID.getValue(), requestId)
                 .entity(errorResponse)
                 .build();
     }

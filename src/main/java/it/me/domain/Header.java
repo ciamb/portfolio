@@ -1,8 +1,8 @@
 package it.me.domain;
 
 public enum Header {
-    X_API_KEY("x-api-key"),
-    X_REQUEST_ID("x-request-id");
+    C_API_KEY("c-api-key"),
+    C_REQUEST_ID("c-request-id");
 
     private final String value;
 
