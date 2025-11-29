@@ -46,7 +46,7 @@ class CvFileDownloadResourceTest {
                 .setContentType("application/pdf")
                 .setFileData("PDF".getBytes())
                 .setSha256("abc123")
-                .setActive(true)
+                .setIsActive(true)
                 .setFilesizeBytes(3L);
     }
 

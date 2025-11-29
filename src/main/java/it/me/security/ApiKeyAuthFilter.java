@@ -8,6 +8,8 @@ import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.jboss.logging.Logger;
+import org.jboss.logging.MDC;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -16,6 +18,7 @@ import java.util.Objects;
 @Priority(Priorities.AUTHENTICATION)
 @Unremovable
 public class ApiKeyAuthFilter implements ContainerRequestFilter {
+    private final Logger logger = Logger.getLogger(getClass().getName());
 
     @ConfigProperty(name = "app.admin.enabled", defaultValue = "false")
     boolean isAdmin;
@@ -23,7 +26,7 @@ public class ApiKeyAuthFilter implements ContainerRequestFilter {
     @ConfigProperty(name = "app.admin.api-key", defaultValue = "")
     String apiKey;
 
-    @ConfigProperty(name = "app.admin.header", defaultValue = "x-api-key")
+    @ConfigProperty(name = "app.admin.header", defaultValue = "c-api-key")
     String header;
 
     @Override
@@ -47,5 +50,7 @@ public class ApiKeyAuthFilter implements ContainerRequestFilter {
                     .entity("{\"error\":\"invalid_api_key\"}")
                     .build());
         }
+
+        logger.warnf("Received /admin request with requestId=%s", MDC.get("requestId"));
     }
 }

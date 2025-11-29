@@ -41,7 +41,7 @@ class IllegalArgumentExceptionMapperTest {
 
         // then
         assertThat(result.getStatus()).isEqualTo(400);
-        assertThat(result.getHeaderString(Header.X_REQUEST_ID.getValue()))
+        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue()))
                 .isEqualTo("fg43h33grdvberb3453dsfs");
 
         var entity = (ErrorResponse) result.getEntity();
@@ -64,7 +64,7 @@ class IllegalArgumentExceptionMapperTest {
 
         // then
         assertThat(result.getStatus()).isEqualTo(400);
-        assertThat(result.getHeaderString(Header.X_REQUEST_ID.getValue())).isEqualTo("fddfb45h33hj7676w");
+        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue())).isEqualTo("fddfb45h33hj7676w");
 
         var entity = (ErrorResponse) result.getEntity();
         assertThat(entity.error()).isEqualTo("illegal_argument_exception");

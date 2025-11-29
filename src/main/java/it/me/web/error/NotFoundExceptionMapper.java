@@ -29,7 +29,7 @@ public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundExceptio
 
         return Response.status(Response.Status.NOT_FOUND)
                 .type(MediaType.APPLICATION_JSON)
-                .header(Header.X_REQUEST_ID.getValue(), requestId)
+                .header(Header.C_REQUEST_ID.getValue(), requestId)
                 .entity(errorResponse)
                 .build();
     }

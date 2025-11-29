@@ -12,17 +12,17 @@ import java.time.ZonedDateTime;
 @Table(name = "contact_me")
 @NamedQueries({
         @NamedQuery(
-                name = ContactMe.READ_PENDING,
+                name = ContactMe.READ_ALL_BY_STATUS_PENDING,
                 query = "SELECT cm FROM ContactMe cm WHERE cm.status = 'PENDING' ORDER BY cm.createdAt ASC"
         ),
         @NamedQuery(
-                name = ContactMe.COUNT_BY_EMAIL_AND_STATUS,
+                name = ContactMe.COUNT_BY_EMAIL_AND_STATUS_PENDING,
                 query = "SELECT COUNT(cm) FROM ContactMe cm WHERE cm.email = :email and cm.status = :status"
         )
 })
 public class ContactMe {
-    public static final String READ_PENDING = "ContactMe.readPending";
-    public static final String COUNT_BY_EMAIL_AND_STATUS = "ContactMe.countByEmailAndStatus";
+    public static final String READ_ALL_BY_STATUS_PENDING = "ContactMe.readAllByStatusPending";
+    public static final String COUNT_BY_EMAIL_AND_STATUS_PENDING = "ContactMe.countByEmailAndStatusPending";
 
     /**
      * Represent the status of a ContactMe record of DB. Actual mapped status are

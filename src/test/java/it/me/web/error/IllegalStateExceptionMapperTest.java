@@ -38,7 +38,7 @@ class IllegalStateExceptionMapperTest {
         Response result = sut.toResponse(ise);
 
         assertThat(result.getStatus()).isEqualTo(409);
-        assertThat(result.getHeaderString(Header.X_REQUEST_ID.getValue())).isEqualTo("jrfhv8734vuiievr9u38");
+        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue())).isEqualTo("jrfhv8734vuiievr9u38");
 
         var errorResponse = (ErrorResponse) result.getEntity();
         assertThat(errorResponse.error()).isEqualTo("illegal_state_exception");
@@ -56,7 +56,7 @@ class IllegalStateExceptionMapperTest {
         Response resp = sut.toResponse(ise);
 
         assertThat(resp.getStatus()).isEqualTo(409);
-        assertThat(resp.getHeaderString(Header.X_REQUEST_ID.getValue()))
+        assertThat(resp.getHeaderString(Header.C_REQUEST_ID.getValue()))
                 .isEqualTo("kfjv89euh89vnei");
 
         var errorResponse = (ErrorResponse) resp.getEntity();

@@ -67,7 +67,7 @@ public class CvFileUploadService {
                 .setContentType(contentType)
                 .setFileData(cvFileUploadRequest.fileData())
                 .setSha256(sha256)
-                .setActive(true)
+                .setIsActive(true)
                 .setCreatedAt(ZonedDateTime.now())
                 .setUpdatedAt(ZonedDateTime.now());
 

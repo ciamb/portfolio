@@ -51,7 +51,7 @@ class ConstraintViolationExceptionMapperTest {
 
         // then
         assertThat(result.getStatus()).isEqualTo(400);
-        assertThat(result.getHeaderString(Header.X_REQUEST_ID.getValue())).isEqualTo("fkm9v0023433h498c92j");
+        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue())).isEqualTo("fkm9v0023433h498c92j");
 
         var entity = (ErrorResponse) result.getEntity();
         assertThat(entity.error()).isEqualTo("bad_request");
@@ -73,7 +73,7 @@ class ConstraintViolationExceptionMapperTest {
 
         // then
         assertThat(result.getStatus()).isEqualTo(400);
-        assertThat(result.getHeaderString(Header.X_REQUEST_ID.getValue())).isEqualTo("8928gn2unfjdnwijfnjdnwi");
+        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue())).isEqualTo("8928gn2unfjdnwijfnjdnwi");
 
         var entity = (ErrorResponse) result.getEntity();
         assertThat(entity.error()).isEqualTo("bad_request");

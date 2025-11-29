@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,7 +42,7 @@ class NotFoundExceptionMapperTest {
 
         //then
         assertThat(result.getStatus()).isEqualTo(404);
-        assertThat(result.getHeaderString(Header.X_REQUEST_ID.getValue()))
+        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue()))
                 .isEqualTo("jdnfivuh89w7hv");
 
         var errorResponse = (ErrorResponse) result.getEntity();
@@ -66,7 +65,7 @@ class NotFoundExceptionMapperTest {
 
         //then
         assertThat(result.getStatus()).isEqualTo(404);
-        assertThat(result.getHeaderString(Header.X_REQUEST_ID.getValue()))
+        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue()))
                 .isEqualTo("jdnfivuh89w7hv");
 
         var errorResponse = (ErrorResponse) result.getEntity();
