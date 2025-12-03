@@ -7,7 +7,6 @@
 
     <properties>
         <!-- declared -->
-        <mockito.version>5.20.0</mockito.version>
         <jacoco.check.coverage>0.80</jacoco.check.coverage>
 
         <!-- other -->
@@ -78,6 +77,14 @@
             <artifactId>jakarta.validation-api</artifactId>
         </dependency>
 
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.36</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- test -->
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -93,7 +100,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
+            <version>5.20.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -121,6 +128,14 @@
                 <version>${compiler-plugin.version}</version>
                 <configuration>
                     <parameters>true</parameters>
+                    <!-- for Lombok compiling -->
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.36</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>

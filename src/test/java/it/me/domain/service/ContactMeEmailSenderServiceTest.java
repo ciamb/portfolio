@@ -1,6 +1,7 @@
 package it.me.domain.service;
 
 import io.quarkus.mailer.Mailer;
+import it.me.domain.dto.ProcessedContactMe;
 import it.me.domain.mapper.ContactMeEmailBodyMapper;
 import it.me.entity.ContactMe;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,8 @@ class ContactMeEmailSenderServiceTest {
     @Test
     void shouldCallMailer() {
         // given
-        List<ContactMe> contactMeList = List.of(new ContactMe());
+        var processedContactMe = ProcessedContactMe.builder().build();
+        List<ProcessedContactMe> contactMeList = List.of(processedContactMe);
 
         given(contactMeEmailBodyMapper.apply(any())).willReturn("body");
 

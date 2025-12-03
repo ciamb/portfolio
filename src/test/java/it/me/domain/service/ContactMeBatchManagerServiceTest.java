@@ -1,5 +1,7 @@
 package it.me.domain.service;
 
+import it.me.domain.dto.ProcessedContactMe;
+import it.me.domain.dto.ProcessedInfo;
 import it.me.entity.ContactMe;
 import it.me.entity.ContactMeBatchConfig;
 import it.me.entity.ContactMeBatchLog;
@@ -36,13 +38,13 @@ class ContactMeBatchManagerServiceTest {
     ContactMeBatchConfigReadByIdRepository contactMeBatchConfigReadByIdRepository;
 
     @Mock
-    ContactMeReadByStatusPendingRepository contactMeReadByStatusPendingRepository;
-
-    @Mock
     ContactMeEmailSenderService contactMeEmailSenderService;
 
     @Mock
     ContactMeBatchLogPersistRepository contactMeBatchLogPersistRepository;
+
+    @Mock
+    ContactMeProcessingService contactMeProcessingService;
 
     @Mock
     ContactMeBatchConfig contactMeBatchConfig;
@@ -50,17 +52,28 @@ class ContactMeBatchManagerServiceTest {
     @Mock
     ContactMeBatchLog contactMeBatchLog;
 
+    @Mock
+    ProcessedInfo processedInfo;
+
     @Test
     void shouldExecuteBatch() {
         //given
         given(contactMeBatchConfigReadByIdRepository.readByIdEquals1())
                 .willReturn(Optional.of(contactMeBatchConfig));
         given(contactMeBatchConfig.isActive()).willReturn(true);
-        var contactMe1 = new ContactMe().setAttempts(0);
-        var contactMe2 = new ContactMe().setAttempts(0);
-        List<ContactMe> listContactMe = List.of(contactMe1, contactMe2);
-        given(contactMeReadByStatusPendingRepository.readAllByStatusPending())
+        var contactMe1 = ProcessedContactMe.builder()
+                .attempts(0)
+                .build();
+        var contactMe2 = ProcessedContactMe.builder()
+                .attempts(0)
+                .build();
+        List<ProcessedContactMe> listContactMe = List.of(contactMe1, contactMe2);
+        given(contactMeProcessingService.processPendingContactMe())
+                .willReturn(processedInfo);
+        given(processedInfo.processedContactMe())
                 .willReturn(listContactMe);
+        given(processedInfo.processed())
+                .willReturn(2);
 
         given(contactMeBatchConfig.targetEmail())
                 .willReturn("toemailsend");
@@ -79,16 +92,13 @@ class ContactMeBatchManagerServiceTest {
         assertThat(response.withError()).isEqualTo(0);
         assertThat(response.sentTo()).isEqualTo("toemailsend");
 
-        assertThat(contactMe1.status()).isEqualTo(ContactMe.Status.PROCESSED);
-        assertThat(contactMe2.status()).isEqualTo(ContactMe.Status.PROCESSED);
-
         InOrder inOrder = Mockito.inOrder(
                 contactMeBatchConfigReadByIdRepository,
-                contactMeReadByStatusPendingRepository,
+                contactMeProcessingService,
                 contactMeEmailSenderService,
                 contactMeBatchLogPersistRepository);
         inOrder.verify(contactMeBatchConfigReadByIdRepository).readByIdEquals1();
-        inOrder.verify(contactMeReadByStatusPendingRepository).readAllByStatusPending();
+        inOrder.verify(contactMeProcessingService).processPendingContactMe();
         inOrder.verify(contactMeEmailSenderService).sendSummaryEmailForPendingList(listContactMe, "toemailsend");
         inOrder.verify(contactMeBatchLogPersistRepository).persist(any(ContactMeBatchLog.class));
         inOrder.verifyNoMoreInteractions();
@@ -113,7 +123,7 @@ class ContactMeBatchManagerServiceTest {
 
         InOrder inOrder = Mockito.inOrder(
                 contactMeBatchConfigReadByIdRepository,
-                contactMeReadByStatusPendingRepository,
+                contactMeProcessingService,
                 contactMeEmailSenderService,
                 contactMeBatchLogPersistRepository);
         inOrder.verify(contactMeBatchConfigReadByIdRepository).readByIdEquals1();
@@ -135,7 +145,7 @@ class ContactMeBatchManagerServiceTest {
 
         InOrder inOrder = Mockito.inOrder(
                 contactMeBatchConfigReadByIdRepository,
-                contactMeReadByStatusPendingRepository,
+                contactMeProcessingService,
                 contactMeEmailSenderService,
                 contactMeBatchLogPersistRepository);
         inOrder.verify(contactMeBatchConfigReadByIdRepository).readByIdEquals1();
@@ -148,8 +158,8 @@ class ContactMeBatchManagerServiceTest {
         given(contactMeBatchConfigReadByIdRepository.readByIdEquals1())
                 .willReturn(Optional.of(contactMeBatchConfig));
         given(contactMeBatchConfig.isActive()).willReturn(true);
-        given(contactMeReadByStatusPendingRepository.readAllByStatusPending())
-                .willReturn(Collections.emptyList());
+        given(contactMeProcessingService.processPendingContactMe())
+                .willReturn(processedInfo);
 
         //when
         ContactMeBatchResponse response = sut.executeBatch();
@@ -163,61 +173,13 @@ class ContactMeBatchManagerServiceTest {
 
         InOrder inOrder = Mockito.inOrder(
                 contactMeBatchConfigReadByIdRepository,
-                contactMeReadByStatusPendingRepository,
+                contactMeProcessingService,
                 contactMeEmailSenderService,
                 contactMeBatchLogPersistRepository);
         inOrder.verify(contactMeBatchConfigReadByIdRepository, times(1))
                 .readByIdEquals1();
-        inOrder.verify(contactMeReadByStatusPendingRepository, times(1))
-                .readAllByStatusPending();
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    void shouldExecuteBatch_andFailAll() {
-        //given
-        given(contactMeBatchConfigReadByIdRepository.readByIdEquals1())
-                .willReturn(Optional.of(contactMeBatchConfig));
-        given(contactMeBatchConfig.isActive()).willReturn(true);
-        var contactMe1 = new ContactMe().setAttempts(0);
-        var contactMe2 = new ContactMe().setAttempts(0);
-        List<ContactMe> listContactMe = List.of(contactMe1, contactMe2);
-        given(contactMeReadByStatusPendingRepository.readAllByStatusPending())
-                .willReturn(listContactMe);
-
-        given(contactMeBatchConfig.targetEmail())
-                .willReturn("toemailsend");
-
-        willThrow(new RuntimeException("Z".repeat(600)))
-                .given(contactMeEmailSenderService)
-                .sendSummaryEmailForPendingList(listContactMe, "toemailsend");
-
-        given(contactMeBatchLogPersistRepository.persist(any(ContactMeBatchLog.class)))
-                .willReturn(contactMeBatchLog);
-        given(contactMeBatchLog.id()).willReturn(1L);
-
-        //when
-        ContactMeBatchResponse response = sut.executeBatch();
-
-        //then
-        assertTrue(response.configActive());
-        assertThat(response.logId()).isEqualTo(1L);
-        assertThat(response.processed()).isEqualTo(2);
-        assertThat(response.withError()).isEqualTo(2);
-        assertThat(response.sentTo()).isEqualTo("toemailsend");
-
-        assertThat(contactMe1.status()).isEqualTo(ContactMe.Status.ERROR);
-        assertThat(contactMe2.status()).isEqualTo(ContactMe.Status.ERROR);
-
-        InOrder inOrder = Mockito.inOrder(
-                contactMeBatchConfigReadByIdRepository,
-                contactMeReadByStatusPendingRepository,
-                contactMeEmailSenderService,
-                contactMeBatchLogPersistRepository);
-        inOrder.verify(contactMeBatchConfigReadByIdRepository).readByIdEquals1();
-        inOrder.verify(contactMeReadByStatusPendingRepository).readAllByStatusPending();
-        inOrder.verify(contactMeEmailSenderService).sendSummaryEmailForPendingList(listContactMe, "toemailsend");
-        inOrder.verify(contactMeBatchLogPersistRepository).persist(any(ContactMeBatchLog.class));
+        inOrder.verify(contactMeProcessingService, times(1))
+                .processPendingContactMe();
         inOrder.verifyNoMoreInteractions();
     }
 }
