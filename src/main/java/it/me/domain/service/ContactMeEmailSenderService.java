@@ -2,6 +2,7 @@ package it.me.domain.service;
 
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
+import it.me.domain.dto.ProcessedContactMe;
 import it.me.domain.mapper.ContactMeEmailBodyMapper;
 import it.me.entity.ContactMe;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -20,10 +21,15 @@ public class ContactMeEmailSenderService {
     @Inject
     Mailer mailer;
 
-    void sendSummaryEmailForPendingList(List<ContactMe> pendingList, String targetEmail) {
-        var emailBody = contactMeEmailBodyMapper.apply(pendingList);
+    void sendSummaryEmailForPendingList(List<ProcessedContactMe> processedList, String targetEmail) {
+        var emailBody = contactMeEmailBodyMapper.apply(processedList);
         var emailSubject = "Riepilogo dei messaggi Contact Me al %s".formatted(ZonedDateTime.now());
         logger.infof("Sending email via quarkus mailer");
-        mailer.send(Mail.withText(targetEmail, emailSubject, emailBody));
+        try {
+            mailer.send(Mail.withText(targetEmail, emailSubject, emailBody));
+        } catch (Exception e) {
+            logger.error(e);
+            throw e;
+        }
     }
 }

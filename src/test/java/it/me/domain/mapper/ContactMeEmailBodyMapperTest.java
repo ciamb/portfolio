@@ -1,5 +1,6 @@
 package it.me.domain.mapper;
 
+import it.me.domain.dto.ProcessedContactMe;
 import it.me.entity.ContactMe;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,13 +23,14 @@ class ContactMeEmailBodyMapperTest {
     @Test
     void shouldMapNoError() {
         //given
-        ContactMe contactMeA = new ContactMe()
-                .setMessage("ciao")
-                .setName("marcella")
-                .setEmail("marcella@bella.com")
-                .setContactBack(true)
-                .setCreatedAt(ZonedDateTime.of(2025, 1, 2, 3, 4, 5, 666, ZoneId.of("Europe/Paris")));
-        List<ContactMe> contactMeList = List.of(contactMeA);
+        ProcessedContactMe contactMeA = ProcessedContactMe.builder()
+                .message("ciao")
+                .email("marcella@bella.com")
+                .name("marcella")
+                .contactBack(true)
+                .createdAt(ZonedDateTime.of(2025, 1, 2, 3, 4, 5, 666, ZoneId.of("Europe/Paris")))
+                .build();
+        List<ProcessedContactMe> contactMeList = List.of(contactMeA);
 
         //when
         String apply = assertDoesNotThrow(() -> sut.apply(contactMeList));
@@ -43,15 +45,16 @@ class ContactMeEmailBodyMapperTest {
     @Test
     void shouldMapWithError() {
         // given
-        ContactMe contactMe = new ContactMe()
-                .setName("marcella")
-                .setEmail("marcella@bella.com")
-                .setMessage("ciao")
-                .setContactBack(true)
-                .setErrorReason("Mail provider down")
-                .setCreatedAt(ZonedDateTime.now());
+        ProcessedContactMe contactMe = ProcessedContactMe.builder()
+                .name("marcella")
+                .email("marcella@bella.com")
+                .message("ciao")
+                .contactBack(true)
+                .errorReason("Mail provider down")
+                .createdAt(ZonedDateTime.now())
+                .build();
 
-        List<ContactMe> list = List.of(contactMe);
+        List<ProcessedContactMe> list = List.of(contactMe);
 
         // when
         String body = sut.apply(list);

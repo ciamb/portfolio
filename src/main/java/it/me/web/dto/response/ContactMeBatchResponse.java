@@ -5,6 +5,7 @@ public record ContactMeBatchResponse(
         Long logId,
         Integer processed,
         Integer withError,
-        String sentTo
+        String sentTo,
+        Boolean mailSuccess
 ) {
 }
