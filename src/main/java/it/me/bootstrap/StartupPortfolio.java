@@ -1,8 +1,8 @@
 package it.me.bootstrap;
 
 import io.quarkus.runtime.StartupEvent;
-import it.me.domain.service.ContactMeBatchConfigSeedService;
-import it.me.domain.service.PageContentHomeService;
+import it.me.domain.service.contact.me.batch.config.ContactMeBatchConfigSeedService;
+import it.me.domain.service.page.content.PageContentHomeService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;

@@ -1,35 +1,35 @@
 package it.me.domain.mapper;
 
 import it.me.domain.dto.ProcessedContactMe;
-import it.me.entity.ContactMe;
+import it.me.repository.entity.ContactMeEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.jboss.logging.Logger;
 
 import java.util.function.Function;
 
 @ApplicationScoped
-public class ProcessedContactMeMapper implements Function<ContactMe, ProcessedContactMe> {
+public class ProcessedContactMeMapper implements Function<ContactMeEntity, ProcessedContactMe> {
     private static Logger logger = Logger.getLogger(ProcessedContactMeMapper.class);
 
     @Override
-    public ProcessedContactMe apply(ContactMe contactMe) {
-        if (contactMe == null) {
+    public ProcessedContactMe apply(ContactMeEntity contactMeEntity) {
+        if (contactMeEntity == null) {
             logger.warn("contactMe is null");
             return null;
         }
 
         return ProcessedContactMe.builder()
-                .id(contactMe.id())
-                .email(contactMe.email())
-                .name(contactMe.name())
-                .message(contactMe.message())
-                .contactBack(contactMe.contactBack())
-                .status(contactMe.status())
-                .attempts(contactMe.attempts())
-                .lastAttemptAt(contactMe.lastAttemptAt())
-                .errorReason(contactMe.errorReason())
-                .createdAt(contactMe.createdAt())
-                .updatedAt(contactMe.updatedAt())
+                .id(contactMeEntity.id())
+                .email(contactMeEntity.email())
+                .name(contactMeEntity.name())
+                .message(contactMeEntity.message())
+                .contactBack(contactMeEntity.contactBack())
+                .status(contactMeEntity.status())
+                .attempts(contactMeEntity.attempts())
+                .lastAttemptAt(contactMeEntity.lastAttemptAt())
+                .errorReason(contactMeEntity.errorReason())
+                .createdAt(contactMeEntity.createdAt())
+                .updatedAt(contactMeEntity.updatedAt())
                 .build();
     }
 }
