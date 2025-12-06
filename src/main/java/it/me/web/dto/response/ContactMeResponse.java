@@ -1,10 +1,10 @@
 package it.me.web.dto.response;
 
-import it.me.entity.ContactMe;
+import it.me.repository.entity.ContactMeEntity;
 
 public record ContactMeResponse(
         Long id,
-        ContactMe.Status status,
+        ContactMeEntity.Status status,
         String message
 ) {
 }

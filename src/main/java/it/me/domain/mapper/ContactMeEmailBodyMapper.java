@@ -1,7 +1,6 @@
 package it.me.domain.mapper;
 
 import it.me.domain.dto.ProcessedContactMe;
-import it.me.entity.ContactMe;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 

@@ -1,6 +1,6 @@
 package it.me.domain.dto;
 
-import it.me.entity.ContactMe;
+import it.me.repository.entity.ContactMeEntity;
 import lombok.Builder;
 
 import java.time.ZonedDateTime;
@@ -12,7 +12,7 @@ public record ProcessedContactMe(
         String name,
         String message,
         Boolean contactBack,
-        ContactMe.Status status,
+        ContactMeEntity.Status status,
         Integer attempts,
         ZonedDateTime lastAttemptAt,
         String errorReason,

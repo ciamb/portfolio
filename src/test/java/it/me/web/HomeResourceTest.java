@@ -2,8 +2,9 @@ package it.me.web;
 
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
-import it.me.entity.PageContent;
-import it.me.repository.PageContentReadBySlugRepository;
+import it.me.repository.entity.PageContentEntity;
+import it.me.repository.page.content.PageContentReadBySlugRepository;
+import it.me.web.view.HomeResource;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
@@ -53,7 +54,7 @@ class HomeResourceTest {
     @Test
     void writeMetaDescription() {
         // given
-        var pageContent = new PageContent()
+        var pageContent = new PageContentEntity()
                 .setSlug("home")
                 .setTitle("title")
                 .setBody("hi           guysss   ")
@@ -90,7 +91,7 @@ class HomeResourceTest {
     void writeMetaDescriptionTruncated_andUpdatedAtNull() {
         // given
         var body = "x".repeat(200);
-        var pageContent = new PageContent()
+        var pageContent = new PageContentEntity()
                 .setSlug("home")
                 .setTitle("title")
                 .setBody(body)
@@ -124,7 +125,7 @@ class HomeResourceTest {
     @Test
     void write_bodyBlank_andMetaDescriptionBlank_andUpdatedAtNull() {
         // given
-        var pageContent = new PageContent()
+        var pageContent = new PageContentEntity()
                 .setSlug("home")
                 .setTitle("title")
                 .setBody("")
@@ -156,7 +157,7 @@ class HomeResourceTest {
     @Test
     void write_bodyNull_andMetaDescriptionNull_andUpdatedAtNull() {
         // given
-        var pageContent = new PageContent()
+        var pageContent = new PageContentEntity()
                 .setSlug("home")
                 .setTitle("title")
                 .setBody(null)
