@@ -19,7 +19,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-class CvFileUpdateIsActiveToFalseIfAnyRepositoryTest {
+class CvFileUpdateAllIsActiveToFalseRepositoryJpaTest {
 
     @Mock
     EntityManager em;
@@ -28,7 +28,7 @@ class CvFileUpdateIsActiveToFalseIfAnyRepositoryTest {
     Query query;
 
     @InjectMocks
-    private CvFileUpdateIsActiveToFalseIfAnyRepository sut;
+    private CvFileUpdateAllIsActiveToFalseRepositoryJpa sut;
 
     @Test
     void updateIsActiveToFalseIfAny() {

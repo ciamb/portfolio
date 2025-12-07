@@ -4,6 +4,7 @@ import it.me.domain.dto.PageContent;
 import it.me.domain.service.page.content.PageContentUpdateBySlugService;
 import it.me.web.dto.request.PageContentUpdateRequest;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -22,7 +23,7 @@ public class PageContentUpdateAdminResource {
     @Path("/update/{slug}")
     public Response updatePageContentBySlug(
             @PathParam("slug") String slug,
-            PageContentUpdateRequest pageContentUpdateRequest) {
+            @Valid PageContentUpdateRequest pageContentUpdateRequest) {
         logger.infof("Received request /api/v1/admin/page/update/%s", slug);
         PageContent updated = pageContentUpdateBySlugService
                 .updatePageContentBySlug(slug, pageContentUpdateRequest);
