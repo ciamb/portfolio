@@ -1,6 +1,7 @@
 package it.me.repository.contact.me;
 
-import it.me.domain.dto.ProcessedContactMe;
+import it.me.domain.dto.ContactMe;
+import it.me.domain.repository.contact.me.ContactMeProcessedBulkUpdateRepository;
 import it.me.repository.entity.ContactMeEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -11,14 +12,14 @@ import org.jboss.logging.Logger;
 import java.util.List;
 
 @ApplicationScoped
-public class ContactMeProcessedBulkUpdateRepository {
-    private final Logger logger = Logger.getLogger(ContactMeProcessedBulkUpdateRepository.class.getName());
+public class ContactMeProcessedBulkUpdateRepositoryJpa implements ContactMeProcessedBulkUpdateRepository {
+    private final Logger logger = Logger.getLogger(ContactMeProcessedBulkUpdateRepositoryJpa.class.getName());
 
     @Inject
     EntityManager em;
 
     @Transactional
-    public void updateProcessedContactMe(List<ProcessedContactMe> processedContactMe) {
+    public void updateProcessedContactMe(List<ContactMe> processedContactMe) {
         List<ContactMeEntity> updated = processedContactMe.stream()
                 .map(pcm -> {
                     if (pcm.id() == null) {

@@ -49,6 +49,10 @@ public class CvFileUploadService {
             throw new IllegalArgumentException("Invalid content type, only application/pdf is supported");
         }
 
+        if (cvFileUploadRequest.filename() == null || cvFileUploadRequest.filename().isBlank()) {
+            throw new IllegalArgumentException("filename is null or blank");
+        }
+
         var sha256 = fileDataToSha256Mapper.apply(cvFileUploadRequest.fileData());
         CvFile exist = cvFileReadBySha256Repository.readBySha256(sha256)
                 .orElse(null);

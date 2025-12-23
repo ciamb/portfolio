@@ -17,10 +17,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith({MockitoExtension.class})
-class ContactMeCountByEmailAndStatusPendingRepositoryTest {
+class ContactMeCountByEmailAndStatusPendingRepositoryJpaTest {
 
     @InjectMocks
-    private ContactMeCountByEmailAndStatusPendingRepository sut;
+    private ContactMeCountByEmailAndStatusPendingRepositoryJpa sut;
 
     @Mock
     private EntityManager em;

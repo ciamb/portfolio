@@ -3,6 +3,7 @@ package it.me.domain.service.page.content;
 import it.me.domain.Page;
 import it.me.domain.dto.PageContent;
 import it.me.domain.repository.page.content.PageContentPersistRepository;
+import it.me.domain.repository.page.content.PageContentReadBySlugRepository;
 import it.me.repository.page.content.PageContentReadBySlugRepositoryJpa;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -16,13 +17,13 @@ public class PageContentHomeService {
     private static final Logger logger = Logger.getLogger(PageContentHomeService.class.getName());
 
     @Inject
-    PageContentReadBySlugRepositoryJpa pageContentReadBySlugRepositoryJpa;
+    PageContentReadBySlugRepository pageContentReadBySlugRepository;
 
     @Inject
     PageContentPersistRepository pageContentPersistRepository;
 
     public PageContent createHomeIfMissing() {
-        return pageContentReadBySlugRepositoryJpa.readBySlug(Page.HOME.getSlug())
+        return pageContentReadBySlugRepository.readBySlug(Page.HOME.getSlug())
                 .orElseGet(() -> {
                     logger.infof("PageContent slug=%s not found. Using default", Page.HOME.getSlug());
 

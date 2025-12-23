@@ -1,12 +1,13 @@
 package it.me.repository.contact.me;
 
+import it.me.domain.repository.contact.me.ContactMeCountByEmailAndStatusPendingRepository;
 import it.me.repository.entity.ContactMeEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 
 @ApplicationScoped
-public class ContactMeCountByEmailAndStatusPendingRepository {
+public class ContactMeCountByEmailAndStatusPendingRepositoryJpa implements ContactMeCountByEmailAndStatusPendingRepository {
     @Inject
     EntityManager em;
 

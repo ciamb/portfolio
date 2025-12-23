@@ -1,5 +1,7 @@
 package it.me.repository.contact.me.batch.config;
 
+import it.me.domain.dto.ContactMeBatchConfig;
+import it.me.repository.contact.me.batch.config.mapper.ContactMeBatchConfigEntity2ContactMeBatchConfigMapper;
 import it.me.repository.entity.ContactMeBatchConfigEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -20,10 +22,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class ContactMeBatchConfigReadByIdRepositoryTest {
+class ContactMeBatchConfigReadByIdRepositoryJpaTest {
 
     @InjectMocks
-    private ContactMeBatchConfigReadByIdRepository sut;
+    private ContactMeBatchConfigReadByIdRepositoryJpa sut;
+
+    @Mock
+    ContactMeBatchConfigEntity2ContactMeBatchConfigMapper mapper;
 
     @Mock
     EntityManager em;
@@ -41,13 +46,15 @@ class ContactMeBatchConfigReadByIdRepositoryTest {
         given(query.setParameter("id", 1))
                 .willReturn(query);
         given(query.getResultStream()).willReturn(Stream.of(contactMeBatchConfigEntity));
+        ContactMeBatchConfig config = ContactMeBatchConfig.builder().build();
+        given(mapper.apply(contactMeBatchConfigEntity)).willReturn(config);
 
         //when
-        Optional<ContactMeBatchConfigEntity> result = assertDoesNotThrow(() -> sut.readByIdEquals1());
+        Optional<ContactMeBatchConfig> result = assertDoesNotThrow(() -> sut.readByIdEquals1());
 
         //then
         assertTrue(result.isPresent());
-        assertEquals(contactMeBatchConfigEntity, result.get());
+        assertEquals(config, result.get());
         verify(em, times(1))
                 .createNamedQuery(eq(ContactMeBatchConfigEntity.READ_BY_ID), eq(ContactMeBatchConfigEntity.class));
     }

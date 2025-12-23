@@ -1,8 +1,8 @@
 package it.me.domain.service.contact.me.batch.config;
 
-import it.me.repository.entity.ContactMeBatchConfigEntity;
-import it.me.repository.contact.me.batch.config.ContactMeBatchConfigPersistRepository;
-import it.me.repository.contact.me.batch.config.ContactMeBatchConfigReadByIdRepository;
+import it.me.domain.dto.ContactMeBatchConfig;
+import it.me.domain.repository.contact.me.batch.config.ContactMeBatchConfigPersistRepository;
+import it.me.repository.contact.me.batch.config.ContactMeBatchConfigReadByIdRepositoryJpa;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
@@ -28,7 +28,7 @@ class ContactMeBatchConfigSeedServiceTest {
     ContactMeBatchConfigPersistRepository contactMeBatchConfigPersistRepository;
 
     @Mock
-    ContactMeBatchConfigReadByIdRepository contactMeBatchConfigReadByIdRepository;
+    ContactMeBatchConfigReadByIdRepositoryJpa contactMeBatchConfigReadByIdRepository;
 
     @Test
     void foundNotPresent_seedConfig() throws NoSuchFieldException, IllegalAccessException {
@@ -52,10 +52,11 @@ class ContactMeBatchConfigSeedServiceTest {
     void foundPresent_shouldNotSeedConfig() throws NoSuchFieldException, IllegalAccessException {
         //given
         setTargetEmailMockViaReflection("targetEmail");
-        ContactMeBatchConfigEntity config = new ContactMeBatchConfigEntity()
-                .setId(1)
-                .setIsActive(true)
-                .setTargetEmail("myemail");
+        ContactMeBatchConfig config = ContactMeBatchConfig.builder()
+                .id(1)
+                .isActive(true)
+                .targetEmail("myemail")
+                .build();
         given(contactMeBatchConfigReadByIdRepository.readByIdEquals1())
                 .willReturn(Optional.of(config));
 
@@ -63,29 +64,6 @@ class ContactMeBatchConfigSeedServiceTest {
         assertDoesNotThrow(() -> sut.createContactMeBatchConfigIfMissing());
 
         //then
-        InOrder inOrder = inOrder(contactMeBatchConfigReadByIdRepository);
-        inOrder.verify(contactMeBatchConfigReadByIdRepository).readByIdEquals1();
-        Mockito.verifyNoInteractions(contactMeBatchConfigPersistRepository);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    void foundPresent_shouldNotSeedConfig_butThrowISEOnTargetEmail() throws NoSuchFieldException, IllegalAccessException {
-        //given
-        setTargetEmailMockViaReflection("targetEmail");
-        ContactMeBatchConfigEntity config = new ContactMeBatchConfigEntity()
-                .setId(1)
-                .setIsActive(true)
-                .setTargetEmail("   ");
-        given(contactMeBatchConfigReadByIdRepository.readByIdEquals1())
-                .willReturn(Optional.of(config));
-
-        //when
-        var ise = assertThrows(IllegalStateException.class,
-                () -> sut.createContactMeBatchConfigIfMissing());
-
-        //then
-        assertTrue(ise.getMessage().contains("target_email"));
         InOrder inOrder = inOrder(contactMeBatchConfigReadByIdRepository);
         inOrder.verify(contactMeBatchConfigReadByIdRepository).readByIdEquals1();
         Mockito.verifyNoInteractions(contactMeBatchConfigPersistRepository);

@@ -1,6 +1,6 @@
-package it.me.domain.mapper;
+package it.me.repository.contact.me.mapper;
 
-import it.me.domain.dto.ProcessedContactMe;
+import it.me.domain.dto.ContactMe;
 import it.me.repository.entity.ContactMeEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.jboss.logging.Logger;
@@ -8,17 +8,17 @@ import org.jboss.logging.Logger;
 import java.util.function.Function;
 
 @ApplicationScoped
-public class ProcessedContactMeMapper implements Function<ContactMeEntity, ProcessedContactMe> {
-    private static Logger logger = Logger.getLogger(ProcessedContactMeMapper.class);
+public class ContactMeEntity2ContactMeMapper implements Function<ContactMeEntity, ContactMe> {
+    private final Logger logger = Logger.getLogger(ContactMeEntity2ContactMeMapper.class);
 
     @Override
-    public ProcessedContactMe apply(ContactMeEntity contactMeEntity) {
+    public ContactMe apply(ContactMeEntity contactMeEntity) {
         if (contactMeEntity == null) {
-            logger.warn("contactMe is null");
+            logger.warn("mapping null contactMeEntity");
             return null;
         }
 
-        return ProcessedContactMe.builder()
+        return ContactMe.builder()
                 .id(contactMeEntity.id())
                 .email(contactMeEntity.email())
                 .name(contactMeEntity.name())

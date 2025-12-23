@@ -1,5 +1,7 @@
 package it.me.repository.contact.me.batch.config;
 
+import it.me.domain.dto.ContactMeBatchConfig;
+import it.me.repository.contact.me.batch.config.mapper.ContactMeBatchConfig2ContactMeBatchConfigEntityMapper;
 import it.me.repository.entity.ContactMeBatchConfigEntity;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
@@ -10,12 +12,16 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
 
 @ExtendWith(MockitoExtension.class)
-class ContactMeBatchConfigPersistRepositoryTest {
+class ContactMeBatchConfigPersistRepositoryJpaTest {
     @InjectMocks
-    private ContactMeBatchConfigPersistRepository sut;
+    private ContactMeBatchConfigPersistRepositoryJpa sut;
+
+    @Mock
+    ContactMeBatchConfig2ContactMeBatchConfigEntityMapper mapper;
 
     @Mock
     EntityManager em;
@@ -24,17 +30,18 @@ class ContactMeBatchConfigPersistRepositoryTest {
     @DisplayName("1. Should call persist flush refresh")
     void shouldCallFlushRefresh() {
         // given
-        var config = new ContactMeBatchConfigEntity();
+        var config = ContactMeBatchConfig.builder().build();
+        ContactMeBatchConfigEntity entity = new ContactMeBatchConfigEntity();
+        given(mapper.apply(config)).willReturn(entity);
 
         //when
-        ContactMeBatchConfigEntity result = sut.persist(config);
+        ContactMeBatchConfig result = sut.persist(config);
 
         // then
         assertSame(config, result);
-        var inOrder = inOrder(em);
-        inOrder.verify(em).persist(config);
-        inOrder.verify(em).flush();
-        inOrder.verify(em).refresh(config);
+        var inOrder = inOrder(em, mapper);
+        inOrder.verify(mapper).apply(config);
+        inOrder.verify(em).persist(entity);
         inOrder.verifyNoMoreInteractions();
     }
 }

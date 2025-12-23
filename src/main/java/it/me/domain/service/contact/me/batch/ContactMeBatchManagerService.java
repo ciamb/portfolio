@@ -1,11 +1,14 @@
 package it.me.domain.service.contact.me.batch;
 
+import it.me.domain.dto.ContactMeBatchLog;
 import it.me.domain.dto.ProcessedInfo;
+import it.me.domain.repository.contact.me.batch.config.ContactMeBatchConfigReadByIdRepository;
+import it.me.domain.repository.contact.me.batch.log.ContactMeBatchLogPersistRepository;
 import it.me.domain.service.contact.me.ContactMeEmailSenderService;
 import it.me.domain.service.contact.me.ContactMeProcessingService;
 import it.me.repository.entity.ContactMeBatchLogEntity;
-import it.me.repository.contact.me.batch.config.ContactMeBatchConfigReadByIdRepository;
-import it.me.repository.contact.me.batch.log.ContactMeBatchLogPersistRepository;
+import it.me.repository.contact.me.batch.config.ContactMeBatchConfigReadByIdRepositoryJpa;
+import it.me.repository.contact.me.batch.log.ContactMeBatchLogPersistRepositoryJpa;
 import it.me.web.dto.response.ContactMeBatchResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -35,7 +38,7 @@ public class ContactMeBatchManagerService {
 
         if (!contactMeBatchConfig.isActive()) {
             logger.warnf("Contact me batch config is not active");
-            return new ContactMeBatchResponse(contactMeBatchConfig.isActive(), null, 0, 0, null, false);
+            return new ContactMeBatchResponse(false, null, 0, 0, null, false);
         }
 
         ProcessedInfo processedInfo = contactMeProcessingService.processPendingContactMe();
@@ -44,7 +47,7 @@ public class ContactMeBatchManagerService {
                 && !processedInfo.processedContactMe().isEmpty();
         if (!isProcessed) {
             logger.warnf("No contact me processed");
-            return new ContactMeBatchResponse(contactMeBatchConfig.isActive(), null, 0, 0, null, false);
+            return new ContactMeBatchResponse(true, null, 0, 0, null, false);
         }
 
         AtomicBoolean mailSuccess = new AtomicBoolean(false);
@@ -55,17 +58,21 @@ public class ContactMeBatchManagerService {
             mailSuccess.compareAndSet(false, true);
         } catch (Exception e) {
             logger.errorf("Invio della email sommario di contact me non riuscita. Errore %s", e.getMessage());
-            mailSuccess.set(false);
+            mailSuccess.compareAndSet(false, false);
         }
 
-        ContactMeBatchLogEntity log = contactMeBatchLogPersistRepository.persist(new ContactMeBatchLogEntity()
-                .setRunAt(processedInfo.runAt())
-                .setProcessed(processedInfo.processed())
-                .setWithError(processedInfo.withError())
-                .setSentTo(contactMeBatchConfig.targetEmail()));
+        ContactMeBatchLog contactMeBatchLog = ContactMeBatchLog.builder()
+                .runAt(processedInfo.runAt())
+                .processed(processedInfo.processed())
+                .withError(processedInfo.withError())
+                .sentTo(contactMeBatchConfig.targetEmail())
+                .build();
+
+        ContactMeBatchLog log = contactMeBatchLogPersistRepository
+                .persist(contactMeBatchLog);
 
         return new ContactMeBatchResponse(
-                contactMeBatchConfig.isActive(),
+                true,
                 log.id(),
                 processedInfo.processed(),
                 processedInfo.withError(),
