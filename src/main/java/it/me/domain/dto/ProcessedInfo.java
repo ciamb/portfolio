@@ -7,6 +7,6 @@ public record ProcessedInfo(
         ZonedDateTime runAt,
         int processed,
         int withError,
-        List<ProcessedContactMe> processedContactMe
+        List<ContactMe> processedContactMe
 ) {
 }

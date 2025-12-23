@@ -1,5 +1,6 @@
 package it.me.web.api.cv.file;
 
+import it.me.domain.dto.CvFile;
 import it.me.domain.service.cv.file.CvFileUploadService;
 import it.me.repository.entity.CvFileEntity;
 import it.me.web.dto.request.CvFileUploadRequest;
@@ -32,7 +33,7 @@ class CvFileUploadAdminResourceTest {
     @Test
     void shouldCallCvFileUploadService() {
         // given
-        var cvFile = new CvFileEntity().setFilename("cvFile.pdf");
+        var cvFile = CvFile.builder().filename("cvFile.pdf").build();
         given(cvFileUploadService.uploadCvFile(any()))
                 .willReturn(cvFile);
 

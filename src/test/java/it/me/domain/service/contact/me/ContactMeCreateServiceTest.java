@@ -1,8 +1,11 @@
 package it.me.domain.service.contact.me;
 
+import it.me.domain.dto.ContactMe;
+import it.me.domain.repository.contact.me.ContactMeCountByEmailAndStatusPendingRepository;
+import it.me.domain.repository.contact.me.ContactMePersistRepository;
 import it.me.repository.entity.ContactMeEntity;
-import it.me.repository.contact.me.ContactMeCountByEmailAndStatusPendingRepository;
-import it.me.repository.contact.me.ContactMePersistRepository;
+import it.me.repository.contact.me.ContactMeCountByEmailAndStatusPendingRepositoryJpa;
+import it.me.repository.contact.me.ContactMePersistRepositoryJpa;
 import it.me.web.dto.request.ContactMeRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,12 +45,12 @@ class ContactMeCreateServiceTest {
 
         given(contactMeCountByEmailAndStatusPendingRepository.countContactMeByEmailAndStatusPending(eq("email")))
                 .willReturn(0L);
-        given(contactMePersistRepository.persist(any(ContactMeEntity.class)))
-                .willAnswer(invocation -> invocation.getArgument(0, ContactMeEntity.class));
+        given(contactMePersistRepository.persist(any(ContactMe.class)))
+                .willAnswer(invocation -> invocation.getArgument(0, ContactMe.class));
 
         //when
-        ContactMeEntity result = sut.createContactMe(contactMeRequest);
-        ArgumentCaptor<ContactMeEntity> contactMe = ArgumentCaptor.forClass(ContactMeEntity.class);
+        ContactMe result = sut.createContactMe(contactMeRequest);
+        ArgumentCaptor<ContactMe> contactMe = ArgumentCaptor.forClass(ContactMe.class);
 
         //then
         assertNotNull(result);

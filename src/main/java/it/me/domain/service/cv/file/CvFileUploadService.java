@@ -1,14 +1,14 @@
 package it.me.domain.service.cv.file;
 
+import it.me.domain.dto.CvFile;
 import it.me.domain.mapper.FileDataToSha256Mapper;
-import it.me.repository.entity.CvFileEntity;
-import it.me.repository.cv.file.CvFilePersistRepository;
-import it.me.repository.cv.file.CvFileReadBySha256Repository;
-import it.me.repository.cv.file.CvFileUpdateIsActiveToFalseIfAnyRepository;
+import it.me.domain.repository.cv.file.CvFilePersistRepository;
+import it.me.domain.repository.cv.file.CvFileReadBySha256Repository;
+import it.me.domain.repository.cv.file.CvFileUpdateAllIsActiveFalseRepository;
+import it.me.repository.cv.file.CvFileUpdateAllIsActiveToFalseRepositoryJpa;
 import it.me.web.dto.request.CvFileUploadRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import org.jboss.logging.Logger;
 
 import java.time.ZonedDateTime;
@@ -21,7 +21,7 @@ public class CvFileUploadService {
     CvFileReadBySha256Repository cvFileReadBySha256Repository;
 
     @Inject
-    CvFileUpdateIsActiveToFalseIfAnyRepository cvFileUpdateIsActiveToFalseIfAnyRepository;
+    CvFileUpdateAllIsActiveFalseRepository cvFileUpdateAllIsActiveFalseRepository;
 
     @Inject
     CvFilePersistRepository cvFilePersistRepository;
@@ -29,10 +29,9 @@ public class CvFileUploadService {
     @Inject
     FileDataToSha256Mapper fileDataToSha256Mapper;
 
-    @Transactional
-    public CvFileEntity uploadCvFile(CvFileUploadRequest cvFileUploadRequest) {
+    public CvFile uploadCvFile(CvFileUploadRequest cvFileUploadRequest) {
         if (cvFileUploadRequest == null) {
-            throw new IllegalArgumentException("cvFileUploadRequest is null");
+            throw new IllegalArgumentException("Upload request is null");
         }
 
         if (cvFileUploadRequest.fileData() == null || cvFileUploadRequest.fileData().length == 0) {
@@ -44,7 +43,8 @@ public class CvFileUploadService {
         }
 
         var contentType = cvFileUploadRequest.contentType() == null
-                ? "application/pdf" : cvFileUploadRequest.contentType();
+                ? "application/pdf"
+                : cvFileUploadRequest.contentType();
         if (!contentType.toLowerCase().startsWith("application/pdf")) {
             throw new IllegalArgumentException("Invalid content type, only application/pdf is supported");
         }
@@ -54,24 +54,26 @@ public class CvFileUploadService {
         }
 
         var sha256 = fileDataToSha256Mapper.apply(cvFileUploadRequest.fileData());
-        CvFileEntity cvFileEntity = cvFileReadBySha256Repository.readBySha256(sha256).orElse(null);
-        if (cvFileEntity != null) {
+        CvFile exist = cvFileReadBySha256Repository.readBySha256(sha256)
+                .orElse(null);
+        if (exist != null) {
             throw new IllegalStateException("This CV already exists (sha256 duplicated)");
         }
 
-        logger.info("Set every CV with is_active = true to false");
-        cvFileUpdateIsActiveToFalseIfAnyRepository.updateIsActiveToFalseIfAny();
+        logger.info("Set every other CV with is_active = true to false");
+        cvFileUpdateAllIsActiveFalseRepository.updateIsActiveToFalseIfAny();
 
-        CvFileEntity cvFileEntityToPersist = new CvFileEntity()
-                .setFilename(cvFileUploadRequest.filename())
-                .setContentType(contentType)
-                .setFileData(cvFileUploadRequest.fileData())
-                .setSha256(sha256)
-                .setIsActive(true)
-                .setCreatedAt(ZonedDateTime.now())
-                .setUpdatedAt(ZonedDateTime.now());
+        CvFile cvFile = CvFile.builder()
+                .filename(cvFileUploadRequest.filename())
+                .contentType(contentType)
+                .fileData(cvFileUploadRequest.fileData())
+                .sha256(sha256)
+                .isActive(true)
+                .createdAt(ZonedDateTime.now())
+                .updatedAt(ZonedDateTime.now())
+                .build();
 
-        logger.infof("Persisting new CvFile filename=%s", cvFileEntityToPersist.filename());
-        return cvFilePersistRepository.persistCvFile(cvFileEntityToPersist);
+        logger.infof("Persisting new CvFile filename=%s", cvFile.filename());
+        return cvFilePersistRepository.persist(cvFile);
     }
 }

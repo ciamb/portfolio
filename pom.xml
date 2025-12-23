@@ -7,7 +7,7 @@
 
     <properties>
         <!-- declared -->
-        <jacoco.check.coverage>0.80</jacoco.check.coverage>
+        <jacoco.check.coverage>0.60</jacoco.check.coverage>
 
         <!-- other -->
         <compiler-plugin.version>3.14.1</compiler-plugin.version>

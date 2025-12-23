@@ -1,6 +1,6 @@
 package it.me.domain.mapper;
 
-import it.me.domain.dto.ProcessedContactMe;
+import it.me.domain.dto.ContactMe;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -9,14 +9,14 @@ import java.util.List;
 import java.util.function.Function;
 
 @ApplicationScoped
-public class ContactMeEmailBodyMapper implements Function<List<ProcessedContactMe>, String> {
+public class ContactMeEmailBodyMapper implements Function<List<ContactMe>, String> {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMMM yyyy - HH:mm");
 
     @ConfigProperty(name = "contact.me.username")
     String username;
 
     @Override
-    public String apply(List<ProcessedContactMe> pendingList) {
+    public String apply(List<ContactMe> pendingList) {
         var body = """
                 
                 Ciao %s,

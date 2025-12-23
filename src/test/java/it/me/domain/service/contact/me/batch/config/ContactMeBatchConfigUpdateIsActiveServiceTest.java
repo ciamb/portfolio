@@ -1,7 +1,10 @@
 package it.me.domain.service.contact.me.batch.config;
 
+import it.me.domain.dto.ContactMeBatchConfig;
+import it.me.domain.repository.contact.me.batch.config.ContactMeBatchConfigPersistRepository;
+import it.me.domain.repository.contact.me.batch.config.ContactMeBatchConfigReadByIdRepository;
 import it.me.repository.entity.ContactMeBatchConfigEntity;
-import it.me.repository.contact.me.batch.config.ContactMeBatchConfigReadByIdRepository;
+import it.me.repository.contact.me.batch.config.ContactMeBatchConfigReadByIdRepositoryJpa;
 import it.me.web.dto.request.ContactMeBatchConfigUpdateRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,21 +27,22 @@ class ContactMeBatchConfigUpdateIsActiveServiceTest {
     ContactMeBatchConfigReadByIdRepository contactMeBatchConfigReadByIdRepository;
 
     @Mock
+    ContactMeBatchConfigPersistRepository contactMeBatchConfigPersistRepository;
+
+    @Mock
     ContactMeBatchConfigUpdateRequest contactMeBatchConfigUpdateRequest;
 
     @Test
     void shouldUpdateConfig_withActiveTrue() {
         // given
         given(contactMeBatchConfigReadByIdRepository.readByIdEquals1())
-                .willReturn(Optional.of(new ContactMeBatchConfigEntity()));
-        given(contactMeBatchConfigUpdateRequest.isActive()).willReturn(true);
+                .willReturn(Optional.of(ContactMeBatchConfig.builder().build()));
 
         //when
-        Boolean result = assertDoesNotThrow(
+        assertDoesNotThrow(
                 () -> sut.updateContactMeBatchConfig(contactMeBatchConfigUpdateRequest));
 
         //then
-        assertTrue(result);
         Mockito.verify(contactMeBatchConfigReadByIdRepository, Mockito.times(1))
                 .readByIdEquals1();
     }

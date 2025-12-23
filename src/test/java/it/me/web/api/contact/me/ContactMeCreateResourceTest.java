@@ -1,5 +1,6 @@
 package it.me.web.api.contact.me;
 
+import it.me.domain.dto.ContactMe;
 import it.me.domain.mapper.ContactBackToMessageMapper;
 import it.me.domain.service.contact.me.ContactMeCreateService;
 import it.me.repository.entity.ContactMeEntity;
@@ -36,8 +37,9 @@ class ContactMeCreateResourceTest {
     @Test
     void createContactMe() {
         // given
-        var contactMe = new ContactMeEntity()
-                .setContactBack(false);
+        var contactMe = ContactMe.builder()
+                .contactBack(true)
+                .build();
         given(contactMeCreateService.createContactMe(eq(contactMeRequest)))
                 .willReturn(contactMe);
         given(contactBackToMessageMapper.apply(eq(contactMe.contactBack())))

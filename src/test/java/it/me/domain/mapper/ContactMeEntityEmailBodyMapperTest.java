@@ -1,6 +1,6 @@
 package it.me.domain.mapper;
 
-import it.me.domain.dto.ProcessedContactMe;
+import it.me.domain.dto.ContactMe;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,14 +22,14 @@ class ContactMeEntityEmailBodyMapperTest {
     @Test
     void shouldMapNoError() {
         //given
-        ProcessedContactMe contactMeA = ProcessedContactMe.builder()
+        ContactMe contactMeA = ContactMe.builder()
                 .message("ciao")
                 .email("marcella@bella.com")
                 .name("marcella")
                 .contactBack(true)
                 .createdAt(ZonedDateTime.of(2025, 1, 2, 3, 4, 5, 666, ZoneId.of("Europe/Paris")))
                 .build();
-        List<ProcessedContactMe> contactMeList = List.of(contactMeA);
+        List<ContactMe> contactMeList = List.of(contactMeA);
 
         //when
         String apply = assertDoesNotThrow(() -> sut.apply(contactMeList));
@@ -44,7 +44,7 @@ class ContactMeEntityEmailBodyMapperTest {
     @Test
     void shouldMapWithError() {
         // given
-        ProcessedContactMe contactMe = ProcessedContactMe.builder()
+        ContactMe contactMe = ContactMe.builder()
                 .name("marcella")
                 .email("marcella@bella.com")
                 .message("ciao")
@@ -53,7 +53,7 @@ class ContactMeEntityEmailBodyMapperTest {
                 .createdAt(ZonedDateTime.now())
                 .build();
 
-        List<ProcessedContactMe> list = List.of(contactMe);
+        List<ContactMe> list = List.of(contactMe);
 
         // when
         String body = sut.apply(list);

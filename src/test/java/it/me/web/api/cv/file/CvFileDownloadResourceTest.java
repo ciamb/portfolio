@@ -1,5 +1,6 @@
 package it.me.web.api.cv.file;
 
+import it.me.domain.dto.CvFile;
 import it.me.domain.mapper.FilenameDefaultMapper;
 import it.me.domain.service.cv.file.CvFileDownloadService;
 import it.me.repository.entity.CvFileEntity;
@@ -37,25 +38,26 @@ class CvFileDownloadResourceTest {
     @Mock
     Request request;
 
-    private CvFileEntity cvFileEntity;
+    private CvFile cvFile;
 
     @BeforeEach
     void setUp() {
-        cvFileEntity = new CvFileEntity()
-                .setFilename("Andrea_CV")
-                .setContentType("application/pdf")
-                .setFileData("PDF".getBytes())
-                .setSha256("abc123")
-                .setIsActive(true)
-                .setFilesizeBytes(3L);
+        cvFile = CvFile.builder()
+                .filename("Andrea_CV")
+                .contentType("application/pdf")
+                .fileData("PDF".getBytes())
+                .sha256("abc123")
+                .isActive(true)
+                .filesizeBytes(3L)
+                .build();
     }
 
     @Test
     void shouldDownloadCvFile() {
         // given
-        given(cvFileDownloadService.downloadActiveCvFile()).willReturn(cvFileEntity);
+        given(cvFileDownloadService.downloadActiveCvFile()).willReturn(cvFile);
         given(request.evaluatePreconditions(any(EntityTag.class))).willReturn(null);
-        given(filenameDefaultMapper.apply(eq(cvFileEntity.filename()))).willReturn("Andrea_CV.pdf");
+        given(filenameDefaultMapper.apply(eq(cvFile.filename()))).willReturn("Andrea_CV.pdf");
 
         // when
         Response result = sut.downloadCv(request);

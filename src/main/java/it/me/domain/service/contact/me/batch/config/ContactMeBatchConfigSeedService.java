@@ -1,8 +1,8 @@
 package it.me.domain.service.contact.me.batch.config;
 
-import it.me.repository.entity.ContactMeBatchConfigEntity;
-import it.me.repository.contact.me.batch.config.ContactMeBatchConfigPersistRepository;
-import it.me.repository.contact.me.batch.config.ContactMeBatchConfigReadByIdRepository;
+import it.me.domain.dto.ContactMeBatchConfig;
+import it.me.domain.repository.contact.me.batch.config.ContactMeBatchConfigPersistRepository;
+import it.me.domain.repository.contact.me.batch.config.ContactMeBatchConfigReadByIdRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -11,7 +11,7 @@ import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class ContactMeBatchConfigSeedService {
-    private final Logger logger = Logger.getLogger(ContactMeBatchConfigSeedService.class.getName());
+    private final Logger logger = Logger.getLogger(ContactMeBatchConfigSeedService.class);
 
     @Inject
     ContactMeBatchConfigPersistRepository contactMeBatchConfigPersistRepository;
@@ -28,11 +28,11 @@ public class ContactMeBatchConfigSeedService {
         if (found.isPresent()) {
             var contactMeBatchConfig = found.get();
             logger.infof(
-                    "Found contact_me_batch_config already exists with id %d",
+                    "Found! contact_me_batch_config already exists with id %d",
                     contactMeBatchConfig.id()
             );
             if (contactMeBatchConfig.targetEmail().isBlank()) {
-                throw new IllegalStateException("target_email non \u00E8 configurata correttamente a DB");
+                logger.warnf("target_email non \u00E8 configurata correttamente a DB, controlla");
             }
             return;
         }
@@ -41,12 +41,13 @@ public class ContactMeBatchConfigSeedService {
             throw new IllegalStateException("Add contact.me.batch.config.target-email to env");
         }
 
-        var cmbc = new ContactMeBatchConfigEntity();
-        cmbc.setId(1);
-        cmbc.setIsActive(false);
-        cmbc.setTargetEmail(targetEmail);
-        logger.infof("Seeding DB with new contact_me_batch_config with id %d", cmbc.id());
+        ContactMeBatchConfig contactMeBatchConfig = ContactMeBatchConfig.builder()
+                .id(1)
+                .isActive(false)
+                .targetEmail(targetEmail)
+                .build();
+        logger.infof("Seeding DB with new contact_me_batch_config with id %d", contactMeBatchConfig.id());
 
-        contactMeBatchConfigPersistRepository.persist(cmbc);
+        contactMeBatchConfigPersistRepository.persist(contactMeBatchConfig);
     }
 }

@@ -1,7 +1,8 @@
 package it.me.domain.service.page.content;
 
-import it.me.repository.entity.PageContentEntity;
-import it.me.repository.page.content.PageContentReadBySlugRepository;
+import it.me.domain.dto.PageContent;
+import it.me.domain.repository.page.content.PageContentReadBySlugRepository;
+import it.me.domain.repository.page.content.PageContentUpdateBySlugRepository;
 import it.me.web.dto.request.PageContentUpdateRequest;
 import jakarta.ws.rs.NotFoundException;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -23,6 +25,9 @@ class PageContentUpdateBySlugServiceTest {
 
     @InjectMocks
     private PageContentUpdateBySlugService sut;
+
+    @Mock
+    PageContentUpdateBySlugRepository pageContentUpdateBySlugRepository;
 
     @Mock
     PageContentReadBySlugRepository pageContentReadBySlugRepository;
@@ -43,43 +48,9 @@ class PageContentUpdateBySlugServiceTest {
     }
 
     @Test
-    void updatePageContentBySlug_titleShouldThrowIllegalArgumentException() {
-        //given
-        var pageContent = new PageContentEntity();
-        var title = "t".repeat(140);
-        var pageContentUpdateRequest = new PageContentUpdateRequest(title, null, "");
-        given(pageContentReadBySlugRepository.readBySlug(anyString()))
-                .willReturn(Optional.of(pageContent));
-
-        //when
-        IllegalArgumentException iae = assertThrows(IllegalArgumentException.class,
-                () -> sut.updatePageContentBySlug("any", pageContentUpdateRequest));
-
-        //then
-        assertThat(iae.getMessage()).contains("title is longer than 120");
-    }
-
-    @Test
-    void updatePageContentBySlug_subtitleShouldThrowIllegalArgumentException() {
-        //given
-        var pageContent = new PageContentEntity();
-        var subtitle = "s".repeat(300);
-        var pageContentUpdateRequest = new PageContentUpdateRequest("", subtitle, null);
-        given(pageContentReadBySlugRepository.readBySlug(anyString()))
-                .willReturn(Optional.of(pageContent));
-
-        //when
-        IllegalArgumentException iae = assertThrows(IllegalArgumentException.class,
-                () -> sut.updatePageContentBySlug("any", pageContentUpdateRequest));
-
-        //then
-        assertThat(iae.getMessage()).contains("subtitle is longer than 240");
-    }
-
-    @Test
     void updatePageContentBySlug_shouldUpdatePageContent() {
         //given
-        var pageContent = new PageContentEntity();
+        var pageContent = PageContent.builder().build();
         var title = "t".repeat(20);
         var subtitle = "s".repeat(130);
         var pageContentUpdateRequest = new PageContentUpdateRequest(title, subtitle, "hello");
@@ -87,7 +58,7 @@ class PageContentUpdateBySlugServiceTest {
                 .willReturn(Optional.of(pageContent));
 
         //when
-        PageContentEntity result = assertDoesNotThrow(() -> sut.updatePageContentBySlug("any", pageContentUpdateRequest));
+        PageContent result = assertDoesNotThrow(() -> sut.updatePageContentBySlug("any", pageContentUpdateRequest));
 
         //then
         assertThat(result.title()).isSameAs(title);

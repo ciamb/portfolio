@@ -1,7 +1,10 @@
 package it.me.domain.service.page.content;
 
+import it.me.domain.dto.PageContent;
+import it.me.domain.repository.page.content.PageContentReadBySlugRepository;
+import it.me.domain.repository.page.content.PageContentUpdateBySlugRepository;
 import it.me.repository.entity.PageContentEntity;
-import it.me.repository.page.content.PageContentReadBySlugRepository;
+import it.me.repository.page.content.PageContentReadBySlugRepositoryJpa;
 import it.me.web.dto.request.PageContentUpdateRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -18,36 +21,41 @@ public class PageContentUpdateBySlugService {
     @Inject
     PageContentReadBySlugRepository pageContentReadBySlugRepository;
 
-    @Transactional
-    public PageContentEntity updatePageContentBySlug(
-            String slug, PageContentUpdateRequest pageContentUpdateRequest) {
-        var pageContent = pageContentReadBySlugRepository.readBySlug(slug)
-                .orElseThrow(() -> new NotFoundException("Page not found with slug: %s".formatted(slug)));
+    @Inject
+    PageContentUpdateBySlugRepository pageContentUpdateBySlugRepository;
 
-        logger.infof("Admin update slug=%s", slug);
+    public PageContent updatePageContentBySlug(
+            String slug, PageContentUpdateRequest pageContentUpdateRequest) {
+        PageContent pageContent = pageContentReadBySlugRepository.readBySlug(slug)
+                .orElseThrow(() -> new NotFoundException("Page not found with slug: %s".formatted(slug)));
+        logger.infof("found slug=%s, updating with new infos", slug);
 
         if (pageContentUpdateRequest.title() != null
                 && !pageContentUpdateRequest.title().isBlank()) {
-            if (pageContentUpdateRequest.title().length() > 120) {
-                throw new IllegalArgumentException("title is longer than 120 characters");
-            }
-            pageContent.setTitle(pageContentUpdateRequest.title());
+            pageContent = pageContent.builderFromThis()
+                    .title(pageContentUpdateRequest.title())
+                    .build();
         }
 
         if (pageContentUpdateRequest.subtitle() != null
                 && !pageContentUpdateRequest.subtitle().isBlank()) {
-            if (pageContentUpdateRequest.subtitle().length() > 240) {
-                throw new IllegalArgumentException("subtitle is longer than 240 characters");
-            }
-            pageContent.setSubtitle(pageContentUpdateRequest.subtitle());
+            pageContent = pageContent.builderFromThis()
+                    .subtitle(pageContentUpdateRequest.subtitle())
+                    .build();
         }
 
         if (pageContentUpdateRequest.body() != null
                 && !pageContentUpdateRequest.body().isBlank()) {
-            pageContent.setBody(pageContentUpdateRequest.body());
+            pageContent = pageContent.builderFromThis()
+                    .body(pageContentUpdateRequest.body())
+                    .build();
         }
 
-        pageContent.setUpdatedAt(ZonedDateTime.now());
+        pageContent = pageContent.builderFromThis().updatedAt(ZonedDateTime.now())
+                .build();
+
+        pageContentUpdateBySlugRepository.updatePageContentBySlug(pageContent);
+
         return pageContent;
     }
 }

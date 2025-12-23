@@ -1,5 +1,6 @@
 package it.me.web.api.page.content;
 
+import it.me.domain.dto.PageContent;
 import it.me.domain.service.page.content.PageContentUpdateBySlugService;
 import it.me.repository.entity.PageContentEntity;
 import it.me.web.dto.request.PageContentUpdateRequest;
@@ -33,7 +34,7 @@ class PageContentUpdateAdminResourceTest {
     @Test
     void shouldCallPageContentUpdateBySlugService() {
         //given
-        var pageContent = new PageContentEntity();
+        var pageContent = PageContent.builder().build();
         given(pageContentUpdateBySlugService.updatePageContentBySlug(anyString(), any()))
                 .willReturn(pageContent);
 
