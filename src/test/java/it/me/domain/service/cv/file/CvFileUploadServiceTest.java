@@ -1,10 +1,10 @@
 package it.me.domain.service.cv.file;
 
+import it.me.domain.dto.CvFile;
 import it.me.domain.mapper.FileDataToSha256Mapper;
-import it.me.repository.entity.CvFileEntity;
-import it.me.repository.cv.file.CvFilePersistRepository;
-import it.me.repository.cv.file.CvFileReadBySha256Repository;
-import it.me.repository.cv.file.CvFileUpdateIsActiveToFalseIfAnyRepository;
+import it.me.domain.repository.cv.file.CvFilePersistRepository;
+import it.me.domain.repository.cv.file.CvFileReadBySha256Repository;
+import it.me.domain.repository.cv.file.CvFileUpdateAllIsActiveFalseRepository;
 import it.me.web.dto.request.CvFileUploadRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,8 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,7 +34,7 @@ class CvFileUploadServiceTest {
     CvFileReadBySha256Repository cvFileReadBySha256Repository;
 
     @Mock
-    CvFileUpdateIsActiveToFalseIfAnyRepository cvFileUpdateIsActiveToFalseIfAnyRepository;
+    CvFileUpdateAllIsActiveFalseRepository cvFileUpdateAllIsActiveFalseRepository;
 
     @Mock
     CvFilePersistRepository cvFilePersistRepository;
@@ -50,7 +51,7 @@ class CvFileUploadServiceTest {
                 () -> sut.uploadCvFile(null));
 
         //then
-        assertThat(iae.getMessage()).contains("cvFileUploadRequest is null");
+        assertThat(iae.getMessage()).contains("Upload request is null");
     }
 
     @Test
@@ -162,7 +163,7 @@ class CvFileUploadServiceTest {
                 "name",
                 "application/pdf"
         );
-        var cvFile = new CvFileEntity();
+        var cvFile = CvFile.builder().build();
         given(fileDataToSha256Mapper.apply(any(byte[].class)))
                 .willReturn("sha256");
         given(cvFileReadBySha256Repository.readBySha256(anyString()))
@@ -190,24 +191,24 @@ class CvFileUploadServiceTest {
                 .willReturn("sha256");
         given(cvFileReadBySha256Repository.readBySha256(anyString()))
                 .willReturn(Optional.empty());
-        given(cvFilePersistRepository.persistCvFile(any(CvFileEntity.class)))
-                .willAnswer(invocation -> invocation.getArgument(0, CvFileEntity.class));
+        given(cvFilePersistRepository.persist(any(CvFile.class)))
+                .willAnswer(invocation -> invocation.getArgument(0, CvFile.class));
 
         //when
-        CvFileEntity result = assertDoesNotThrow(() -> sut.uploadCvFile(cvFileUploadRequest));
-        ArgumentCaptor<CvFileEntity> cvFile = ArgumentCaptor.forClass(CvFileEntity.class);
+        CvFile result = assertDoesNotThrow(() -> sut.uploadCvFile(cvFileUploadRequest));
+        ArgumentCaptor<CvFile> cvFile = ArgumentCaptor.forClass(CvFile.class);
 
         //then
         var inOrder = Mockito.inOrder(
                 fileDataToSha256Mapper,
                 cvFileReadBySha256Repository,
-                cvFileUpdateIsActiveToFalseIfAnyRepository,
+                cvFileUpdateAllIsActiveFalseRepository,
                 cvFilePersistRepository
         );
         inOrder.verify(fileDataToSha256Mapper).apply(any(byte[].class));
         inOrder.verify(cvFileReadBySha256Repository).readBySha256(anyString());
-        inOrder.verify(cvFileUpdateIsActiveToFalseIfAnyRepository).updateIsActiveToFalseIfAny();
-        inOrder.verify(cvFilePersistRepository).persistCvFile(cvFile.capture());
+        inOrder.verify(cvFileUpdateAllIsActiveFalseRepository).updateIsActiveToFalseIfAny();
+        inOrder.verify(cvFilePersistRepository).persist(cvFile.capture());
         inOrder.verifyNoMoreInteractions();
 
         assertSame(result, cvFile.getValue());

@@ -2,8 +2,9 @@ package it.me.web;
 
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
+import it.me.domain.dto.PageContent;
 import it.me.repository.entity.PageContentEntity;
-import it.me.repository.page.content.PageContentReadBySlugRepository;
+import it.me.repository.page.content.PageContentReadBySlugRepositoryJpa;
 import it.me.web.view.HomeResource;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
@@ -35,12 +36,12 @@ class HomeResourceTest {
     Template templateIndex;
 
     @Mock
-    PageContentReadBySlugRepository pageContentReadBySlugRepository;
+    PageContentReadBySlugRepositoryJpa pageContentReadBySlugRepositoryJpa;
 
     @Test
     void home_notFound() {
         // given
-        given(pageContentReadBySlugRepository.readBySlug(eq("home")))
+        given(pageContentReadBySlugRepositoryJpa.readBySlug(eq("home")))
                 .willReturn(Optional.empty());
 
         //when
@@ -54,12 +55,13 @@ class HomeResourceTest {
     @Test
     void writeMetaDescription() {
         // given
-        var pageContent = new PageContentEntity()
-                .setSlug("home")
-                .setTitle("title")
-                .setBody("hi           guysss   ")
-                .setUpdatedAt(ZonedDateTime.of(2025, 1, 2, 3, 4, 5, 0, ZoneId.of("Europe/Paris")));
-        given(pageContentReadBySlugRepository.readBySlug(eq("home")))
+        var pageContent = PageContent.builder()
+                .slug("home")
+                .title("title")
+                .body("hi           guysss   ")
+                .updatedAt(ZonedDateTime.of(2025, 1, 2, 3, 4, 5, 0, ZoneId.of("Europe/Paris")))
+                .build();
+        given(pageContentReadBySlugRepositoryJpa.readBySlug(eq("home")))
                 .willReturn(Optional.of(pageContent));
         var templateInstance = Mockito.mock(TemplateInstance.class, RETURNS_SELF);
         given(templateIndex.data(anyString(), any())).willReturn(templateInstance);
@@ -84,19 +86,20 @@ class HomeResourceTest {
         assertThat(metaDescription.getValue()).isEqualTo("hi guysss");
         assertThat(updatedAt.getValue()).isEqualTo("2025-01-02 03:04:05");
 
-        verifyNoMoreInteractions(templateIndex, templateInstance, pageContentReadBySlugRepository);
+        verifyNoMoreInteractions(templateIndex, templateInstance, pageContentReadBySlugRepositoryJpa);
     }
 
     @Test
     void writeMetaDescriptionTruncated_andUpdatedAtNull() {
         // given
         var body = "x".repeat(200);
-        var pageContent = new PageContentEntity()
-                .setSlug("home")
-                .setTitle("title")
-                .setBody(body)
-                .setUpdatedAt(null);
-        given(pageContentReadBySlugRepository.readBySlug(eq("home")))
+        var pageContent = PageContent.builder()
+                .slug("home")
+                .title("title")
+                .body(body)
+                .updatedAt(null)
+                .build();
+        given(pageContentReadBySlugRepositoryJpa.readBySlug(eq("home")))
                 .willReturn(Optional.of(pageContent));
         var templateInstance = Mockito.mock(TemplateInstance.class, RETURNS_SELF);
         given(templateIndex.data(anyString(), any())).willReturn(templateInstance);
@@ -125,12 +128,13 @@ class HomeResourceTest {
     @Test
     void write_bodyBlank_andMetaDescriptionBlank_andUpdatedAtNull() {
         // given
-        var pageContent = new PageContentEntity()
-                .setSlug("home")
-                .setTitle("title")
-                .setBody("")
-                .setUpdatedAt(null);
-        given(pageContentReadBySlugRepository.readBySlug(eq("home")))
+        var pageContent = PageContent.builder()
+                .slug("home")
+                .title("title")
+                .body("")
+                .updatedAt(null)
+                .build();
+        given(pageContentReadBySlugRepositoryJpa.readBySlug(eq("home")))
                 .willReturn(Optional.of(pageContent));
         var templateInstance = Mockito.mock(TemplateInstance.class, RETURNS_SELF);
         given(templateIndex.data(anyString(), any())).willReturn(templateInstance);
@@ -157,12 +161,13 @@ class HomeResourceTest {
     @Test
     void write_bodyNull_andMetaDescriptionNull_andUpdatedAtNull() {
         // given
-        var pageContent = new PageContentEntity()
-                .setSlug("home")
-                .setTitle("title")
-                .setBody(null)
-                .setUpdatedAt(null);
-        given(pageContentReadBySlugRepository.readBySlug(eq("home")))
+        var pageContent = PageContent.builder()
+                .slug("home")
+                .title("title")
+                .body(null)
+                .updatedAt(null)
+                .build();
+        given(pageContentReadBySlugRepositoryJpa.readBySlug(eq("home")))
                 .willReturn(Optional.of(pageContent));
         var templateInstance = Mockito.mock(TemplateInstance.class, RETURNS_SELF);
         given(templateIndex.data(anyString(), any())).willReturn(templateInstance);

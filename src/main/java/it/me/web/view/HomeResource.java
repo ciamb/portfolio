@@ -2,7 +2,7 @@ package it.me.web.view;
 
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
-import it.me.repository.page.content.PageContentReadBySlugRepository;
+import it.me.repository.page.content.PageContentReadBySlugRepositoryJpa;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
@@ -18,17 +18,17 @@ public class HomeResource {
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.ITALY);
 
     private final Template index;
-    private final PageContentReadBySlugRepository pageContentReadBySlugRepository;
+    private final PageContentReadBySlugRepositoryJpa pageContentReadBySlugRepositoryJpa;
 
     @Inject
-    public HomeResource(Template index, PageContentReadBySlugRepository pageContentReadBySlugRepository) {
+    public HomeResource(Template index, PageContentReadBySlugRepositoryJpa pageContentReadBySlugRepositoryJpa) {
         this.index = index;
-        this.pageContentReadBySlugRepository = pageContentReadBySlugRepository;
+        this.pageContentReadBySlugRepositoryJpa = pageContentReadBySlugRepositoryJpa;
     }
 
     @GET
     public Response home() {
-        var home = pageContentReadBySlugRepository.readBySlug("home")
+        var home = pageContentReadBySlugRepositoryJpa.readBySlug("home")
                 .orElseThrow(() -> new NotFoundException("Page slug=%s not found".formatted("home")));
 
         var metaTitle = home.title();

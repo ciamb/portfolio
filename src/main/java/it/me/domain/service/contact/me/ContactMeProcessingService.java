@@ -1,11 +1,10 @@
 package it.me.domain.service.contact.me;
 
-import it.me.domain.dto.ProcessedContactMe;
+import it.me.domain.dto.ContactMe;
 import it.me.domain.dto.ProcessedInfo;
-import it.me.domain.mapper.ProcessedContactMeListMapper;
+import it.me.domain.repository.contact.me.ContactMeProcessedBulkUpdateRepository;
+import it.me.domain.repository.contact.me.ContactMeReadByStatusPendingRepository;
 import it.me.repository.entity.ContactMeEntity;
-import it.me.repository.contact.me.ContactMeReadByStatusPendingRepository;
-import it.me.repository.contact.me.ContactMeProcessedBulkUpdateRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
@@ -24,30 +23,27 @@ public class ContactMeProcessingService {
     ContactMeReadByStatusPendingRepository contactMeReadByStatusPendingRepository;
 
     @Inject
-    ProcessedContactMeListMapper processedContactMeListMapper;
-
-    @Inject
     ContactMeProcessedBulkUpdateRepository contactMeProcessedBulkUpdateRepository;
 
     public ProcessedInfo processPendingContactMe() {
         ZonedDateTime now = ZonedDateTime.now();
 
-        List<ContactMeEntity> found = contactMeReadByStatusPendingRepository.readAllByStatusPending();
-        if (found.isEmpty()) {
+        List<ContactMe> pendingList = contactMeReadByStatusPendingRepository
+                .readAllByStatusPending();
+
+        if (pendingList.isEmpty()) {
             logger.warn("No contact me found in PENDING status");
             return new ProcessedInfo(now, 0, 0, Collections.emptyList());
         }
 
-        List<ProcessedContactMe> processingList = processedContactMeListMapper.apply(found);
-
         AtomicInteger processed = new AtomicInteger();
         AtomicInteger withError = new AtomicInteger();
 
-        List<ProcessedContactMe> processedList = new ArrayList<>();
+        List<ContactMe> processedList = new ArrayList<>();
 
-        processingList.forEach(processing -> {
+        pendingList.forEach(processing -> {
             try {
-                ProcessedContactMe processedContactMe = processing.improve()
+                ContactMe processedContactMe = processing.builderFromThis()
                         .status(ContactMeEntity.Status.PROCESSED)
                         .attempts(processing.attempts() + 1)
                         .lastAttemptAt(now)
@@ -60,14 +56,14 @@ public class ContactMeProcessingService {
                 var errorMsg = e.getMessage() != null && e.getMessage().length() > 500
                         ? e.getMessage().substring(0, 500)
                         : e.getMessage();
-                ProcessedContactMe errorContactMe = processing.improve()
+                ContactMe erroredContactMe = processing.builderFromThis()
                         .status(ContactMeEntity.Status.ERROR)
                         .attempts(processing.attempts() + 1)
                         .lastAttemptAt(now)
                         .updatedAt(now)
                         .errorReason(errorMsg)
                         .build();
-                processedList.add(errorContactMe);
+                processedList.add(erroredContactMe);
                 withError.getAndIncrement();
             }
         });

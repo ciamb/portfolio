@@ -1,5 +1,6 @@
 package it.me.web.api.cv.file;
 
+import it.me.domain.dto.CvFile;
 import it.me.domain.mapper.FilenameDefaultMapper;
 import it.me.domain.service.cv.file.CvFileDownloadService;
 import it.me.repository.entity.CvFileEntity;
@@ -22,22 +23,22 @@ public class CvFileDownloadResource {
     @Path("/download")
     @Produces("application/pdf")
     public Response downloadCv(@Context Request request) {
-        CvFileEntity cvFileEntity = cvFileDownloadService.downloadActiveCvFile();
+        CvFile cvFile = cvFileDownloadService.downloadActiveCvFile();
 
-        EntityTag entityTag = new EntityTag(cvFileEntity.sha256());
+        EntityTag entityTag = new EntityTag(cvFile.sha256());
         Response.ResponseBuilder preConditions = request.evaluatePreconditions(entityTag);
         if (preConditions != null) {
             return preConditions.build();
         }
 
-        var filename = filenameDefaultMapper.apply(cvFileEntity.filename());
-        Response.ResponseBuilder responseBuilder = Response.ok(cvFileEntity.fileData(), cvFileEntity.contentType())
+        var filename = filenameDefaultMapper.apply(cvFile.filename());
+        Response.ResponseBuilder responseBuilder = Response.ok(cvFile.fileData(), cvFile.contentType())
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                 .header(HttpHeaders.CACHE_CONTROL, "private, no-cache")
                 .tag(entityTag);
 
-        if (cvFileEntity.filesizeBytes() != null) {
-            responseBuilder.header(HttpHeaders.CONTENT_LENGTH, cvFileEntity.filesizeBytes());
+        if (cvFile.filesizeBytes() != null) {
+            responseBuilder.header(HttpHeaders.CONTENT_LENGTH, cvFile.filesizeBytes());
         }
 
         return responseBuilder.build();

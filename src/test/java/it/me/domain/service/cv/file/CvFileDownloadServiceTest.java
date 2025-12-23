@@ -1,7 +1,8 @@
 package it.me.domain.service.cv.file;
 
+import it.me.domain.dto.CvFile;
 import it.me.repository.entity.CvFileEntity;
-import it.me.repository.cv.file.CvFileReadByIsActiveRepository;
+import it.me.repository.cv.file.CvFileReadByIsActiveRepositoryJpa;
 import jakarta.ws.rs.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,16 +25,17 @@ class CvFileDownloadServiceTest {
     private CvFileDownloadService sut;
 
     @Mock
-    CvFileReadByIsActiveRepository cvFileReadByIsActiveRepository;
+    CvFileReadByIsActiveRepositoryJpa cvFileReadByIsActiveRepository;
 
     @Test
     void downloadActiveFile() {
         //given
+        CvFile cvFile = CvFile.builder().build();
         given(cvFileReadByIsActiveRepository.readByIsActive())
-                .willReturn(Optional.of(new CvFileEntity()));
+                .willReturn(Optional.of(cvFile));
 
         //when
-        CvFileEntity result = assertDoesNotThrow(() -> sut.downloadActiveCvFile());
+        CvFile result = assertDoesNotThrow(() -> sut.downloadActiveCvFile());
 
         // then
         assertNotNull(result);

@@ -1,12 +1,13 @@
 package it.me.domain.service.contact.me;
 
+import it.me.domain.dto.ContactMe;
+import it.me.domain.repository.contact.me.ContactMeCountByEmailAndStatusPendingRepository;
+import it.me.domain.repository.contact.me.ContactMePersistRepository;
+import it.me.repository.contact.me.ContactMeCountByEmailAndStatusPendingRepositoryJpa;
 import it.me.repository.entity.ContactMeEntity;
-import it.me.repository.contact.me.ContactMeCountByEmailAndStatusPendingRepository;
-import it.me.repository.contact.me.ContactMePersistRepository;
 import it.me.web.dto.request.ContactMeRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import org.jboss.logging.Logger;
 
 import java.time.ZonedDateTime;
@@ -21,8 +22,7 @@ public class ContactMeCreateService {
     @Inject
     ContactMeCountByEmailAndStatusPendingRepository contactMeCountByEmailAndStatusPendingRepository;
 
-    @Transactional
-    public ContactMeEntity createContactMe(ContactMeRequest contactMeRequest) {
+    public ContactMe createContactMe(ContactMeRequest contactMeRequest) {
         logger.infof("Received ContactMeRequest=%s", contactMeRequest);
 
         var count = contactMeCountByEmailAndStatusPendingRepository
@@ -35,14 +35,17 @@ public class ContactMeCreateService {
                     """);
         }
 
-        var contactMe = new ContactMeEntity()
-                .setEmail(contactMeRequest.email())
-                .setName(contactMeRequest.name())
-                .setMessage(contactMeRequest.message())
-                .setContactBack(contactMeRequest.contactBack())
-                .setCreatedAt(ZonedDateTime.now())
-                .setUpdatedAt(ZonedDateTime.now());
-        //attempts and status set by default 0 and PENDING
+        var contactMe = ContactMe.builder()
+                .email(contactMeRequest.email())
+                .name(contactMeRequest.name())
+                .message(contactMeRequest.message())
+                .contactBack(contactMeRequest.contactBack())
+                .status(ContactMeEntity.Status.PENDING)
+                .attempts(0)
+                .createdAt(ZonedDateTime.now())
+                .updatedAt(ZonedDateTime.now())
+                .build();
+        //attempts and status set 0 and PENDING
         return contactMePersistRepository.persist(contactMe);
     }
 }
