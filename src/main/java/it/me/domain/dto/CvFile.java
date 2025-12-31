@@ -14,7 +14,7 @@ public record CvFile(
         boolean isActive,
         ZonedDateTime createdAt,
         ZonedDateTime updatedAt) {
-    CvFileBuilder buildFromThis() {
+    public CvFileBuilder toBuilder() {
         return CvFile.builder()
                 .id(this.id)
                 .filename(this.filename)

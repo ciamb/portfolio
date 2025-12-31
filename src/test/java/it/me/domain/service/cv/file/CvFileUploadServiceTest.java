@@ -8,6 +8,7 @@ import static org.mockito.BDDMockito.given;
 
 import it.me.domain.dto.CvFile;
 import it.me.domain.mapper.FileDataToSha256Mapper;
+import it.me.domain.repository.cv.file.CvFileDeleteOldRepository;
 import it.me.domain.repository.cv.file.CvFilePersistRepository;
 import it.me.domain.repository.cv.file.CvFileReadBySha256Repository;
 import it.me.domain.repository.cv.file.CvFileUpdateAllIsActiveFalseRepository;
@@ -40,6 +41,9 @@ class CvFileUploadServiceTest {
 
     @Mock
     FileDataToSha256Mapper fileDataToSha256Mapper;
+
+    @Mock
+    CvFileDeleteOldRepository cvFileDeleteOldRepository;
 
     @Test
     @DisplayName("1. Upload should throw exceptin because request is null")

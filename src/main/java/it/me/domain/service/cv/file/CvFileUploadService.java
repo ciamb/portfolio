@@ -2,6 +2,7 @@ package it.me.domain.service.cv.file;
 
 import it.me.domain.dto.CvFile;
 import it.me.domain.mapper.FileDataToSha256Mapper;
+import it.me.domain.repository.cv.file.CvFileDeleteOldRepository;
 import it.me.domain.repository.cv.file.CvFilePersistRepository;
 import it.me.domain.repository.cv.file.CvFileReadBySha256Repository;
 import it.me.domain.repository.cv.file.CvFileUpdateAllIsActiveFalseRepository;
@@ -26,6 +27,9 @@ public class CvFileUploadService {
 
     @Inject
     FileDataToSha256Mapper fileDataToSha256Mapper;
+
+    @Inject
+    CvFileDeleteOldRepository cvFileDeleteOldRepository;
 
     public CvFile uploadCvFile(CvFileUploadRequest cvFileUploadRequest) {
         if (cvFileUploadRequest == null) {
@@ -71,6 +75,10 @@ public class CvFileUploadService {
                 .build();
 
         logger.infof("Persisting new CvFile filename=%s", cvFile.filename());
-        return cvFilePersistRepository.persist(cvFile);
+        CvFile persisted = cvFilePersistRepository.persist(cvFile);
+
+        logger.info("Delete all other CV files not active");
+        cvFileDeleteOldRepository.deleteAllNotActive();
+        return persisted;
     }
 }

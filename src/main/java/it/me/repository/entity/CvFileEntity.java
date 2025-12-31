@@ -25,10 +25,14 @@ import org.hibernate.type.SqlTypes;
 @NamedQuery(
         name = CvFileEntity.READ_BY_IS_ACTIVE,
         query = " select cve from CvFileEntity cve" + " where cve.isActive = true ")
+@NamedQuery(
+        name = CvFileEntity.DELETE_ALL_IS_ACTIVE_FALSE,
+        query = " delete CvFileEntity cve where cve.isActive = false ")
 public class CvFileEntity {
     public static final String READ_BY_SHA256 = "CvFile.readBySha256";
     public static final String UPDATE_IS_ACTIVE_TO_FALSE_IF_ANY = "CvFile.updateIsActiveToFalseIfAny";
     public static final String READ_BY_IS_ACTIVE = "CvFile.readByIsActive";
+    public static final String DELETE_ALL_IS_ACTIVE_FALSE = "CvFile.deleteAllIsActiveFalse";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

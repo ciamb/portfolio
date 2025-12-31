@@ -14,6 +14,7 @@ public class CvFileUpdateAllIsActiveToFalseRepositoryJpa implements CvFileUpdate
     @Inject
     EntityManager em;
 
+    @Override
     @Transactional
     public void updateIsActiveToFalseIfAny() {
         em.createNamedQuery(CvFileEntity.UPDATE_IS_ACTIVE_TO_FALSE_IF_ANY)
