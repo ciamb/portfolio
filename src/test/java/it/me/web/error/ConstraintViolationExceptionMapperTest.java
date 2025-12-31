@@ -1,10 +1,15 @@
 package it.me.web.error;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
+
 import it.me.domain.Header;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import java.util.Set;
 import org.jboss.logging.MDC;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -12,12 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Set;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class ConstraintViolationExceptionMapperTest {
@@ -84,7 +83,7 @@ class ConstraintViolationExceptionMapperTest {
 
     @Test
     void toResponse_blankMessages_becomeValidationError() {
-        //given
+        // given
         sut.uriInfo = null;
         MDC.put("requestId", "cjri9c839828fu239hf2");
 
@@ -93,10 +92,10 @@ class ConstraintViolationExceptionMapperTest {
 
         var cve = new ConstraintViolationException(Set.of(fieldA));
 
-        //when
+        // when
         Response result = sut.toResponse(cve);
 
-        //then
+        // then
         var entity = (ErrorResponse) result.getEntity();
         assertThat(entity.message()).isEqualTo("Validation error");
     }

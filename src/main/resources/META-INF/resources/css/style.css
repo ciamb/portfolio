@@ -1,73 +1,112 @@
-/* index --- start */
+/* home --- start */
 :root {
-  --bg:#0f1115;
-  --fg:#e7eaf0;
-  --muted:#9aa4b2;
-  --card:#151923;
-  --acc:#6aa6ff;
-  --ring:#99c2ff;
+    --bg: #0f1115;
+    --fg: #e7eaf0;
+    --muted: #9aa4b2;
+    --card: #151923;
+    --acc: #6aa6ff;
+    --ring: #99c2ff;
+    --err: #f97373
 }
-* { box-sizing: border-box; }
+
+* {
+    box-sizing: border-box;
+}
 
 body {
-  margin: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  background: var(--bg);
-  color: var(--fg);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    background: var(--bg);
+    color: var(--fg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 a:focus-visible, button:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
-  border-radius: 8px;
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 8px;
 }
 
 .wrap {
-  max-width: 920px;
-  margin: 48px auto;
-  padding: 0 24px;
+    max-width: 920px;
+    margin: 48px auto;
+    padding: 0 24px;
 }
 
 .card {
-  background: var(--card);
-  border-radius: 20px;
-  padding: 32px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    background: var(--card);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(
+            90deg,
+            rgba(154, 164, 178, 0),
+            rgba(154, 164, 178, 0.35),
+            rgba(154, 164, 178, 0)
+    );
+    margin: 1rem 0;
 }
 
 h1 {
-  margin: 0 0 10px;
-  font-size: clamp(28px, 4vw, 40px);
-  letter-spacing:.2px;
+    margin: 0 0 10px;
+    font-size: clamp(28px, 4vw, 40px);
+    letter-spacing: .2px;
 }
 
 p.subtitle {
-  margin: 0 0 22px;
-  color: var(--muted);
-  font-size: 18px;
+    margin: 0 0 22px;
+    color: var(--muted);
+    font-size: 18px;
 }
 
 .body {
-  line-height:1.75;
-  font-size:18px;
-  white-space:pre-wrap;
+    line-height: 1.75;
+    font-size: 18px;
+    white-space: pre-wrap;
 }
 
 .footer {
-  margin-top:22px;
-  font-size:14px;
-  color:var(--muted);
-  display:flex;
-  gap:8px;
-  align-items:baseline;
+    margin-top: 22px;
+    font-size: 14px;
+    color: var(--muted);
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
 }
 
 .footer time {
-  color: var(--fg);
-  font-variant-numeric: tabular-nums;
+    color: var(--fg);
+    font-variant-numeric: tabular-nums;
 }
+
+/* Bottone servizi aggiuntivi in home */
+.card #serviziAggiuntivi .btn-service {
+    display: inline-block;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.card #serviziAggiuntivi .btn-service:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+}
+
+.card #serviziAggiuntivi .btn-service:active {
+    background-color: #004494;
+    transform: translateY(0);
+}
+
 /* index --- end */
 /* ------------------------------------------------- */
 /* ------------------------------------------------- */
@@ -81,25 +120,26 @@ p.subtitle {
 }
 
 .btn-download {
-  display: inline-block;
-  padding: 0.75rem 1.25rem;
-  border-radius: 8px;
-  background-color: #007bff;
-  color: white;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+    display: inline-block;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
 .btn-download:hover {
-  background-color: #0056b3;
-  transform: translateY(-1px);
+    background-color: #0056b3;
+    transform: translateY(-1px);
 }
 
 .btn-download:active {
-  background-color: #004494;
-  transform: translateY(0);
+    background-color: #004494;
+    transform: translateY(0);
 }
+
 /* download btn --- end */
 /* ------------------------------------------------- */
 /* ------------------------------------------------- */
@@ -126,8 +166,8 @@ p.subtitle {
 }
 
 .btn-contact:active {
-  background-color: #004494;
-  transform: translateY(0);
+    background-color: #004494;
+    transform: translateY(0);
 }
 
 .btn-primary {
@@ -197,7 +237,7 @@ p.subtitle {
 }
 
 .contact-me__header h2 {
-    font-size: 1.25 rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: #e5e7eb;
     margin: 0;
@@ -239,7 +279,7 @@ p.subtitle {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     font-size: 0.9rem;
     border-radius: 0.5rem;
-    border: 1px solid  #374151;
+    border: 1px solid #374151;
     padding: 0.6rem 0.7rem;
     resize: vertical;
     min-height: 220px;
@@ -276,7 +316,278 @@ p.subtitle {
 .contact-me__feedback--info {
     color: #60a5fa;
 }
+
 /* contact me --- end */
+/* ------------------------------------------------- */
+/* ------------------------------------------------- */
+/* ------------------------------------------------- */
+/* food cost calculator --- start */
+.card form#foodCostForm {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.card h1.title {
+    color: #eb7e2bcc;
+}
+
+.card h3.subtitle {
+    font-weight: 700;
+}
+
+.card hr {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(
+            90deg,
+            rgba(154, 164, 178, 0),
+            rgba(154, 164, 178, 0.35),
+            rgba(154, 164, 178, 0)
+    );
+    margin: 6px 0;
+}
+
+#foodCostForm section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#foodCostForm label {
+    font-weight: 650;
+}
+
+/* specificare l'input type non e necessario
+ma e unn'aggiunta carina al momento */
+#foodCostForm input[type="text"],
+#foodCostForm input[type="number"] {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border-radius: 12px;
+    border: 0;
+    background: var(--bg);
+    color: var(--fg);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+}
+
+#foodCostForm input::placeholder {
+    color: var(--muted);
+}
+
+#foodCostForm input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #99c2ff2e;
+}
+
+/* Rimuove le frecce dell'input number orribili */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#foodCostPercentInput input#foodCostPercent {
+    max-width: 10rem;
+}
+
+#ingredientListInput > div:first-child h3 {
+    margin: 0;
+    font-size: 22px;
+}
+
+#foodCostForm button {
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.08s ease, background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+/* al click del bottone */
+#foodCostForm button:active {
+    transform: translateY(1px);
+}
+
+/* bottone aggiungi ingrediente */
+#addIngredientButton {
+    font-weight: bold;
+    align-self: flex-start;
+    border: 1px dashed #9aa4b273;
+    background: #111827bf;
+    color: var(--fg);
+    padding: 0.6rem 1rem;
+    margin-top: 0.6rem;
+}
+
+#addIngredientButton:hover {
+    background: #1f2937d9;
+    border-color: #9aa4b2b3;
+    border-style: solid;
+}
+
+/* bottone calcola */
+#estimateFoodCostButton {
+    border: none;
+    background: var(--acc);
+    color: var(--bg);
+    font-weight: 800;
+    padding: 0.7rem 1rem;
+    width: fit-content;
+    min-width: 10rem;
+}
+
+#estimateFoodCostButton:hover {
+    filter: brightness(1.10);
+}
+
+/* Nel caso in cui non ci siano ingredienti */
+#estimateFoodCostButton:disabled {
+    opacity: 1;
+    cursor: not-allowed;
+    background: #374151;
+    color: #cbd5e1;
+    filter: none;
+}
+
+/* Ingredienti */
+#ingredientListContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin-top: 0.7rem;
+}
+
+.ingredient-row fieldset {
+    border: 1px solid #9aa4b238;
+    border-radius: 16px;
+    padding: 0.9rem 0.8rem 0.8rem;
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+}
+
+.ingredient-row legend {
+    padding: 0 0.5rem;
+    font-weight: 800;
+    color: var(--fg);
+}
+
+/* Nome, Quantita, Prezzo al kg */
+.ingredient-row label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-weight: 700;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* Bottone rimuovi */
+.removeIngredientButton {
+    border: 1px solid var(--err);
+    background: #ef44441a;
+    color: #efd2d2f2;
+    padding: 0.6rem 0.8rem;
+    font-weight: 800;
+}
+
+.removeIngredientButton:hover {
+    background: #ef444429;
+    border-color: #ef4444bf;
+}
+
+/* Mobile: ingredienti in colonna nel caso in cui la width scenda
+ sotto i 720 px, nice have */
+@media (max-width: 720px) {
+    .ingredient-row fieldset {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+    .removeIngredientButton {
+        width: 100%;
+    }
+    #estimateFoodCostButton {
+        width: 100%;
+    }
+}
+
+/* Result box  */
+#foodCostResult #resultBox {
+    margin-top: 6px;
+    padding: 1.1rem 1rem;
+    border-radius: 16px;
+    border: 1px solid #9aa4b238;
+    background: #ffffff05;
+    position: relative;
+    overflow: hidden;
+}
+
+#foodCostResult #resultBox::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.7rem;
+    bottom: 0.7rem;
+    width: 4px;
+    border-radius: 99px;
+    background: var(--acc);
+    opacity: 0.9;
+}
+
+#foodCostResult #resultBox h2 {
+    margin: 0 0 0.7rem;
+    font-size: 28px;
+}
+
+#foodCostResult #resultBox p {
+    margin: 0.6rem 0;
+    font-size: 18px;
+    color: #e7eaf0eb;
+}
+
+#foodCostResult #resultBox strong {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Error box  */
+#foodCostResult #errorBox {
+    margin-top: 6px;
+    padding: 1.1rem 1rem;
+    border-radius: 16px;
+    border: 1px solid #9aa4b238;
+    background: #ffffff05;
+    position: relative;
+    overflow: hidden;
+}
+
+#foodCostResult #errorBox::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.7rem;
+    bottom: 0.7rem;
+    width: 4px;
+    border-radius: 99px;
+    background: var(--err);
+    opacity: 0.9;
+}
+
+#foodCostResult #errorBox h2 {
+    margin: 0 0 0.7rem;
+    font-size: 28px;
+}
+
+#foodCostResult #errorBox p {
+    margin: 0.6rem 0;
+    font-size: 18px;
+    color: #e7eaf0eb;
+}
+
+/* Food cost calculator --- end */
 /* ------------------------------------------------- */
 /* ------------------------------------------------- */
 /* ------------------------------------------------- */

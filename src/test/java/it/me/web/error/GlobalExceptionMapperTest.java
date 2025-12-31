@@ -1,5 +1,8 @@
 package it.me.web.error;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+
 import it.me.domain.Header;
 import jakarta.ws.rs.core.Request;
 import jakarta.ws.rs.core.Response;
@@ -11,9 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class GlobalExceptionMapperTest {
@@ -46,8 +46,7 @@ class GlobalExceptionMapperTest {
 
         // then
         assertThat(result.getStatus()).isEqualTo(500);
-        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue()))
-                .isEqualTo("sjiovn989082029ireuivwisnhf029");
+        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue())).isEqualTo("sjiovn989082029ireuivwisnhf029");
 
         var entity = (ErrorResponse) result.getEntity();
         assertThat(entity.error()).isEqualTo("internal_error");
@@ -70,8 +69,7 @@ class GlobalExceptionMapperTest {
 
         // then
         assertThat(resp.getStatus()).isEqualTo(500);
-        assertThat(resp.getHeaderString(Header.C_REQUEST_ID.getValue()))
-                .isEqualTo("djhc23874y93094093jinif2");
+        assertThat(resp.getHeaderString(Header.C_REQUEST_ID.getValue())).isEqualTo("djhc23874y93094093jinif2");
 
         var entity = (ErrorResponse) resp.getEntity();
         assertThat(entity.error()).isEqualTo("internal_error");

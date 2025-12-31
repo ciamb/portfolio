@@ -22,12 +22,9 @@ public class PageContentUpdateAdminResource {
     @PUT
     @Path("/update/{slug}")
     public Response updatePageContentBySlug(
-            @PathParam("slug") String slug,
-            @Valid PageContentUpdateRequest pageContentUpdateRequest) {
+            @PathParam("slug") String slug, @Valid PageContentUpdateRequest pageContentUpdateRequest) {
         logger.infof("Received request /api/v1/admin/page/update/%s", slug);
-        PageContent updated = pageContentUpdateBySlugService
-                .updatePageContentBySlug(slug, pageContentUpdateRequest);
+        PageContent updated = pageContentUpdateBySlugService.updatePageContentBySlug(slug, pageContentUpdateRequest);
         return Response.ok(updated).build();
     }
-
 }

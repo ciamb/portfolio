@@ -1,18 +1,10 @@
 package it.me.domain.dto;
 
+import java.time.ZonedDateTime;
 import lombok.Builder;
 
-import java.time.ZonedDateTime;
-
 @Builder
-public record PageContent(
-        Long id,
-        String slug,
-        String title,
-        String subtitle,
-        String body,
-        ZonedDateTime updatedAt
-) {
+public record PageContent(Long id, String slug, String title, String subtitle, String body, ZonedDateTime updatedAt) {
     public PageContentBuilder builderFromThis() {
         return PageContent.builder()
                 .id(this.id)

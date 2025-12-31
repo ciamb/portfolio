@@ -3,9 +3,8 @@ package it.me.repository.cv.file.mapper;
 import it.me.domain.dto.CvFile;
 import it.me.repository.entity.CvFileEntity;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jboss.logging.Logger;
-
 import java.util.function.Function;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class CvFileEntity2CvFileMapper implements Function<CvFileEntity, CvFile> {

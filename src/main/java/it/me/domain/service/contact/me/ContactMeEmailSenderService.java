@@ -2,19 +2,18 @@ package it.me.domain.service.contact.me;
 
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
-import io.vertx.ext.mail.SMTPException;
 import it.me.domain.dto.ContactMe;
 import it.me.domain.mapper.ContactMeEmailBodyMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.jboss.logging.Logger;
-
 import java.time.ZonedDateTime;
 import java.util.List;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class ContactMeEmailSenderService {
     private final Logger logger = Logger.getLogger(ContactMeEmailSenderService.class);
+
     @Inject
     ContactMeEmailBodyMapper contactMeEmailBodyMapper;
 

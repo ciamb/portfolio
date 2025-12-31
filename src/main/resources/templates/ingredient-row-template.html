@@ -1,0 +1,44 @@
+<!-- Non viente mostrato dal browser ma usato da JS per clonarlo -->
+<template id="ingredientRowTemplate">
+    <div class="ingredient-row">
+        <fieldset>
+            <legend>Ingrediente</legend>
+
+            <label>
+                Nome
+                <input type="text"
+                       name="ingredientName"
+                       placeholder="Es. Farina 00"
+                       maxlength="60"
+                       autocomplete="off"
+                       required/>
+            </label>
+
+            <label>
+                Quantità (g)
+                <input type="number"
+                       name="ingredientQuantity"
+                       inputmode="decimal"
+                       min="1"
+                       step="1"
+                       placeholder="100"
+                       required/>
+            </label>
+
+            <label>
+                Prezzo (€/kg)
+                <input type="number"
+                       name="ingredientPricePerKg"
+                       inputmode="decimal"
+                       min="0"
+                       step="0.01"
+                       placeholder="1.60"
+                       required/>
+            </label>
+
+            <button type="button" class="removeIngredientButton">
+                Rimuovi
+            </button>
+        </fieldset>
+    </div>
+</template>

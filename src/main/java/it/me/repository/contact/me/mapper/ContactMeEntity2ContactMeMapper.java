@@ -3,9 +3,8 @@ package it.me.repository.contact.me.mapper;
 import it.me.domain.dto.ContactMe;
 import it.me.repository.entity.ContactMeEntity;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jboss.logging.Logger;
-
 import java.util.function.Function;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class ContactMeEntity2ContactMeMapper implements Function<ContactMeEntity, ContactMe> {

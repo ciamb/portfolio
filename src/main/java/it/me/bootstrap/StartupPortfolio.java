@@ -16,10 +16,11 @@ public class StartupPortfolio {
     ContactMeBatchConfigSeedService contactMeBatchConfigSeedService;
 
     /**
-     * <p>Startup action only <strong>if needed</strong>:</p>
+     * Startup action only <strong>if needed</strong>:
+     *
      * <ul>
-     *     <li>create a basic home page if missing on DB</li>
-     *     <li>create batch configuration for contact me email</li>
+     *   <li>create a basic home page if missing on DB
+     *   <li>create batch configuration for contact me email
      * </ul>
      *
      * @param startupEvent startupEvent observer

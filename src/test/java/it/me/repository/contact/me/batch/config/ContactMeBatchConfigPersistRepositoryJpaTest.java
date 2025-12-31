@@ -1,5 +1,9 @@
 package it.me.repository.contact.me.batch.config;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.inOrder;
+
 import it.me.domain.dto.ContactMeBatchConfig;
 import it.me.repository.contact.me.batch.config.mapper.ContactMeBatchConfig2ContactMeBatchConfigEntityMapper;
 import it.me.repository.entity.ContactMeBatchConfigEntity;
@@ -10,10 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.inOrder;
 
 @ExtendWith(MockitoExtension.class)
 class ContactMeBatchConfigPersistRepositoryJpaTest {
@@ -34,7 +34,7 @@ class ContactMeBatchConfigPersistRepositoryJpaTest {
         ContactMeBatchConfigEntity entity = new ContactMeBatchConfigEntity();
         given(mapper.apply(config)).willReturn(entity);
 
-        //when
+        // when
         ContactMeBatchConfig result = sut.persist(config);
 
         // then

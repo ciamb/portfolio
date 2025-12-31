@@ -1,5 +1,9 @@
 package it.me.repository.contact.me;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.inOrder;
+
 import it.me.domain.dto.ContactMe;
 import it.me.repository.contact.me.mapper.ContactMe2ContactMeEntityMapper;
 import it.me.repository.entity.ContactMeEntity;
@@ -10,10 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.inOrder;
 
 @ExtendWith(MockitoExtension.class)
 class ContactMePersistRepositoryTest {
@@ -35,7 +35,7 @@ class ContactMePersistRepositoryTest {
         var contactMeEntity = new ContactMeEntity();
         given(contactMe2ContactMeEntityMapper.apply(contactMe)).willReturn(contactMeEntity);
 
-        //when
+        // when
         ContactMe result = sut.persist(contactMe);
 
         // then
@@ -45,5 +45,4 @@ class ContactMePersistRepositoryTest {
         inOrder.verify(em).persist(contactMeEntity);
         inOrder.verifyNoMoreInteractions();
     }
-
 }

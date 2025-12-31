@@ -1,23 +1,21 @@
 package it.me.domain.service.page.content;
 
-import it.me.domain.Page;
-import it.me.domain.dto.PageContent;
-import it.me.domain.repository.page.content.PageContentPersistRepository;
-import it.me.domain.repository.page.content.PageContentReadBySlugRepository;
-import jakarta.persistence.EntityManager;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
+
+import it.me.domain.Page;
+import it.me.domain.dto.PageContent;
+import it.me.domain.repository.page.content.PageContentPersistRepository;
+import it.me.domain.repository.page.content.PageContentReadBySlugRepository;
+import java.util.Optional;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith({MockitoExtension.class})
 class PageContentHomeServiceTest {
@@ -39,32 +37,30 @@ class PageContentHomeServiceTest {
         given(pageContentReadBySlugRepositoryJpa.readBySlug(ArgumentMatchers.eq(Page.HOME.getSlug())))
                 .willReturn(Optional.of(pageContent));
 
-        //when
+        // when
         PageContent result = sut.createHomeIfMissing();
 
-        //then
+        // then
         assertThat(result).isSameAs(pageContent);
         var inOrder = Mockito.inOrder(pageContentReadBySlugRepositoryJpa);
-        inOrder.verify(pageContentReadBySlugRepositoryJpa, times(1))
-                .readBySlug(eq(Page.HOME.getSlug()));
+        inOrder.verify(pageContentReadBySlugRepositoryJpa, times(1)).readBySlug(eq(Page.HOME.getSlug()));
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     @DisplayName("2. Should return the default home page")
     void createHomeIfMissing_returnsDefaultHome_whenIsNotPresent() {
-        //given
+        // given
         given(pageContentReadBySlugRepositoryJpa.readBySlug(eq(Page.HOME.getSlug())))
                 .willReturn(Optional.empty());
         ArgumentCaptor<PageContent> pageContent = ArgumentCaptor.forClass(PageContent.class);
 
-        //when
+        // when
         PageContent result = sut.createHomeIfMissing();
 
-        //then
+        // then
         var inOrder = Mockito.inOrder(pageContentReadBySlugRepositoryJpa, pageContentPersistRepository);
-        inOrder.verify(pageContentReadBySlugRepositoryJpa, times(1))
-                .readBySlug(eq(Page.HOME.getSlug()));
+        inOrder.verify(pageContentReadBySlugRepositoryJpa, times(1)).readBySlug(eq(Page.HOME.getSlug()));
         inOrder.verify(pageContentPersistRepository, times(1)).persist(pageContent.capture());
         inOrder.verifyNoMoreInteractions();
 

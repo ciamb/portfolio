@@ -17,10 +17,9 @@ public class ContactMeBatchConfigUpdateAdminResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateContactMeBatchConfig(
-            ContactMeBatchConfigUpdateRequest contactMeBatchConfigUpdateRequest) {
-        var isActive = contactMeBatchConfigUpdateIsActiveService
-                .updateContactMeBatchConfig(contactMeBatchConfigUpdateRequest);
+    public Response updateContactMeBatchConfig(ContactMeBatchConfigUpdateRequest contactMeBatchConfigUpdateRequest) {
+        var isActive =
+                contactMeBatchConfigUpdateIsActiveService.updateContactMeBatchConfig(contactMeBatchConfigUpdateRequest);
         return Response.ok(isActive ? "Batch Contact Me Execution: true" : "Batch Contact Me execution: false")
                 .build();
     }

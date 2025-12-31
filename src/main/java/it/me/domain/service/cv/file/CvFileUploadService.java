@@ -5,13 +5,11 @@ import it.me.domain.mapper.FileDataToSha256Mapper;
 import it.me.domain.repository.cv.file.CvFilePersistRepository;
 import it.me.domain.repository.cv.file.CvFileReadBySha256Repository;
 import it.me.domain.repository.cv.file.CvFileUpdateAllIsActiveFalseRepository;
-import it.me.repository.cv.file.CvFileUpdateAllIsActiveToFalseRepositoryJpa;
 import it.me.web.dto.request.CvFileUploadRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.jboss.logging.Logger;
-
 import java.time.ZonedDateTime;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class CvFileUploadService {
@@ -42,20 +40,19 @@ public class CvFileUploadService {
             throw new IllegalArgumentException("fileData is too large (max 10MB)");
         }
 
-        var contentType = cvFileUploadRequest.contentType() == null
-                ? "application/pdf"
-                : cvFileUploadRequest.contentType();
+        var contentType =
+                cvFileUploadRequest.contentType() == null ? "application/pdf" : cvFileUploadRequest.contentType();
         if (!contentType.toLowerCase().startsWith("application/pdf")) {
             throw new IllegalArgumentException("Invalid content type, only application/pdf is supported");
         }
 
-        if (cvFileUploadRequest.filename() == null || cvFileUploadRequest.filename().isBlank()) {
+        if (cvFileUploadRequest.filename() == null
+                || cvFileUploadRequest.filename().isBlank()) {
             throw new IllegalArgumentException("filename is null or blank");
         }
 
         var sha256 = fileDataToSha256Mapper.apply(cvFileUploadRequest.fileData());
-        CvFile exist = cvFileReadBySha256Repository.readBySha256(sha256)
-                .orElse(null);
+        CvFile exist = cvFileReadBySha256Repository.readBySha256(sha256).orElse(null);
         if (exist != null) {
             throw new IllegalStateException("This CV already exists (sha256 duplicated)");
         }

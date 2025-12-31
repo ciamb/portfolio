@@ -1,37 +1,30 @@
 package it.me.repository.entity;
 
 import jakarta.persistence.*;
+import java.time.ZonedDateTime;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
-import java.time.ZonedDateTime;
 
 @Entity
 @Table(
         name = "cv_file",
-        indexes = {
-                @Index(name = "uq_single_active_cv", columnList = "is_active")
-        },
+        indexes = {@Index(name = "uq_single_active_cv", columnList = "is_active")},
         uniqueConstraints = {
-                @UniqueConstraint(name = "uq_cv_file_sha256", columnNames = {"sha256"})
-        }
-)
+            @UniqueConstraint(
+                    name = "uq_cv_file_sha256",
+                    columnNames = {"sha256"})
+        })
 @NamedQuery(
         name = CvFileEntity.READ_BY_SHA256,
-        query = " select cve from CvFileEntity cve " +
-                " where cve.sha256 = :sha256 "
-)
+        query = " select cve from CvFileEntity cve " + " where cve.sha256 = :sha256 ")
 @NamedQuery(
         name = CvFileEntity.UPDATE_IS_ACTIVE_TO_FALSE_IF_ANY,
-        query = " update CvFileEntity cve set cve.isActive = false," +
-                " cve.updatedAt = :updatedAt" +
-                " where cve.isActive = true "
-)
+        query = " update CvFileEntity cve set cve.isActive = false,"
+                + " cve.updatedAt = :updatedAt"
+                + " where cve.isActive = true ")
 @NamedQuery(
         name = CvFileEntity.READ_BY_IS_ACTIVE,
-        query = " select cve from CvFileEntity cve" +
-                " where cve.isActive = true "
-)
+        query = " select cve from CvFileEntity cve" + " where cve.isActive = true ")
 public class CvFileEntity {
     public static final String READ_BY_SHA256 = "CvFile.readBySha256";
     public static final String UPDATE_IS_ACTIVE_TO_FALSE_IF_ANY = "CvFile.updateIsActiveToFalseIfAny";

@@ -28,10 +28,7 @@ public class ContactMeCreateResource {
     public Response contactMe(@Valid ContactMeRequest contactMeRequest) {
         var contactMe = contactMeCreateService.createContactMe(contactMeRequest);
         var contactMeResponse = new ContactMeResponse(
-                contactMe.id(),
-                contactMe.status(),
-                contactBackToMessageMapper.apply(contactMe.contactBack())
-        );
+                contactMe.id(), contactMe.status(), contactBackToMessageMapper.apply(contactMe.contactBack()));
 
         return Response.status(Response.Status.CREATED)
                 .entity(contactMeResponse)

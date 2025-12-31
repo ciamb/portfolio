@@ -1,11 +1,11 @@
 package it.me.domain.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(MockitoExtension.class)
 class ContactBackToMessageMapperTest {
@@ -21,7 +21,7 @@ class ContactBackToMessageMapperTest {
         // when
         String result = sut.apply(contactBack);
 
-        //then
+        // then
         assertThat(result).contains("Ti auguro una buona giornata!");
     }
 
@@ -33,7 +33,7 @@ class ContactBackToMessageMapperTest {
         // when
         String result = sut.apply(contactBack);
 
-        //then
+        // then
         assertThat(result).contains("Ci sentiamo presto!");
     }
 }

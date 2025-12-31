@@ -1,9 +1,8 @@
 package it.me.domain.dto;
 
 import it.me.repository.entity.ContactMeEntity;
-import lombok.Builder;
-
 import java.time.ZonedDateTime;
+import lombok.Builder;
 
 @Builder
 public record ContactMe(
@@ -17,8 +16,7 @@ public record ContactMe(
         ZonedDateTime lastAttemptAt,
         String errorReason,
         ZonedDateTime createdAt,
-        ZonedDateTime updatedAt
-) {
+        ZonedDateTime updatedAt) {
     public ContactMeBuilder builderFromThis() {
         return ContactMe.builder()
                 .id(this.id)

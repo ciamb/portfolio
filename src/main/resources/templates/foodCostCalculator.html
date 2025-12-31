@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>FoodCost calcolatore</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" href="/favicon.ico">
+</head>
+<body>
+<div class="wrap">
+    <div class="card">
+        <h1 class="title">Semplice calcolatore FoodCost</h1>
+        <h3 class="subtitle">Un semplice e piccolo calcolatore per il food cost di un prodotto</h3>
+        <p class="subtitle">Inserisci prima di tutto il food cost in percentuale (es. 30 = 30% del food cost),
+            successivamente inserisci gli ingredienti. Al momento e possibile inserire fino ad un massimo di 10
+            ingredienti</p>
+
+        <!-- form food cost-->
+        <form id="foodCostForm" novalidate
+              autocomplete="off">
+
+            <section id="foodCostPercentInput">
+                <label for="foodCostPercent">
+                    Food Cost (% del costo del cibo sul prezzo finale)
+                </label>
+                <input id="foodCostPercent"
+                       name="foodCostPercent"
+                       type="number"
+                       min="1"
+                       max="100"
+                       step="1"
+                       placeholder="30"
+                       required/>
+                <small class="subtitle">Esempio: 30 significa che il costo degli ingredienti
+                    deve valere il 30% del prezzo finale di vendita</small>
+            </section>
+
+            <hr />
+
+            <section id="ingredientListInput">
+                <div>
+                    <h3>Ingredienti</h3>
+                    <small class="subtitle">Puoi aggiungere fino a <strong>10</strong> ingredienti.</small>
+                </div>
+
+                <button type="button" id="addIngredientButton">
+                    + Aggiungi ingrediente
+                </button>
+
+                <!-- dynamic by JS -->
+                <div id="ingredientListContainer"></div>
+
+                <!-- Non viente mostrato dal browser ma usato da JS per clonarlo -->
+                {#include ingredient-row-template /}
+
+            </section>
+
+            <hr />
+
+            <section id="foodCostFormAction">
+                <button type="submit"
+                        id="estimateFoodCostButton">
+                    Calcola
+                </button>
+            </section>
+
+            <section id="foodCostResult"
+                     aria-live="polite">
+                <div id="resultBox" hidden>
+                    <h2>Risultato</h2>
+                    <p>
+                        Costo totale ingredienti: <strong><span id="resourceCost">-</span></strong>
+                    </p>
+                    <p>
+                        Prezzo consigliato: <strong><span id="targetCost">-</span></strong>
+                    </p>
+                </div>
+                <div id="errorBox" hidden>
+                    <h2>Errore</h2>
+                    <p id="errorMessage">-</p>
+                </div>
+            </section>
+        </form>
+    </div>
+</div>
+
+<script src="/js/food-cost-calculator.js" defer></script>
+</body>
+</html>

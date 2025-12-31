@@ -24,5 +24,4 @@ public class ContactMeBatchLogPersistRepositoryJpa implements ContactMeBatchLogP
         em.persist(entity);
         return contactMeBatchLog;
     }
-
 }

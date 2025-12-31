@@ -1,5 +1,8 @@
 package it.me.web.error;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+
 import it.me.domain.Header;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.UriInfo;
@@ -10,9 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class NotFoundExceptionMapperTest {
@@ -37,13 +37,12 @@ class NotFoundExceptionMapperTest {
 
         var nfe = new NotFoundException("not found");
 
-        //when
+        // when
         var result = sut.toResponse(nfe);
 
-        //then
+        // then
         assertThat(result.getStatus()).isEqualTo(404);
-        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue()))
-                .isEqualTo("jdnfivuh89w7hv");
+        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue())).isEqualTo("jdnfivuh89w7hv");
 
         var errorResponse = (ErrorResponse) result.getEntity();
         assertThat(errorResponse.error()).isEqualTo("not_found");
@@ -60,13 +59,12 @@ class NotFoundExceptionMapperTest {
 
         var nfe = new NotFoundException("not found");
 
-        //when
+        // when
         var result = sut.toResponse(nfe);
 
-        //then
+        // then
         assertThat(result.getStatus()).isEqualTo(404);
-        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue()))
-                .isEqualTo("jdnfivuh89w7hv");
+        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue())).isEqualTo("jdnfivuh89w7hv");
 
         var errorResponse = (ErrorResponse) result.getEntity();
         assertThat(errorResponse.error()).isEqualTo("not_found");

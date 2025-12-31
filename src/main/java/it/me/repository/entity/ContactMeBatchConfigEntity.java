@@ -6,22 +6,20 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "contact_me_batch_config")
 @NamedQueries({
-        @NamedQuery(
-                name = ContactMeBatchConfigEntity.READ_BY_ID,
-                query = " select cmbce from ContactMeBatchConfigEntity as cmbce " +
-                        " where cmbce.id = :id ")
+    @NamedQuery(
+            name = ContactMeBatchConfigEntity.READ_BY_ID,
+            query = " select cmbce from ContactMeBatchConfigEntity as cmbce " + " where cmbce.id = :id ")
 })
 public class ContactMeBatchConfigEntity {
-    public final static String READ_BY_ID = "ContactMeBatchConfig.readById";
+    public static final String READ_BY_ID = "ContactMeBatchConfig.readById";
+
     @Id
     private Integer id;
 
-    @NotNull
-    @Column(name = "is_active", nullable = false)
+    @NotNull @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
-    @NotNull
-    @Column(name = "target_email", nullable = false)
+    @NotNull @Column(name = "target_email", nullable = false)
     private String targetEmail;
 
     public Integer id() {

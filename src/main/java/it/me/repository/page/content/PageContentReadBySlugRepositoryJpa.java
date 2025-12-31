@@ -7,7 +7,6 @@ import it.me.repository.page.content.mapper.PageContentEntity2PageContentMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-
 import java.util.Optional;
 
 @ApplicationScoped
@@ -26,5 +25,4 @@ public class PageContentReadBySlugRepositoryJpa implements PageContentReadBySlug
                 .findFirst()
                 .map(pageContentEntity2PageContentMapper);
     }
-
 }

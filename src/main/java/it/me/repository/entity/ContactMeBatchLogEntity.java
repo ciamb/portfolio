@@ -3,7 +3,6 @@ package it.me.repository.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
 import java.time.ZonedDateTime;
 
 @Entity
@@ -15,20 +14,16 @@ public class ContactMeBatchLogEntity {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @NotNull
-    @Column(name = "run_at", nullable = false)
+    @NotNull @Column(name = "run_at", nullable = false)
     private ZonedDateTime runAt;
 
-    @NotNull
-    @Column(name = "processed", nullable = false)
+    @NotNull @Column(name = "processed", nullable = false)
     private Integer processed;
 
-    @NotNull
-    @Column(name = "with_error", nullable = false)
+    @NotNull @Column(name = "with_error", nullable = false)
     private Integer withError;
 
-    @Size(max = 255)
-    @Column(name = "sent_to")
+    @Size(max = 255) @Column(name = "sent_to")
     private String sentTo;
 
     public Long id() {

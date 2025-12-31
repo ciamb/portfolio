@@ -17,14 +17,12 @@ public class PageContentUpdateBySlugRepositoryJpa implements PageContentUpdateBy
     @Transactional
     @Override
     public PageContent updatePageContentBySlug(PageContent pageContent) {
-        PageContentEntity pageContentEntity = em
-                .createNamedQuery(
+        PageContentEntity pageContentEntity = em.createNamedQuery(
                         PageContentEntity.READ_BY_SLUG, PageContentEntity.class)
                 .setParameter("slug", pageContent.slug())
                 .getResultStream()
                 .findFirst()
-                .orElseThrow(() -> new NotFoundException(
-                        "Page not found with slug: %s".formatted(pageContent.slug())));
+                .orElseThrow(() -> new NotFoundException("Page not found with slug: %s".formatted(pageContent.slug())));
 
         pageContentEntity.setTitle(pageContent.title());
         pageContentEntity.setSubtitle(pageContent.subtitle());

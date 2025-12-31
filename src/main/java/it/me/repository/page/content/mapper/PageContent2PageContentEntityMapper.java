@@ -3,9 +3,8 @@ package it.me.repository.page.content.mapper;
 import it.me.domain.dto.PageContent;
 import it.me.repository.entity.PageContentEntity;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jboss.logging.Logger;
-
 import java.util.function.Function;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class PageContent2PageContentEntityMapper implements Function<PageContent, PageContentEntity> {

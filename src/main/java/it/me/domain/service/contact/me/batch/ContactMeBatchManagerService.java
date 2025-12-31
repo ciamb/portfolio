@@ -6,15 +6,11 @@ import it.me.domain.repository.contact.me.batch.config.ContactMeBatchConfigReadB
 import it.me.domain.repository.contact.me.batch.log.ContactMeBatchLogPersistRepository;
 import it.me.domain.service.contact.me.ContactMeEmailSenderService;
 import it.me.domain.service.contact.me.ContactMeProcessingService;
-import it.me.repository.entity.ContactMeBatchLogEntity;
-import it.me.repository.contact.me.batch.config.ContactMeBatchConfigReadByIdRepositoryJpa;
-import it.me.repository.contact.me.batch.log.ContactMeBatchLogPersistRepositoryJpa;
 import it.me.web.dto.response.ContactMeBatchResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.jboss.logging.Logger;
-
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class ContactMeBatchManagerService {
@@ -33,7 +29,8 @@ public class ContactMeBatchManagerService {
     ContactMeEmailSenderService contactMeEmailSenderService;
 
     public ContactMeBatchResponse executeBatch() {
-        var contactMeBatchConfig = contactMeBatchConfigReadByIdRepository.readByIdEquals1()
+        var contactMeBatchConfig = contactMeBatchConfigReadByIdRepository
+                .readByIdEquals1()
                 .orElseThrow(() -> new IllegalStateException("No contact me batch config present"));
 
         if (!contactMeBatchConfig.isActive()) {
@@ -68,8 +65,7 @@ public class ContactMeBatchManagerService {
                 .sentTo(contactMeBatchConfig.targetEmail())
                 .build();
 
-        ContactMeBatchLog log = contactMeBatchLogPersistRepository
-                .persist(contactMeBatchLog);
+        ContactMeBatchLog log = contactMeBatchLogPersistRepository.persist(contactMeBatchLog);
 
         return new ContactMeBatchResponse(
                 true,
