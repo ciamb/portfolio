@@ -2,7 +2,8 @@ package it.me.web.view;
 
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
-import it.me.repository.page.content.PageContentReadBySlugRepositoryJpa;
+import it.me.domain.repository.cv.file.CvFileExistsIsActiveRepository;
+import it.me.domain.repository.page.content.PageContentReadBySlugRepository;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
@@ -20,11 +21,14 @@ public class HomeResource {
     Template home;
 
     @Inject
-    PageContentReadBySlugRepositoryJpa pageContentReadBySlugRepositoryJpa;
+    PageContentReadBySlugRepository pageContentReadBySlugRepository;
+
+    @Inject
+    CvFileExistsIsActiveRepository cvFileExistsIsActiveRepository;
 
     @GET
     public Response home() {
-        var pageContent = pageContentReadBySlugRepositoryJpa
+        var pageContent = pageContentReadBySlugRepository
                 .readBySlug("home")
                 .orElseThrow(() -> new NotFoundException("Page slug=%s not found".formatted("home")));
 
@@ -41,10 +45,13 @@ public class HomeResource {
 
         var updatedAt = pageContent.updatedAt() != null ? IT_DATETIME_FORMATTER.format(pageContent.updatedAt()) : null;
 
+        boolean isCvFilePresent = cvFileExistsIsActiveRepository.existsActiveCvFile();
+
         TemplateInstance view = home.data("home", pageContent)
                 .data("metaTitle", metaTitle)
                 .data("metaDescription", metaDescription)
-                .data("updatedAt", updatedAt);
+                .data("updatedAt", updatedAt)
+                .data("isCvFilePresent", isCvFilePresent);
 
         return Response.ok(view).build();
     }

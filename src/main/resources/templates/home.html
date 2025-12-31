@@ -34,10 +34,15 @@
 
             <div class="actions">
                 <!-- download CV -->
-                <a class="btn-download" href="/api/cv/download">
-                    Scarica il mio CV
-                </a>
-
+                {#if isCvFilePresent }
+                    <a class="btn-download" href="/api/cv/download">
+                        Scarica il mio CV
+                    </a>
+                {#else}
+                    <a class="a-btn-warning">
+                        Cv in aggiornamento
+                    </a>
+                {/if}
                 <!-- contact me -->
                 <button type="button" class="btn-contact" id="contact-me-open-btn">
                     Contattami
@@ -67,7 +72,8 @@
     </div>
 </div>
 
-    {#include contact-me /}
+<!-- modale contattami -->
+    {#include contactMe.html /}
 
 <script src="/js/contact-me.js"></script>
 </body>

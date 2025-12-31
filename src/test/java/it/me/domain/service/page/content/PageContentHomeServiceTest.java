@@ -27,14 +27,14 @@ class PageContentHomeServiceTest {
     PageContentPersistRepository pageContentPersistRepository;
 
     @Mock
-    PageContentReadBySlugRepository pageContentReadBySlugRepositoryJpa;
+    PageContentReadBySlugRepository pageContentReadBySlugRepository;
 
     @Test
     @DisplayName("1. Should return the home page from database")
     void createHomeIfMissing_returnsHome_whenIsPresent() {
         // given
         var pageContent = PageContent.builder().build();
-        given(pageContentReadBySlugRepositoryJpa.readBySlug(ArgumentMatchers.eq(Page.HOME.getSlug())))
+        given(pageContentReadBySlugRepository.readBySlug(ArgumentMatchers.eq(Page.HOME.getSlug())))
                 .willReturn(Optional.of(pageContent));
 
         // when
@@ -42,8 +42,8 @@ class PageContentHomeServiceTest {
 
         // then
         assertThat(result).isSameAs(pageContent);
-        var inOrder = Mockito.inOrder(pageContentReadBySlugRepositoryJpa);
-        inOrder.verify(pageContentReadBySlugRepositoryJpa, times(1)).readBySlug(eq(Page.HOME.getSlug()));
+        var inOrder = Mockito.inOrder(pageContentReadBySlugRepository);
+        inOrder.verify(pageContentReadBySlugRepository, times(1)).readBySlug(eq(Page.HOME.getSlug()));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -51,7 +51,7 @@ class PageContentHomeServiceTest {
     @DisplayName("2. Should return the default home page")
     void createHomeIfMissing_returnsDefaultHome_whenIsNotPresent() {
         // given
-        given(pageContentReadBySlugRepositoryJpa.readBySlug(eq(Page.HOME.getSlug())))
+        given(pageContentReadBySlugRepository.readBySlug(eq(Page.HOME.getSlug())))
                 .willReturn(Optional.empty());
         ArgumentCaptor<PageContent> pageContent = ArgumentCaptor.forClass(PageContent.class);
 
@@ -59,8 +59,8 @@ class PageContentHomeServiceTest {
         PageContent result = sut.createHomeIfMissing();
 
         // then
-        var inOrder = Mockito.inOrder(pageContentReadBySlugRepositoryJpa, pageContentPersistRepository);
-        inOrder.verify(pageContentReadBySlugRepositoryJpa, times(1)).readBySlug(eq(Page.HOME.getSlug()));
+        var inOrder = Mockito.inOrder(pageContentReadBySlugRepository, pageContentPersistRepository);
+        inOrder.verify(pageContentReadBySlugRepository, times(1)).readBySlug(eq(Page.HOME.getSlug()));
         inOrder.verify(pageContentPersistRepository, times(1)).persist(pageContent.capture());
         inOrder.verifyNoMoreInteractions();
 

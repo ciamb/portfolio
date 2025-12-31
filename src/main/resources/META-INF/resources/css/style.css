@@ -6,7 +6,8 @@
     --card: #151923;
     --acc: #6aa6ff;
     --ring: #99c2ff;
-    --err: #f97373
+    --err: #f97373;
+    --warn: #FFEE93;
 }
 
 * {
@@ -591,3 +592,14 @@ input[type="number"]::-webkit-inner-spin-button {
 /* ------------------------------------------------- */
 /* ------------------------------------------------- */
 /* ------------------------------------------------- */
+/* General --- start */
+.a-btn-warning {
+    display: inline-block;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    background-color: var(--warn);
+    color: var(--card);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: not-allowed;
+}
