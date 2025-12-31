@@ -2,13 +2,13 @@ package it.me.web.view;
 
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
-import it.me.repository.page.content.PageContentReadBySlugRepositoryJpa;
+import it.me.domain.repository.cv.file.CvFileExistsIsActiveRepository;
+import it.me.domain.repository.page.content.PageContentReadBySlugRepository;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
-
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -17,23 +17,24 @@ public class HomeResource {
     private static final DateTimeFormatter IT_DATETIME_FORMATTER =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.ITALY);
 
-    private final Template index;
-    private final PageContentReadBySlugRepositoryJpa pageContentReadBySlugRepositoryJpa;
+    @Inject
+    Template home;
 
     @Inject
-    public HomeResource(Template index, PageContentReadBySlugRepositoryJpa pageContentReadBySlugRepositoryJpa) {
-        this.index = index;
-        this.pageContentReadBySlugRepositoryJpa = pageContentReadBySlugRepositoryJpa;
-    }
+    PageContentReadBySlugRepository pageContentReadBySlugRepository;
+
+    @Inject
+    CvFileExistsIsActiveRepository cvFileExistsIsActiveRepository;
 
     @GET
     public Response home() {
-        var home = pageContentReadBySlugRepositoryJpa.readBySlug("home")
+        var pageContent = pageContentReadBySlugRepository
+                .readBySlug("home")
                 .orElseThrow(() -> new NotFoundException("Page slug=%s not found".formatted("home")));
 
-        var metaTitle = home.title();
+        var metaTitle = pageContent.title();
 
-        var body = home.body();
+        var body = pageContent.body();
         var metaDescription = "";
         if (body != null && !body.isBlank()) {
             metaDescription = body.replaceAll("\\s+", " ").strip();
@@ -42,12 +43,15 @@ public class HomeResource {
             }
         }
 
-        var updatedAt = home.updatedAt() != null ? IT_DATETIME_FORMATTER.format(home.updatedAt()) : null;
+        var updatedAt = pageContent.updatedAt() != null ? IT_DATETIME_FORMATTER.format(pageContent.updatedAt()) : null;
 
-        TemplateInstance view = index.data("home", home)
+        boolean isCvFilePresent = cvFileExistsIsActiveRepository.existsActiveCvFile();
+
+        TemplateInstance view = home.data("home", pageContent)
                 .data("metaTitle", metaTitle)
                 .data("metaDescription", metaDescription)
-                .data("updatedAt", updatedAt);
+                .data("updatedAt", updatedAt)
+                .data("isCvFilePresent", isCvFilePresent);
 
         return Response.ok(view).build();
     }

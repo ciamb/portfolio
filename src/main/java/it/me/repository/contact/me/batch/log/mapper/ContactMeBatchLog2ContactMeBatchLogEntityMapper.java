@@ -3,9 +3,8 @@ package it.me.repository.contact.me.batch.log.mapper;
 import it.me.domain.dto.ContactMeBatchLog;
 import it.me.repository.entity.ContactMeBatchLogEntity;
 import jakarta.enterprise.context.ApplicationScoped;
-import org.jboss.logging.Logger;
-
 import java.util.function.Function;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class ContactMeBatchLog2ContactMeBatchLogEntityMapper

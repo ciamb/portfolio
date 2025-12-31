@@ -1,5 +1,8 @@
 package it.me.web.error;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+
 import it.me.domain.Header;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
@@ -10,9 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class IllegalArgumentExceptionMapperTest {
@@ -41,8 +41,7 @@ class IllegalArgumentExceptionMapperTest {
 
         // then
         assertThat(result.getStatus()).isEqualTo(400);
-        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue()))
-                .isEqualTo("fg43h33grdvberb3453dsfs");
+        assertThat(result.getHeaderString(Header.C_REQUEST_ID.getValue())).isEqualTo("fg43h33grdvberb3453dsfs");
 
         var entity = (ErrorResponse) result.getEntity();
         assertThat(entity.error()).isEqualTo("illegal_argument_exception");

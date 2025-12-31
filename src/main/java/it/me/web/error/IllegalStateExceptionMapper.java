@@ -22,12 +22,7 @@ public class IllegalStateExceptionMapper implements ExceptionMapper<IllegalState
         var requestId = String.valueOf(MDC.get("requestId"));
         var path = uriInfo != null ? uriInfo.getPath() : "";
 
-        var errorResponse = new ErrorResponse(
-                "illegal_state_exception",
-                exception.getMessage(),
-                path,
-                requestId
-        );
+        var errorResponse = new ErrorResponse("illegal_state_exception", exception.getMessage(), path, requestId);
 
         logger.errorf("%s: %s", errorResponse.error(), exception.getMessage());
 

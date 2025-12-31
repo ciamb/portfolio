@@ -1,8 +1,7 @@
 package it.me.domain.dto;
 
-import lombok.Builder;
-
 import java.time.ZonedDateTime;
+import lombok.Builder;
 
 @Builder
 public record CvFile(
@@ -14,9 +13,8 @@ public record CvFile(
         String sha256,
         boolean isActive,
         ZonedDateTime createdAt,
-        ZonedDateTime updatedAt
-) {
-    CvFileBuilder buildFromThis() {
+        ZonedDateTime updatedAt) {
+    public CvFileBuilder toBuilder() {
         return CvFile.builder()
                 .id(this.id)
                 .filename(this.filename)

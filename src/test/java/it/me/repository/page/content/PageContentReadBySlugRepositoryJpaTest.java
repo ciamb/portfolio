@@ -1,11 +1,19 @@
 package it.me.repository.page.content;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+
 import it.me.domain.dto.PageContent;
 import it.me.repository.entity.PageContentEntity;
 import it.me.repository.page.content.mapper.PageContentEntity2PageContentMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,16 +21,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
-import java.util.stream.Stream;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class PageContentReadBySlugRepositoryJpaTest {
@@ -56,11 +54,10 @@ class PageContentReadBySlugRepositoryJpaTest {
         // when
         Optional<PageContent> result = assertDoesNotThrow(() -> sut.readBySlug(slug));
 
-        //then
+        // then
         assertThat(result).isPresent().contains(pageContent);
         var inOrder = Mockito.inOrder(em, query);
-        inOrder.verify(em, times(1))
-                .createNamedQuery(PageContentEntity.READ_BY_SLUG, PageContentEntity.class);
+        inOrder.verify(em, times(1)).createNamedQuery(PageContentEntity.READ_BY_SLUG, PageContentEntity.class);
         inOrder.verify(query, times(1)).setParameter(eq("slug"), eq(slug));
         inOrder.verify(query, times(1)).getResultStream();
         inOrder.verifyNoMoreInteractions();
@@ -80,11 +77,10 @@ class PageContentReadBySlugRepositoryJpaTest {
         // when
         Optional<PageContent> result = assertDoesNotThrow(() -> sut.readBySlug(slug));
 
-        //then
+        // then
         assertThat(result).isEmpty();
         var inOrder = Mockito.inOrder(em, query);
-        inOrder.verify(em, times(1))
-                .createNamedQuery(PageContentEntity.READ_BY_SLUG, PageContentEntity.class);
+        inOrder.verify(em, times(1)).createNamedQuery(PageContentEntity.READ_BY_SLUG, PageContentEntity.class);
         inOrder.verify(query, times(1)).setParameter(eq("slug"), eq(slug));
         inOrder.verify(query, times(1)).getResultStream();
         inOrder.verifyNoMoreInteractions();
@@ -97,7 +93,8 @@ class PageContentReadBySlugRepositoryJpaTest {
         var firstPage = new PageContentEntity();
         var secondPage = new PageContentEntity();
 
-        given(em.createNamedQuery(PageContentEntity.READ_BY_SLUG, PageContentEntity.class)).willReturn(query);
+        given(em.createNamedQuery(PageContentEntity.READ_BY_SLUG, PageContentEntity.class))
+                .willReturn(query);
         given(query.setParameter(eq("slug"), eq("first"))).willReturn(query);
         given(query.getResultStream()).willReturn(Stream.of(firstPage, secondPage));
         PageContent first = PageContent.builder().slug("first").build();
@@ -109,8 +106,7 @@ class PageContentReadBySlugRepositoryJpaTest {
         // then
         assertThat(out).isPresent().contains(first);
         var inOrder = Mockito.inOrder(em, query, pageContentEntity2PageContentMapper);
-        inOrder.verify(em, times(1))
-                .createNamedQuery(PageContentEntity.READ_BY_SLUG, PageContentEntity.class);
+        inOrder.verify(em, times(1)).createNamedQuery(PageContentEntity.READ_BY_SLUG, PageContentEntity.class);
         inOrder.verify(query, times(1)).setParameter(eq("slug"), eq("first"));
         inOrder.verify(query, times(1)).getResultStream();
         inOrder.verify(pageContentEntity2PageContentMapper, times(1)).apply(firstPage);
@@ -121,11 +117,11 @@ class PageContentReadBySlugRepositoryJpaTest {
     @DisplayName("Throw NPE when slug parameter is null")
     void readBySlug_throwsOnNull() {
         // given
-        given(em.createNamedQuery(PageContentEntity.READ_BY_SLUG, PageContentEntity.class)).willReturn(query);
+        given(em.createNamedQuery(PageContentEntity.READ_BY_SLUG, PageContentEntity.class))
+                .willReturn(query);
 
         // when
         // then
-        assertThatThrownBy(() -> sut.readBySlug(null))
-                .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> sut.readBySlug(null)).isInstanceOf(NullPointerException.class);
     }
 }

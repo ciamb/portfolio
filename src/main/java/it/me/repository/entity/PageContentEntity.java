@@ -1,22 +1,15 @@
 package it.me.repository.entity;
 
 import jakarta.persistence.*;
-
 import java.time.ZonedDateTime;
 
 @Entity
 @Table(
         name = "page_content",
-        uniqueConstraints = @UniqueConstraint(
-                name = "unique_page_content_slug",
-                columnNames = "slug"
-        )
-)
+        uniqueConstraints = @UniqueConstraint(name = "unique_page_content_slug", columnNames = "slug"))
 @NamedQuery(
         name = PageContentEntity.READ_BY_SLUG,
-        query = " select pce from PageContentEntity pce " +
-                " where pce.slug = :slug "
-)
+        query = " select pce from PageContentEntity pce " + " where pce.slug = :slug ")
 public class PageContentEntity {
     public static final String READ_BY_SLUG = "PageContent.readBySlug";
 
@@ -25,7 +18,7 @@ public class PageContentEntity {
     private Long id;
 
     @Column(nullable = false, length = 64)
-    private String slug; //es "home"
+    private String slug; // es "home"
 
     @Column(nullable = false, length = 120)
     private String title;

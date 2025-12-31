@@ -1,22 +1,20 @@
 package it.me.domain.service.cv.file;
 
-import it.me.domain.dto.CvFile;
-import it.me.repository.entity.CvFileEntity;
-import it.me.repository.cv.file.CvFileReadByIsActiveRepositoryJpa;
-import jakarta.ws.rs.NotFoundException;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import it.me.domain.dto.CvFile;
+import it.me.repository.cv.file.CvFileReadByIsActiveRepositoryJpa;
+import jakarta.ws.rs.NotFoundException;
+import java.util.Optional;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class CvFileDownloadServiceTest {
@@ -29,12 +27,11 @@ class CvFileDownloadServiceTest {
 
     @Test
     void downloadActiveFile() {
-        //given
+        // given
         CvFile cvFile = CvFile.builder().build();
-        given(cvFileReadByIsActiveRepository.readByIsActive())
-                .willReturn(Optional.of(cvFile));
+        given(cvFileReadByIsActiveRepository.readByIsActive()).willReturn(Optional.of(cvFile));
 
-        //when
+        // when
         CvFile result = assertDoesNotThrow(() -> sut.downloadActiveCvFile());
 
         // then
@@ -44,11 +41,10 @@ class CvFileDownloadServiceTest {
 
     @Test
     void downloadActiveFile_shouldThrowNotFoundException() {
-        //given
-        given(cvFileReadByIsActiveRepository.readByIsActive())
-                .willReturn(Optional.empty());
+        // given
+        given(cvFileReadByIsActiveRepository.readByIsActive()).willReturn(Optional.empty());
 
-        //when
+        // when
         NotFoundException nfe = assertThrows(NotFoundException.class, () -> sut.downloadActiveCvFile());
 
         // then

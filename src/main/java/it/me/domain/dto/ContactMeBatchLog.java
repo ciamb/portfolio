@@ -1,15 +1,7 @@
 package it.me.domain.dto;
 
+import java.time.ZonedDateTime;
 import lombok.Builder;
 
-import java.time.ZonedDateTime;
-
 @Builder
-public record ContactMeBatchLog(
-        Long id,
-        ZonedDateTime runAt,
-        Integer processed,
-        Integer withError,
-        String sentTo
-) {
-}
+public record ContactMeBatchLog(Long id, ZonedDateTime runAt, Integer processed, Integer withError, String sentTo) {}

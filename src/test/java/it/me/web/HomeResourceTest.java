@@ -1,13 +1,22 @@
 package it.me.web;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
+
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import it.me.domain.dto.PageContent;
-import it.me.repository.entity.PageContentEntity;
-import it.me.repository.page.content.PageContentReadBySlugRepositoryJpa;
+import it.me.domain.repository.cv.file.CvFileExistsIsActiveRepository;
+import it.me.domain.repository.page.content.PageContentReadBySlugRepository;
 import it.me.web.view.HomeResource;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -15,16 +24,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class HomeResourceTest {
@@ -36,15 +35,17 @@ class HomeResourceTest {
     Template templateIndex;
 
     @Mock
-    PageContentReadBySlugRepositoryJpa pageContentReadBySlugRepositoryJpa;
+    PageContentReadBySlugRepository pageContentReadBySlugRepository;
+
+    @Mock
+    CvFileExistsIsActiveRepository cvFileExistsIsActiveRepository;
 
     @Test
     void home_notFound() {
         // given
-        given(pageContentReadBySlugRepositoryJpa.readBySlug(eq("home")))
-                .willReturn(Optional.empty());
+        given(pageContentReadBySlugRepository.readBySlug(eq("home"))).willReturn(Optional.empty());
 
-        //when
+        // when
         NotFoundException nfe = assertThrows(NotFoundException.class, () -> sut.home());
 
         // then
@@ -61,15 +62,15 @@ class HomeResourceTest {
                 .body("hi           guysss   ")
                 .updatedAt(ZonedDateTime.of(2025, 1, 2, 3, 4, 5, 0, ZoneId.of("Europe/Paris")))
                 .build();
-        given(pageContentReadBySlugRepositoryJpa.readBySlug(eq("home")))
-                .willReturn(Optional.of(pageContent));
+        given(pageContentReadBySlugRepository.readBySlug(eq("home"))).willReturn(Optional.of(pageContent));
+        given(cvFileExistsIsActiveRepository.existsActiveCvFile()).willReturn(Boolean.TRUE);
         var templateInstance = Mockito.mock(TemplateInstance.class, RETURNS_SELF);
         given(templateIndex.data(anyString(), any())).willReturn(templateInstance);
 
-        //when
+        // when
         Response result = sut.home();
 
-        //then
+        // then
         assertThat(result.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 
         ArgumentCaptor<String> metaTitle = ArgumentCaptor.forClass(String.class);
@@ -81,12 +82,14 @@ class HomeResourceTest {
         verify(templateInstance).data(eq("metaTitle"), metaTitle.capture());
         verify(templateInstance).data(eq("metaDescription"), metaDescription.capture());
         verify(templateInstance).data(eq("updatedAt"), updatedAt.capture());
+        verify(templateInstance).data(eq("isCvFilePresent"), eq(Boolean.TRUE));
 
         assertThat(metaTitle.getValue()).isEqualTo("title");
         assertThat(metaDescription.getValue()).isEqualTo("hi guysss");
         assertThat(updatedAt.getValue()).isEqualTo("2025-01-02 03:04:05");
 
-        verifyNoMoreInteractions(templateIndex, templateInstance, pageContentReadBySlugRepositoryJpa);
+        verifyNoMoreInteractions(
+                templateIndex, templateInstance, pageContentReadBySlugRepository, cvFileExistsIsActiveRepository);
     }
 
     @Test
@@ -99,15 +102,15 @@ class HomeResourceTest {
                 .body(body)
                 .updatedAt(null)
                 .build();
-        given(pageContentReadBySlugRepositoryJpa.readBySlug(eq("home")))
-                .willReturn(Optional.of(pageContent));
+        given(pageContentReadBySlugRepository.readBySlug(eq("home"))).willReturn(Optional.of(pageContent));
+        given(cvFileExistsIsActiveRepository.existsActiveCvFile()).willReturn(Boolean.TRUE);
         var templateInstance = Mockito.mock(TemplateInstance.class, RETURNS_SELF);
         given(templateIndex.data(anyString(), any())).willReturn(templateInstance);
 
-        //when
+        // when
         Response result = sut.home();
 
-        //then
+        // then
         assertThat(result.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 
         ArgumentCaptor<String> metaTitle = ArgumentCaptor.forClass(String.class);
@@ -134,15 +137,15 @@ class HomeResourceTest {
                 .body("")
                 .updatedAt(null)
                 .build();
-        given(pageContentReadBySlugRepositoryJpa.readBySlug(eq("home")))
-                .willReturn(Optional.of(pageContent));
+        given(pageContentReadBySlugRepository.readBySlug(eq("home"))).willReturn(Optional.of(pageContent));
+        given(cvFileExistsIsActiveRepository.existsActiveCvFile()).willReturn(Boolean.TRUE);
         var templateInstance = Mockito.mock(TemplateInstance.class, RETURNS_SELF);
         given(templateIndex.data(anyString(), any())).willReturn(templateInstance);
 
-        //when
+        // when
         Response result = sut.home();
 
-        //then
+        // then
         assertThat(result.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 
         ArgumentCaptor<String> metaTitle = ArgumentCaptor.forClass(String.class);
@@ -167,15 +170,16 @@ class HomeResourceTest {
                 .body(null)
                 .updatedAt(null)
                 .build();
-        given(pageContentReadBySlugRepositoryJpa.readBySlug(eq("home")))
-                .willReturn(Optional.of(pageContent));
+        given(pageContentReadBySlugRepository.readBySlug(eq("home"))).willReturn(Optional.of(pageContent));
+        given(cvFileExistsIsActiveRepository.existsActiveCvFile()).willReturn(Boolean.TRUE);
+
         var templateInstance = Mockito.mock(TemplateInstance.class, RETURNS_SELF);
         given(templateIndex.data(anyString(), any())).willReturn(templateInstance);
 
-        //when
+        // when
         Response result = sut.home();
 
-        //then
+        // then
         assertThat(result.getStatus()).isEqualTo(Response.Status.OK.getStatusCode());
 
         ArgumentCaptor<String> metaTitle = ArgumentCaptor.forClass(String.class);

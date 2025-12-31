@@ -1,8 +1,15 @@
 package it.me.security;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+
 import jakarta.ws.rs.container.ContainerRequestContext;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,14 +17,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.io.IOException;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class ApiKeyAuthFilterTest {
@@ -34,22 +33,22 @@ class ApiKeyAuthFilterTest {
     @Test
     @DisplayName("1. Filter a non admin path")
     void filter_nonAdmin() throws IOException {
-        //given
+        // given
         sut.isAdmin = false;
         given(requestContext.getUriInfo()).willReturn(uriInfo);
         given(uriInfo.getPath()).willReturn("/api/test/double");
 
-        //when
+        // when
         sut.filter(requestContext);
 
-        //then
+        // then
         verify(requestContext, never()).abortWith(any());
     }
 
     @Test
     @DisplayName("2. Filter admin path with api-key not configured")
     void filter_adminWithBlankApiKey() throws IOException {
-        //given
+        // given
         sut.isAdmin = true;
         sut.apiKey = "";
         sut.header = "c-api-key";
@@ -59,20 +58,19 @@ class ApiKeyAuthFilterTest {
 
         ArgumentCaptor<Response> response = ArgumentCaptor.forClass(Response.class);
 
-        //when
+        // when
         sut.filter(requestContext);
 
-        //then
+        // then
         verify(requestContext).getUriInfo();
         verify(requestContext).abortWith(response.capture());
-        assertThat(response.getValue().getStatus())
-                .isEqualTo(Response.Status.SERVICE_UNAVAILABLE.getStatusCode());
+        assertThat(response.getValue().getStatus()).isEqualTo(Response.Status.SERVICE_UNAVAILABLE.getStatusCode());
     }
 
     @Test
     @DisplayName("3. Filter admin path with wrong api-key ")
     void filter_adminWithWrongApiKey() throws IOException {
-        //given
+        // given
         sut.isAdmin = true;
         sut.apiKey = "wrong_apikey";
         sut.header = "c-api-key";
@@ -83,13 +81,12 @@ class ApiKeyAuthFilterTest {
 
         ArgumentCaptor<Response> response = ArgumentCaptor.forClass(Response.class);
 
-        //when
+        // when
         sut.filter(requestContext);
 
-        //then
+        // then
         verify(requestContext).getUriInfo();
         verify(requestContext).abortWith(response.capture());
-        assertThat(response.getValue().getStatus())
-                .isEqualTo(Response.Status.UNAUTHORIZED.getStatusCode());
+        assertThat(response.getValue().getStatus()).isEqualTo(Response.Status.UNAUTHORIZED.getStatusCode());
     }
 }

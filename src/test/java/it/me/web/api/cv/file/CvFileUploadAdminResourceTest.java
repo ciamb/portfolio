@@ -1,8 +1,14 @@
 package it.me.web.api.cv.file;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import it.me.domain.dto.CvFile;
 import it.me.domain.service.cv.file.CvFileUploadService;
-import it.me.repository.entity.CvFileEntity;
 import it.me.web.dto.request.CvFileUploadRequest;
 import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
@@ -10,13 +16,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CvFileUploadAdminResourceTest {
@@ -34,8 +33,7 @@ class CvFileUploadAdminResourceTest {
     void shouldCallCvFileUploadService() {
         // given
         var cvFile = CvFile.builder().filename("cvFile.pdf").build();
-        given(cvFileUploadService.uploadCvFile(any()))
-                .willReturn(cvFile);
+        given(cvFileUploadService.uploadCvFile(any())).willReturn(cvFile);
 
         // when
         Response result = sut.uploadCv(cvFileUploadRequest);
@@ -44,6 +42,5 @@ class CvFileUploadAdminResourceTest {
         assertThat(result.getStatus()).isEqualTo(201);
         assertSame(result.getEntity(), cvFile);
         verify(cvFileUploadService, times(1)).uploadCvFile(any());
-
     }
 }

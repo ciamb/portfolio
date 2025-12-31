@@ -2,7 +2,6 @@ package it.me.web.api.cv.file;
 
 import it.me.domain.dto.CvFile;
 import it.me.domain.service.cv.file.CvFileUploadService;
-import it.me.repository.entity.CvFileEntity;
 import it.me.web.dto.request.CvFileUploadRequest;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -25,8 +24,6 @@ public class CvFileUploadAdminResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response uploadCv(@Valid CvFileUploadRequest cvFileUploadRequest) {
         CvFile persistedCvFile = cvFileUploadService.uploadCvFile(cvFileUploadRequest);
-        return Response.status(Response.Status.CREATED)
-                .entity(persistedCvFile)
-                .build();
+        return Response.status(Response.Status.CREATED).entity(persistedCvFile).build();
     }
 }

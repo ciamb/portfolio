@@ -8,9 +8,8 @@ import jakarta.ws.rs.container.ContainerRequestFilter;
 import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.ext.Provider;
-import org.jboss.logging.MDC;
-
 import java.util.UUID;
+import org.jboss.logging.MDC;
 
 @Provider
 @Priority(Priorities.AUTHENTICATION - 1) // before the c-api-key filter
@@ -31,8 +30,7 @@ public class RequestIdFilter implements ContainerRequestFilter, ContainerRespons
     public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
         var requestId = requestContext.getProperty(MDC_KEY);
         if (requestId != null) {
-            responseContext.getHeaders().putSingle(
-                    Header.C_REQUEST_ID.getValue(), requestId.toString());
+            responseContext.getHeaders().putSingle(Header.C_REQUEST_ID.getValue(), requestId.toString());
         }
         MDC.remove(MDC_KEY);
     }

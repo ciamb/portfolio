@@ -7,7 +7,8 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 
 @ApplicationScoped
-public class ContactMeCountByEmailAndStatusPendingRepositoryJpa implements ContactMeCountByEmailAndStatusPendingRepository {
+public class ContactMeCountByEmailAndStatusPendingRepositoryJpa
+        implements ContactMeCountByEmailAndStatusPendingRepository {
     @Inject
     EntityManager em;
 

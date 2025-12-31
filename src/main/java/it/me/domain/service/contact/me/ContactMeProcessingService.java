@@ -7,13 +7,12 @@ import it.me.domain.repository.contact.me.ContactMeReadByStatusPendingRepository
 import it.me.repository.entity.ContactMeEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.jboss.logging.Logger;
-
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class ContactMeProcessingService {
@@ -28,8 +27,7 @@ public class ContactMeProcessingService {
     public ProcessedInfo processPendingContactMe() {
         ZonedDateTime now = ZonedDateTime.now();
 
-        List<ContactMe> pendingList = contactMeReadByStatusPendingRepository
-                .readAllByStatusPending();
+        List<ContactMe> pendingList = contactMeReadByStatusPendingRepository.readAllByStatusPending();
 
         if (pendingList.isEmpty()) {
             logger.warn("No contact me found in PENDING status");
@@ -43,7 +41,8 @@ public class ContactMeProcessingService {
 
         pendingList.forEach(processing -> {
             try {
-                ContactMe processedContactMe = processing.builderFromThis()
+                ContactMe processedContactMe = processing
+                        .builderFromThis()
                         .status(ContactMeEntity.Status.PROCESSED)
                         .attempts(processing.attempts() + 1)
                         .lastAttemptAt(now)
@@ -56,7 +55,8 @@ public class ContactMeProcessingService {
                 var errorMsg = e.getMessage() != null && e.getMessage().length() > 500
                         ? e.getMessage().substring(0, 500)
                         : e.getMessage();
-                ContactMe erroredContactMe = processing.builderFromThis()
+                ContactMe erroredContactMe = processing
+                        .builderFromThis()
                         .status(ContactMeEntity.Status.ERROR)
                         .attempts(processing.attempts() + 1)
                         .lastAttemptAt(now)

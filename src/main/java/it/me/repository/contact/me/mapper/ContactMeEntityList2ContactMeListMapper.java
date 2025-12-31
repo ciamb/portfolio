@@ -4,13 +4,11 @@ import it.me.domain.dto.ContactMe;
 import it.me.repository.entity.ContactMeEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.util.List;
 import java.util.function.Function;
 
 @ApplicationScoped
-public class ContactMeEntityList2ContactMeListMapper
-        implements Function<List<ContactMeEntity>, List<ContactMe>> {
+public class ContactMeEntityList2ContactMeListMapper implements Function<List<ContactMeEntity>, List<ContactMe>> {
 
     @Inject
     ContactMeEntity2ContactMeMapper contactMeEntity2ContactMeMapper;
@@ -25,8 +23,6 @@ public class ContactMeEntityList2ContactMeListMapper
             return List.of();
         }
 
-        return contactMeEntities.stream()
-                .map(contactMeEntity2ContactMeMapper)
-                .toList();
+        return contactMeEntities.stream().map(contactMeEntity2ContactMeMapper).toList();
     }
 }

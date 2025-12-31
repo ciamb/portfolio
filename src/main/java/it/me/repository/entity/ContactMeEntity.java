@@ -3,33 +3,32 @@ package it.me.repository.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
-
-import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "contact_me")
 @NamedQueries({
-        @NamedQuery(
-                name = ContactMeEntity.READ_ALL_BY_STATUS_PENDING,
-                query = "SELECT cme FROM ContactMeEntity cme WHERE cme.status = 'PENDING' ORDER BY cme.createdAt ASC"
-        ),
-        @NamedQuery(
-                name = ContactMeEntity.COUNT_BY_EMAIL_AND_STATUS_PENDING,
-                query = "SELECT COUNT(cme) FROM ContactMeEntity cme WHERE cme.email = :email and cme.status = :status"
-        )
+    @NamedQuery(
+            name = ContactMeEntity.READ_ALL_BY_STATUS_PENDING,
+            query = "SELECT cme FROM ContactMeEntity cme WHERE cme.status = 'PENDING' ORDER BY cme.createdAt ASC"),
+    @NamedQuery(
+            name = ContactMeEntity.COUNT_BY_EMAIL_AND_STATUS_PENDING,
+            query = "SELECT COUNT(cme) FROM ContactMeEntity cme WHERE cme.email = :email and cme.status = :status")
 })
 public class ContactMeEntity {
     public static final String READ_ALL_BY_STATUS_PENDING = "ContactMe.readAllByStatusPending";
     public static final String COUNT_BY_EMAIL_AND_STATUS_PENDING = "ContactMe.countByEmailAndStatusPending";
 
     /**
-     * Represent the status of a ContactMe record of DB. Actual mapped status are
-     * {@code PENDING}, {@code PROCESSED}, {@code ERROR}
+     * Represent the status of a ContactMe record of DB. Actual mapped status are {@code PENDING},
+     * {@code PROCESSED}, {@code ERROR}
      */
     public enum Status {
-        PENDING, PROCESSED, ERROR
+        PENDING,
+        PROCESSED,
+        ERROR
     }
 
     @Id
@@ -39,24 +38,20 @@ public class ContactMeEntity {
     @Column(nullable = false, length = 255)
     private String email;
 
-    @NotBlank
-    @Column(nullable = false, length = 150)
+    @NotBlank @Column(nullable = false, length = 150)
     private String name;
 
-    @NotBlank
-    @Column(columnDefinition = "TEXT")
+    @NotBlank @Column(columnDefinition = "TEXT")
     private String message;
 
-    @NotNull(message = "Contact back flag is required")
-    @Column(name = "contact_back")
+    @NotNull(message = "Contact back flag is required") @Column(name = "contact_back")
     private Boolean contactBack = false;
 
     @JdbcType(PostgreSQLEnumJdbcType.class)
     @Column(columnDefinition = "contact_me_status")
     private Status status = Status.PENDING;
 
-    @NotNull
-    @Column(nullable = false)
+    @NotNull @Column(nullable = false)
     private Integer attempts = 0;
 
     @Column(name = "last_attempt_at")

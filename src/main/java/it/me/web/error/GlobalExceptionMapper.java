@@ -8,7 +8,6 @@ import jakarta.ws.rs.ext.Provider;
 import org.jboss.logging.Logger;
 import org.jboss.logging.MDC;
 
-
 @Provider
 public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
     private static final Logger logger = Logger.getLogger(GlobalExceptionMapper.class.getName());
@@ -27,8 +26,7 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
 
         logger.errorf(exception, "Unhandled error on %s %s [requestId=%s]", method, path, requestId);
 
-        var errorResponse = new ErrorResponse(
-                "internal_error", "Unhandled error", path, requestId);
+        var errorResponse = new ErrorResponse("internal_error", "Unhandled error", path, requestId);
 
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                 .type(MediaType.APPLICATION_JSON)

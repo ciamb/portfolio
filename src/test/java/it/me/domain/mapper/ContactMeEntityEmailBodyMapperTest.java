@@ -1,17 +1,16 @@
 package it.me.domain.mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import it.me.domain.dto.ContactMe;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @ExtendWith(MockitoExtension.class)
 class ContactMeEntityEmailBodyMapperTest {
@@ -21,7 +20,7 @@ class ContactMeEntityEmailBodyMapperTest {
 
     @Test
     void shouldMapNoError() {
-        //given
+        // given
         ContactMe contactMeA = ContactMe.builder()
                 .message("ciao")
                 .email("marcella@bella.com")
@@ -31,10 +30,10 @@ class ContactMeEntityEmailBodyMapperTest {
                 .build();
         List<ContactMe> contactMeList = List.of(contactMeA);
 
-        //when
+        // when
         String apply = assertDoesNotThrow(() -> sut.apply(contactMeList));
 
-        //then
+        // then
         assertThat(apply).contains(contactMeA.message());
         assertThat(apply).contains(contactMeA.name());
         assertThat(apply).contains(contactMeA.email());

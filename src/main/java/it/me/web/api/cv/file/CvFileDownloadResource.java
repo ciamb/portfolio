@@ -3,7 +3,6 @@ package it.me.web.api.cv.file;
 import it.me.domain.dto.CvFile;
 import it.me.domain.mapper.FilenameDefaultMapper;
 import it.me.domain.service.cv.file.CvFileDownloadService;
-import it.me.repository.entity.CvFileEntity;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;

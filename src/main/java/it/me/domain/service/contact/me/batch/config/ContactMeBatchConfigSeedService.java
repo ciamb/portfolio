@@ -27,10 +27,7 @@ public class ContactMeBatchConfigSeedService {
         var found = contactMeBatchConfigReadByIdRepository.readByIdEquals1();
         if (found.isPresent()) {
             var contactMeBatchConfig = found.get();
-            logger.infof(
-                    "Found! contact_me_batch_config already exists with id %d",
-                    contactMeBatchConfig.id()
-            );
+            logger.infof("Found! contact_me_batch_config already exists with id %d", contactMeBatchConfig.id());
             if (contactMeBatchConfig.targetEmail().isBlank()) {
                 logger.warnf("target_email non \u00E8 configurata correttamente a DB, controlla");
             }

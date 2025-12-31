@@ -9,10 +9,9 @@ import jakarta.ws.rs.container.ContainerResponseContext;
 import jakarta.ws.rs.container.ContainerResponseFilter;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.Provider;
+import java.io.IOException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.jboss.logging.Logger;
-
-import java.io.IOException;
 
 @Provider
 @Priority(Priorities.USER)
@@ -37,7 +36,8 @@ public class RequestTimingFilter implements ContainerRequestFilter, ContainerRes
     }
 
     @Override
-    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) throws IOException {
+    public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext)
+            throws IOException {
         if (!isTimingEnabled) {
             return;
         }
@@ -58,7 +58,7 @@ public class RequestTimingFilter implements ContainerRequestFilter, ContainerRes
 
         if (elapsedInMillis >= slowThresholdMs) {
             logger.warn(formattedMessage);
-        } else  {
+        } else {
             logger.info(formattedMessage);
         }
     }

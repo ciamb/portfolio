@@ -7,9 +7,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import org.jboss.logging.Logger;
-
 import java.util.List;
+import org.jboss.logging.Logger;
 
 @ApplicationScoped
 public class ContactMeProcessedBulkUpdateRepositoryJpa implements ContactMeProcessedBulkUpdateRepository {

@@ -1,9 +1,15 @@
 package it.me.web.api.cv.file;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import it.me.domain.dto.CvFile;
 import it.me.domain.mapper.FilenameDefaultMapper;
 import it.me.domain.service.cv.file.CvFileDownloadService;
-import it.me.repository.entity.CvFileEntity;
 import jakarta.ws.rs.core.EntityTag;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Request;
@@ -15,13 +21,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CvFileDownloadResourceTest {
@@ -64,14 +63,11 @@ class CvFileDownloadResourceTest {
 
         // then
         assertThat(result.getStatus()).isEqualTo(200);
-        assertThat(result.getHeaderString(HttpHeaders.CONTENT_TYPE))
-                .isEqualTo("application/pdf");
+        assertThat(result.getHeaderString(HttpHeaders.CONTENT_TYPE)).isEqualTo("application/pdf");
         assertThat(result.getHeaderString(HttpHeaders.CONTENT_DISPOSITION))
                 .isEqualTo("attachment; filename=\"Andrea_CV.pdf\"");
-        assertThat(result.getHeaderString(HttpHeaders.CACHE_CONTROL))
-                .isEqualTo("private, no-cache");
-        assertThat(result.getHeaderString(HttpHeaders.CONTENT_LENGTH))
-                .isEqualTo("3");
+        assertThat(result.getHeaderString(HttpHeaders.CACHE_CONTROL)).isEqualTo("private, no-cache");
+        assertThat(result.getHeaderString(HttpHeaders.CONTENT_LENGTH)).isEqualTo("3");
 
         // entity tag captor
         ArgumentCaptor<EntityTag> entityTag = ArgumentCaptor.forClass(EntityTag.class);
@@ -80,5 +76,4 @@ class CvFileDownloadResourceTest {
         verify(cvFileDownloadService, times(1)).downloadActiveCvFile();
         verify(filenameDefaultMapper, times(1)).apply("Andrea_CV");
     }
-
 }

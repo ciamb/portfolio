@@ -12,5 +12,4 @@ public enum Page {
     public String getSlug() {
         return slug;
     }
-
 }
