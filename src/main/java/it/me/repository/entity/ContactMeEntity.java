@@ -15,11 +15,15 @@ import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
             query = "SELECT cme FROM ContactMeEntity cme WHERE cme.status = 'PENDING' ORDER BY cme.createdAt ASC"),
     @NamedQuery(
             name = ContactMeEntity.COUNT_BY_EMAIL_AND_STATUS_PENDING,
-            query = "SELECT COUNT(cme) FROM ContactMeEntity cme WHERE cme.email = :email and cme.status = :status")
+            query = "SELECT COUNT(cme) FROM ContactMeEntity cme WHERE cme.email = :email and cme.status = :status"),
+    @NamedQuery(
+            name = ContactMeEntity.DELETE_ALL_BY_STATUS_PROCESSED,
+            query = " delete from ContactMeEntity cme where cme.status = 'PROCESSED'")
 })
 public class ContactMeEntity {
     public static final String READ_ALL_BY_STATUS_PENDING = "ContactMe.readAllByStatusPending";
     public static final String COUNT_BY_EMAIL_AND_STATUS_PENDING = "ContactMe.countByEmailAndStatusPending";
+    public static final String DELETE_ALL_BY_STATUS_PROCESSED = "ContactMe.deleteAllByStatusProcessed";
 
     /**
      * Represent the status of a ContactMe record of DB. Actual mapped status are {@code PENDING},
