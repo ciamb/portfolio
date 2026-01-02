@@ -8,10 +8,14 @@ import jakarta.validation.constraints.NotNull;
 @NamedQueries({
     @NamedQuery(
             name = ContactMeBatchConfigEntity.READ_BY_ID,
-            query = " select cmbce from ContactMeBatchConfigEntity as cmbce " + " where cmbce.id = :id ")
+            query = " select cmbce from ContactMeBatchConfigEntity as cmbce " + " where cmbce.id = :id "),
+    @NamedQuery(
+            name = ContactMeBatchConfigEntity.UPDATE_BY_ID,
+            query = " update ContactMeBatchConfigEntity cmbce set cmbce.isActive = :isActive where cmbce.id = 1")
 })
 public class ContactMeBatchConfigEntity {
     public static final String READ_BY_ID = "ContactMeBatchConfig.readById";
+    public static final String UPDATE_BY_ID = "ContactMeBatchConfig.updateById";
 
     @Id
     private Integer id;
