@@ -26,6 +26,16 @@ jobs:
           java-version: '21'
           cache: maven
 
+      - name: Check snapshot
+        run: |
+          chmod +x mvnw
+          VERSION=$(./mvnw -q -DforceStdout help:evaluate -Dexpression=project.version)
+          echo "POM version: $VERSION"
+          if [[ "$VERSION" == *-SNAPSHOT ]]; then
+            echo "::error::Snapshot versione snapshot non ammessa per il rilascio (found: $VERSION)"
+            exit 1
+          fi
+
       - name: Build & Test (no secrets)
         run: |
           chmod +x mvnw
