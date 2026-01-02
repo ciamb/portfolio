@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @Path("/food-cost-calculator")
 public class FoodCostCalculatorResource {
@@ -13,9 +14,12 @@ public class FoodCostCalculatorResource {
     @Inject
     Template foodCostCalculator;
 
+    @ConfigProperty(name = "quarkus.application.version")
+    String appVersion;
+
     @GET
     public Response foodCostCalculator() {
-        TemplateInstance view = foodCostCalculator.instance();
-        return Response.ok(view).build();
+        TemplateInstance view = foodCostCalculator.data("appVersion", appVersion);
+        return Response.ok(view).header("Cache-Control", "no-cache").build();
     }
 }

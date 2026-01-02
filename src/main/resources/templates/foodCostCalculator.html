@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <title>FoodCost calcolatore</title>
 
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style.css?v={appVersion}">
     <link rel="icon" href="/favicon.ico">
 </head>
 <body>
 <div class="wrap">
+        {#include backToHomeButton /}
     <div class="card">
         <h1 class="title">Semplice calcolatore FoodCost</h1>
         <h3 class="subtitle">Un semplice e piccolo calcolatore per il food cost di un prodotto</h3>
@@ -36,7 +37,7 @@
                     deve valere il 30% del prezzo finale di vendita</small>
             </section>
 
-            <hr />
+            <hr/>
 
             <section id="ingredientListInput">
                 <div>
@@ -52,11 +53,11 @@
                 <div id="ingredientListContainer"></div>
 
                 <!-- Non viente mostrato dal browser ma usato da JS per clonarlo -->
-                {#include ingredientRowTemplate.html /}
+                    {#include ingredientRowTemplate.html /}
 
             </section>
 
-            <hr />
+            <hr/>
 
             <section id="foodCostFormAction">
                 <button type="submit"

@@ -1,5 +1,7 @@
 package it.me.web.view;
 
+import static it.me.domain.PortfolioPublicConst.GITHUB_CIAMB_PORTFOLIO;
+
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
 import it.me.domain.repository.cv.file.CvFileExistsIsActiveRepository;
@@ -11,6 +13,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @Path("/")
 public class HomeResource {
@@ -25,6 +28,9 @@ public class HomeResource {
 
     @Inject
     CvFileExistsIsActiveRepository cvFileExistsIsActiveRepository;
+
+    @ConfigProperty(name = "quarkus.application.version")
+    String appVersion;
 
     @GET
     public Response home() {
@@ -51,8 +57,10 @@ public class HomeResource {
                 .data("metaTitle", metaTitle)
                 .data("metaDescription", metaDescription)
                 .data("updatedAt", updatedAt)
+                .data("githubPage", GITHUB_CIAMB_PORTFOLIO)
+                .data("appVersion", appVersion)
                 .data("isCvFilePresent", isCvFilePresent);
 
-        return Response.ok(view).build();
+        return Response.ok(view).header("Cache-Control", "no-cache").build();
     }
 }
