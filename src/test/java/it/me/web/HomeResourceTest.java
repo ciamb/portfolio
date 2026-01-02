@@ -1,5 +1,6 @@
 package it.me.web;
 
+import static it.me.domain.PortfolioPublicConst.GITHUB_CIAMB_PORTFOLIO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
@@ -14,6 +15,7 @@ import it.me.domain.repository.page.content.PageContentReadBySlugRepository;
 import it.me.web.view.HomeResource;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response;
+import java.lang.reflect.Field;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -54,8 +56,9 @@ class HomeResourceTest {
     }
 
     @Test
-    void writeMetaDescription() {
+    void writeMetaDescription() throws NoSuchFieldException, IllegalAccessException {
         // given
+        setAppVersionMockViaReflection("11");
         var pageContent = PageContent.builder()
                 .slug("home")
                 .title("title")
@@ -83,6 +86,8 @@ class HomeResourceTest {
         verify(templateInstance).data(eq("metaDescription"), metaDescription.capture());
         verify(templateInstance).data(eq("updatedAt"), updatedAt.capture());
         verify(templateInstance).data(eq("isCvFilePresent"), eq(Boolean.TRUE));
+        verify(templateInstance).data(eq("githubPage"), eq(GITHUB_CIAMB_PORTFOLIO));
+        verify(templateInstance).data(eq("appVersion"), eq("11"));
 
         assertThat(metaTitle.getValue()).isEqualTo("title");
         assertThat(metaDescription.getValue()).isEqualTo("hi guysss");
@@ -194,5 +199,18 @@ class HomeResourceTest {
         assertThat(pageContent.body()).isNull();
         assertThat(updatedAt.getValue()).isNull();
         assertThat(metaDescription.getValue()).isBlank();
+    }
+
+    /**
+     * Set app version mock via reflection for testing purpose
+     *
+     * @param appVersion app version to set
+     * @throws NoSuchFieldException possible exception 1
+     * @throws IllegalAccessException possible exception 2
+     */
+    private void setAppVersionMockViaReflection(String appVersion) throws NoSuchFieldException, IllegalAccessException {
+        Field appVersionMock = HomeResource.class.getDeclaredField("appVersion");
+        appVersionMock.setAccessible(true);
+        appVersionMock.set(sut, appVersion);
     }
 }
