@@ -23,7 +23,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-a:focus-visible, button:focus-visible {
+a:focus-visible,
+button:focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
     border-radius: 8px;
@@ -35,6 +36,13 @@ a:focus-visible, button:focus-visible {
     padding: 0 24px;
 }
 
+@media (max-width: 640px) {
+    .wrap {
+        margin: 24px auto;
+        padding: 0 16px;
+    }
+}
+
 .card {
     background: var(--card);
     border-radius: 20px;
@@ -42,15 +50,20 @@ a:focus-visible, button:focus-visible {
     box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
 }
 
+@media (max-width: 640px) {
+    .card {
+        padding: 24px 20px;
+        border-radius: 16px;
+    }
+}
+
 hr {
     border: 0;
     height: 1px;
-    background: linear-gradient(
-            90deg,
+    background: linear-gradient(90deg,
             rgba(154, 164, 178, 0),
             rgba(154, 164, 178, 0.35),
-            rgba(154, 164, 178, 0)
-    );
+            rgba(154, 164, 178, 0));
     margin: 1rem 0;
 }
 
@@ -79,6 +92,7 @@ p.subtitle {
     display: flex;
     gap: 8px;
     align-items: baseline;
+    flex-wrap: wrap;
 }
 
 .footer time {
@@ -176,8 +190,10 @@ p.subtitle {
     color: white;
     transition: background-color 0.2s ease, transform 0.1s ease;
 
-    font: inherit; /* <— usa lo stesso font del body/card */
-    border: none; /* <— toglie il bordo grigio del button */
+    font: inherit;
+    /* <— usa lo stesso font del body/card */
+    border: none;
+    /* <— toglie il bordo grigio del button */
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
@@ -250,6 +266,16 @@ p.subtitle {
     box-shadow: 0 24px 80px rgba(15, 23, 42, 0.8);
     color: #e5e7eb;
     border: 1px solid #1f2937;
+    max-height: calc(100vh - 2rem);
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 640px) {
+    .contact-me {
+        margin: 0.5rem;
+        padding: 1rem;
+    }
 }
 
 .contact-me__header {
@@ -281,6 +307,7 @@ p.subtitle {
 
 .contact-me__body {
     margin-bottom: 0.75rem;
+    overflow-y: auto;
 }
 
 .contact-me__help {
@@ -305,7 +332,7 @@ p.subtitle {
     border: 1px solid #374151;
     padding: 0.6rem 0.7rem;
     resize: vertical;
-    min-height: 220px;
+    min-height: 180px;
     background: #0f1115;
     color: #e5e7eb;
 }
@@ -363,12 +390,10 @@ p.subtitle {
 .card hr {
     border: 0;
     height: 1px;
-    background: linear-gradient(
-            90deg,
+    background: linear-gradient(90deg,
             rgba(154, 164, 178, 0),
             rgba(154, 164, 178, 0.35),
-            rgba(154, 164, 178, 0)
-    );
+            rgba(154, 164, 178, 0));
     margin: 6px 0;
 }
 
@@ -406,10 +431,13 @@ ma e unn'aggiunta carina al momento */
 
 /* Rimuove le frecce dell'input number orribili */
 input[type="number"] {
+    appearance: textfield;
     -moz-appearance: textfield;
 }
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
+    appearance: none;
     -webkit-appearance: none;
     margin: 0;
 }
@@ -418,7 +446,7 @@ input[type="number"]::-webkit-inner-spin-button {
     max-width: 10rem;
 }
 
-#ingredientListInput > div:first-child h3 {
+#ingredientListInput>div:first-child h3 {
     margin: 0;
     font-size: 22px;
 }
@@ -530,9 +558,11 @@ input[type="number"]::-webkit-inner-spin-button {
         grid-template-columns: 1fr;
         align-items: stretch;
     }
+
     .removeIngredientButton {
         width: 100%;
     }
+
     #estimateFoodCostButton {
         width: 100%;
     }
@@ -627,7 +657,8 @@ input[type="number"]::-webkit-inner-spin-button {
     border-radius: 12px;
 
     color: var(--muted);
-    text-decoration: none; /* Rimuove la sottolineatura dell'url */
+    text-decoration: none;
+    /* Rimuove la sottolineatura dell'url */
     font-weight: 700;
 
     border: 1px solid #9aa4b238;
@@ -646,6 +677,7 @@ input[type="number"]::-webkit-inner-spin-button {
 #backToHome .backHomeButton:active {
     transform: translateY(0);
 }
+
 /* Back Home button --- end */
 /* ------------------------------------------------- */
 /* ------------------------------------------------- */
