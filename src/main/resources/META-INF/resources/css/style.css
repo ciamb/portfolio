@@ -153,7 +153,20 @@ p.subtitle {
     display: flex;
     gap: 0.75rem;
     flex-wrap: wrap;
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 480px) {
+    .actions {
+        gap: 0.5rem;
+    }
+
+    .actions>* {
+        flex: 1 1 calc(50% - 0.5rem);
+        text-align: center;
+        font-size: 14px;
+        padding: 0.75rem 0.5rem;
+    }
 }
 
 .btn-download {
