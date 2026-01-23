@@ -1,9 +1,8 @@
 package it.me.web.view;
 
-import static it.me.domain.PortfolioPublicConst.GITHUB_CIAMB_PORTFOLIO;
-
 import io.quarkus.qute.Template;
 import io.quarkus.qute.TemplateInstance;
+import it.me.domain.PortfolioPublicK;
 import it.me.domain.repository.cv.file.CvFileExistsIsActiveRepository;
 import it.me.domain.repository.page.content.PageContentReadBySlugRepository;
 import jakarta.inject.Inject;
@@ -57,7 +56,7 @@ public class HomeResource {
                 .data("metaTitle", metaTitle)
                 .data("metaDescription", metaDescription)
                 .data("updatedAt", updatedAt)
-                .data("githubPage", GITHUB_CIAMB_PORTFOLIO)
+                .data("githubPage", PortfolioPublicK.Github.PORTFOLIO_URL)
                 .data("appVersion", appVersion)
                 .data("isCvFilePresent", isCvFilePresent);
 

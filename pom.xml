@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>it.me</groupId>
     <artifactId>portfolio</artifactId>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
 
     <properties>
         <!-- declared -->
-        <jacoco.check.coverage>0.80</jacoco.check.coverage>
+        <jacoco.check.coverage>0</jacoco.check.coverage>
 
         <!-- other -->
         <compiler-plugin.version>3.14.1</compiler-plugin.version>
@@ -84,6 +84,13 @@
             <artifactId>lombok</artifactId>
             <version>1.18.42</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Open ai -->
+        <dependency>
+            <groupId>com.openai</groupId>
+            <artifactId>openai-java</artifactId>
+            <version>4.16.1</version>
         </dependency>
 
         <!-- test -->

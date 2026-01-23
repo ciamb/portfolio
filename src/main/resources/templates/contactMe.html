@@ -1,8 +1,13 @@
 <!-- contact me modal -->
 <div class="contact-me-backdrop" id="contact-me-backdrop" hidden>
-    <div class="contact-me">
+    <div class="contact-me"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="contact-me-title"
+         aria-describedby="contact-me-help"
+         tabindex="-1">
         <div class="contact-me__header">
-            <h2>Contact Me (by JSON)</h2>
+            <h2 id="contact-me-title">Contact Me (by JSON)</h2>
             <button type="button"
                     class="contact-me__close-btn"
                     id="contact-me-close-btn"
@@ -12,7 +17,7 @@
         </div>
 
         <div class="contact-me__body">
-            <p class="contact-me__help">
+            <p class="contact-me__help" id="contact-me-help">
                 Compila questo JSON con i tuoi dati.
                 Sara validato e inviato al mio backend cosi com'e!
             </p>
@@ -21,8 +26,9 @@
                 JSON
             </label>
             <textarea id="contact-json"
-                      class="contact-me__textarea"
-                      rows="10">
+                      class="input"
+                      rows="10"
+                      spellcheck="false">
 {
     "email": "example@mail.com",
     "name": "Andrea Ciambella",
@@ -31,17 +37,16 @@
 }
             </textarea>
 
-            <div class="contact-me__feedback"
-                 id="contact-feedback"
-                 aria-live="polite">
+            <div class="contact-me__feedback" id="contact-feedback" aria-live="polite">
+                <!-- div per feedback inserito via js -->
             </div>
         </div>
 
         <div class="contact-me__footer">
-            <button type="button" class="btn-secondary" id="contact-me-cancel-btn">
+            <button type="button" class="btn btn--secondary" id="contact-me-cancel-btn">
                 Annulla
             </button>
-            <button type="button" class="btn-primary" id="contact-me-submit-btn">
+            <button type="button" class="btn btn--primary" id="contact-me-submit-btn">
                 Invia
             </button>
         </div>
