@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>it.me</groupId>
     <artifactId>portfolio</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 
     <properties>
         <!-- declared -->
-        <jacoco.check.coverage>0.50</jacoco.check.coverage>
+        <jacoco.check.coverage>0.80</jacoco.check.coverage>
 
         <!-- other -->
         <compiler-plugin.version>3.14.1</compiler-plugin.version>

@@ -48,7 +48,7 @@ public class FoodCostEstimateService {
         }
 
         Ingredient.Unit unit = ingredient.unit();
-        if (!unit.equals(Ingredient.Unit.GRAMS)) {
+        if (!Ingredient.Unit.GRAMS.equals(unit)) {
             throw new IllegalArgumentException("Al momento l'unica unit disponibile e GRAMS");
         }
     }
