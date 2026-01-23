@@ -1,6 +1,6 @@
 package it.me.web;
 
-import static it.me.domain.PortfolioPublicConst.GITHUB_CIAMB_PORTFOLIO;
+import static it.me.domain.PortfolioPublicK.Github.PORTFOLIO_URL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
@@ -86,7 +86,7 @@ class HomeResourceTest {
         verify(templateInstance).data(eq("metaDescription"), metaDescription.capture());
         verify(templateInstance).data(eq("updatedAt"), updatedAt.capture());
         verify(templateInstance).data(eq("isCvFilePresent"), eq(Boolean.TRUE));
-        verify(templateInstance).data(eq("githubPage"), eq(GITHUB_CIAMB_PORTFOLIO));
+        verify(templateInstance).data(eq("githubPage"), eq(PORTFOLIO_URL));
         verify(templateInstance).data(eq("appVersion"), eq("11"));
 
         assertThat(metaTitle.getValue()).isEqualTo("title");
