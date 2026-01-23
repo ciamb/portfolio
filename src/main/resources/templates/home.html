@@ -1,8 +1,9 @@
 <!doctype html>
 <html lang="it">
+
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{metaTitle}</title>
     <meta name="title" content="{metaTitle}">
@@ -23,25 +24,25 @@
 </head>
 
 <body>
-<div class="wrap">
-    <div class="card">
-        {#if home}
+    <div class="wrap">
+        <div class="card">
+            {#if home}
             <h1>{home.title}</h1>
             {#if home.subtitle}
-                <p class="subtitle">{home.subtitle}</p>
+            <p class="subtitle">{home.subtitle}</p>
             {/if}
             <div class="body">{home.body}</div>
 
             <div class="actions">
                 <!-- download CV -->
                 {#if isCvFilePresent }
-                    <a class="btn-download" href="/api/cv/download">
-                        Scarica il mio CV
-                    </a>
+                <a class="btn-download" href="/api/cv/download">
+                    Scarica il mio CV
+                </a>
                 {#else}
-                    <a class="a-btn-warning">
-                        Cv in aggiornamento
-                    </a>
+                <a class="a-btn-warning">
+                    Cv in aggiornamento
+                </a>
                 {/if}
                 <!-- contact me -->
                 <button type="button" class="btn-contact" id="contact-me-open-btn">
@@ -56,32 +57,32 @@
             </div>
 
             {#if updatedAt}
-                <div class="footer">
-                    <span>Ultimo aggiornamento: </span>
-                    <time datetime="{home.updatedAt}">{updatedAt}</time>
-                    <span> - v. {appVersion}</span>
-                </div>
+            <div class="footer">
+                <span>Ultimo aggiornamento: </span>
+                <time datetime="{home.updatedAt}">{updatedAt}</time>
+                <span> - v. {appVersion}</span>
+            </div>
             {/if}
-        {#else}
+            {#else}
             <h1>Pagina non trovata</h1>
             <p class="subtitle">Nessun contenuto per "home".</p>
-        {/if}
-    </div>
-    <hr/>
-    <div class="card">
-        <div id="serviziAggiuntivi">
-            <h2>Piccoli servizi da sbirciare (fatti per amici)</h2>
-            <a class="btn-service"
-               href="/food-cost-calculator">
-                Calcolatore FoodCost
-            </a>
+            {/if}
+        </div>
+        <hr />
+        <div class="card">
+            <div id="serviziAggiuntivi">
+                <h2>Piccoli servizi da sbirciare (fatti per amici)</h2>
+                <a class="btn-service" href="/food-cost-calculator">
+                    Calcolatore FoodCost
+                </a>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- modale contattami -->
+    <!-- modale contattami -->
     {#include contactMe.html /}
 
-<script src="/js/contact-me.js?v={appVersion}"></script>
+    <script src="/js/contact-me.js?v={appVersion}"></script>
 </body>
+
 </html>
