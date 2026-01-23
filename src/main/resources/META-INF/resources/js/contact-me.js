@@ -1,113 +1,118 @@
 (function () {
-  const openBtn = document.getElementById('contact-me-open-btn');
-  const closeBtn = document.getElementById('contact-me-close-btn');
-  const cancelBtn = document.getElementById('contact-me-cancel-btn');
-  const submitBtn = document.getElementById('contact-me-submit-btn');
+    "use strict";
 
-  const backdrop = document.getElementById('contact-me-backdrop');
-  const textarea = document.getElementById('contact-json');
-  const feedback = document.getElementById('contact-feedback');
+    /**
+     * Modale "Contact me":
+     * - apre/chiude modale
+     * - invia JSON a POST /api/contact-me
+     * - gestisce feedback e validazione JSON
+     * - supporta chiusura con ESC e click sul backdrop
+     */
+    const openBtn = document.getElementById("contact-me-open-btn");
+    const closeBtn = document.getElementById("contact-me-close-btn");
+    const cancelBtn = document.getElementById("contact-me-cancel-btn");
+    const submitBtn = document.getElementById("contact-me-submit-btn");
 
-  function openModal() {
-    feedback.textContent = '';
-    feedback.className = 'contact-me__feedback';
-    backdrop.hidden = false;
-  }
+    const backdrop = document.getElementById("contact-me-backdrop");
+    const modal = backdrop ? backdrop.querySelector(".contact-me") : null;
 
-  function closeModal() {
-    backdrop.hidden = true;
-  }
+    const textarea = document.getElementById("contact-json");
+    const feedback = document.getElementById("contact-feedback");
 
-  function setFeedback(message, type) {
-    feedback.textContent = message;
-    feedback.className =
-      'contact-me__feedback contact-me__feedback--' + type;
-  }
+    if (!backdrop || !modal || !textarea || !feedback) return;
+
+    let lastFocusEl = null;
+
+    function setFeedback(message, type) {
+        feedback.textContent = message;
+        feedback.className = "contact-me__feedback contact-me__feedback--" + type;
+    }
+
+    function openModal() {
+        lastFocusEl = document.activeElement;
+        setFeedback("", "info");
+        backdrop.hidden = false;
+        modal.focus();
+        textarea.focus();
+    }
+
+    function closeModal() {
+        backdrop.hidden = true;
+        if (lastFocusEl && typeof lastFocusEl.focus === "function") {
+            lastFocusEl.focus();
+        }
+    }
+
+    function setBusy(busy) {
+        submitBtn.disabled = busy;
+        textarea.disabled = busy;
+    }
+
+    async function readJsonSafe(response) {
+        try {
+            return await response.json();
+        } catch {
+            return null;
+        }
+    }
 
     async function submitContact() {
-        setFeedback('✏️ Scrittura in corso...', 'info');
-        const textareaValue = textarea.value.trim();
+        setFeedback("✏️ Scrittura in corso...", "info");
 
-        if (!textareaValue) {
-            setFeedback('Ti stai dimenticando di lasciare un messaggio! 😤', 'error');
+        const raw = textarea.value.trim();
+        if (!raw) {
+            setFeedback("Ti stai dimenticando di lasciare un messaggio! 😤", "error");
             return;
         }
 
         let parsed;
         try {
-            parsed = JSON.parse(textareaValue);
-        } catch (e) {
-            setFeedback(
-                'Aia! Il JSON non è valido. 😶‍🌫️ Controlla virgolette, virgole e parentesi..',
-                'error'
-            );
+            parsed = JSON.parse(raw);
+        } catch {
+            setFeedback("JSON non valido. Controlla virgolette, virgole e parentesi.", "error");
             return;
         }
 
-        submitBtn.disabled = true;
+        setBusy(true);
 
         try {
-            const response = await fetch('/api/contact-me', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify(parsed)
+            const response = await fetch("/api/contact-me", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(parsed),
             });
 
-            // response ok
+            const data = await readJsonSafe(response);
+
             if (response.ok) {
-                let msgDefault = 'Messaggio inserito nel sistema correttamente!';
-                try {
-                    const successData = await response.json();
-                    if (successData && typeof successData.message === 'string') {
-                        setFeedback(successData.message, 'success');
-                    } else {
-                        setFeedback(msgDefault, 'success');
-                    }
-                } catch (ignored) {
-                    console.debug('parsing response.json failed')
-                    setFeedback(msgDefault, 'success');
-                }
+                const msg = (data && typeof data.message === "string")
+                    ? data.message
+                    : "Messaggio inserito nel sistema correttamente!";
+                setFeedback(msg, "success");
                 return;
             }
 
-            // bad response
-            let errorMsgDefault = 'Qualcosa non quadra, riprova piu tardi.';
-            try {
-                const data = await response.json();
-                if (data && typeof data.message === 'string') {
-                    errorMsgDefault = data.message;
-                }
-            } catch (ignored) {
-            }
-            setFeedback(errorMsgDefault, 'error');
-
-        } catch (e) {
-            let msg500 = 'Impossibile contattare il server. Controlla la connessione'
-            setFeedback(msg500, 'error');
+            const err = (data && typeof data.message === "string")
+                ? data.message
+                : `Qualcosa non quadra (HTTP ${response.status}). Riprova più tardi.`;
+            setFeedback(err, "error");
+        } catch {
+            setFeedback("Impossibile contattare il server. Controlla la connessione.", "error");
         } finally {
-            submitBtn.disabled = false;
+            setBusy(false);
         }
     }
 
-  if (openBtn) {
-    openBtn.addEventListener('click', openModal);
-  }
-  if (closeBtn) {
-    closeBtn.addEventListener('click', closeModal);
-  }
-  if (cancelBtn) {
-    cancelBtn.addEventListener('click', closeModal);
-  }
+    openBtn?.addEventListener("click", openModal);
+    closeBtn?.addEventListener("click", closeModal);
+    cancelBtn?.addEventListener("click", closeModal);
+    submitBtn?.addEventListener("click", submitContact);
 
-  if (backdrop) {
-    backdrop.addEventListener('click', function (event) {
-      if (event.target === backdrop) {
-        closeModal();
-      }
+    backdrop.addEventListener("click", (event) => {
+        if (event.target === backdrop) closeModal();
     });
-  }
 
-  if (submitBtn) {
-    submitBtn.addEventListener('click', submitContact);
-  }
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !backdrop.hidden) closeModal();
+    });
 })();

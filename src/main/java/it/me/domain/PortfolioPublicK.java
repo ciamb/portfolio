@@ -36,7 +36,7 @@ public final class PortfolioPublicK {
         };
 
         public static final String[] OUT_OF_SCOPE = {
-            "poesia", "barzelletta", "meteo", "calcio", "ricetta", "oroscopo", "traduci"
+            "poesia", "barzelletta", "meteo", "calcio", "ricetta", "oroscopo", "traduci", "immagine", "sport", "basket"
         };
     }
 }

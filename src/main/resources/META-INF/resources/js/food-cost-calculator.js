@@ -1,243 +1,205 @@
-// const and variable
-const MAX_INGREDIENTS = 10;
-const API_URL = "/api/food-cost/estimate";
+(function () {
+    "use strict";
 
-// ===================
-// == ELEMENTI DOM  ==
-// ===================
+    /**
+     * Food cost calculator UI:
+     * - gestisce lista ingredienti (max 10) via template
+     * - valida input lato client
+     * - chiama POST /api/food-cost/estimate
+     * - renderizza risultato o errore
+     */
 
-// food cost
-const foodCostForm = document.getElementById("foodCostForm");
-const foodCostPercent = document.getElementById("foodCostPercent");
-const estimateFoodCostButton = document.getElementById("estimateFoodCostButton");
+    const MAX_INGREDIENTS = 10;
+    const API_URL = "/api/food-cost/estimate";
+    const EUR = new Intl.NumberFormat("it-IT", { style: "currency", currency: "EUR" });
 
-// ingredient
-const addIngredientButton = document.getElementById("addIngredientButton");
-const ingredientRowTemplate = document.getElementById("ingredientRowTemplate");
-const ingredientListContainer = document.getElementById("ingredientListContainer");
+    // DOM
+    const foodCostForm = document.getElementById("foodCostForm");
+    const foodCostPercent = document.getElementById("foodCostPercent");
+    const estimateFoodCostButton = document.getElementById("estimateFoodCostButton");
 
-// result box
-const resultBox = document.getElementById("resultBox");
-const resourceCost = document.getElementById("resourceCost");
-const targetCost = document.getElementById("targetCost");
+    const addIngredientButton = document.getElementById("addIngredientButton");
+    const ingredientRowTemplate = document.getElementById("ingredientRowTemplate");
+    const ingredientListContainer = document.getElementById("ingredientListContainer");
 
-// error box
-const errorBox = document.getElementById("errorBox");
-const errorMessage = document.getElementById("errorMessage");
+    const resultBox = document.getElementById("resultBox");
+    const resourceCost = document.getElementById("resourceCost");
+    const targetCost = document.getElementById("targetCost");
 
-// ====================
-// == METODI HELPERS ==
-// ====================
+    const errorBox = document.getElementById("errorBox");
+    const errorMessage = document.getElementById("errorMessage");
 
-/**
- * Fa il parse del numero in stile italiano trasformando la virgola in punto
- * @param value valore da parsare
- * @returns {number} numero parsato
- */
-function sanitizeItNumber(value) {
-    // handle italian number for price like "1,60"
-    const itValue = String(value ?? "")
-        .trim()
-        .replace(",", ".");
-    // per info: l'operatore ?? in js significa ->
-    // SE value e' null or undefined allora usa "" altrimenti usa value
-    // questo e' particolarmente utile perche' poi
-    // Number("") === 0, quindi ancora valido
-    return Number(itValue);
-}
+    if (
+        !foodCostForm || !foodCostPercent || !estimateFoodCostButton ||
+        !addIngredientButton || !ingredientRowTemplate || !ingredientListContainer ||
+        !resultBox || !resourceCost || !targetCost || !errorBox || !errorMessage
+    ) return;
 
-/**
- * Fa il parso del valore di soldi in euro (quindi ad un valore alla seconda cifra
- * decimale)
- * @param value valore da formattare
- * @returns {string} valore da mostrare
- */
-function formatEuro(value) {
-    const euroValue = Number(value);
-    if (!Number.isFinite(euroValue)) {
-        return "- euro";
-    }
-    const fixedValue = euroValue.toFixed(2);
-    return `${fixedValue} euro`;
-}
-
-/**
- * Resetta il risultato del calcolo del costo quando viene
- * aggiunta una nuova riga di ingrediente
- */
-function resetResult() {
-    resultBox.hidden = true;
-    errorBox.hidden = true;
-
-    resourceCost.textContent = "- euro";
-    targetCost.textContent = "- euro";
-    errorMessage.textContent = "-";
-}
-
-function getIngredientRowCount() {
-    return ingredientListContainer.querySelectorAll(".ingredient-row").length;
-}
-
-function updateEstimateButton() {
-    const count = getIngredientRowCount();
-    estimateFoodCostButton.disabled = count === 0;
-}
-
-function updateAddIngredientButton() {
-    const count = getIngredientRowCount();
-    addIngredientButton.disabled = count >= MAX_INGREDIENTS;
-}
-
-function renderResult(result) {
-    resultBox.hidden = false;
-    errorBox.hidden = true;
-    resourceCost.textContent = formatEuro(result.resourceCost);
-    targetCost.textContent = formatEuro(result.targetCost);
-}
-
-function renderError(message) {
-    resultBox.hidden = true;
-    errorBox.hidden = false;
-    errorMessage.textContent = message || "Errore imprevisto";
-
-}
-
-// ==============================
-// == INGREDIENT ROW MANAGMENT ==
-// ==============================
-
-/**
- * Aggiunge una riga per l'ingrediente clonandola
- * dal template presente in HTML
- */
-function addIngredientRow() {
-    resetResult();
-
-    const count = getIngredientRowCount();
-    if (count >= MAX_INGREDIENTS) {
-        log.info("Troppi ingredienti")
-        return;
+    function sanitizeItNumber(value) {
+        const raw = String(value ?? "").trim();
+        if (!raw) return Number.NaN;
+        return Number(raw.replace(",", "."));
     }
 
-    // cloneNode clona tutto, anche i figli (quindi fa un deep clone)
-    const clonedRowTemplate = ingredientRowTemplate.content
-        .cloneNode(true);
+    function formatEuro(value) {
+        const n = Number(value);
+        return Number.isFinite(n) ? EUR.format(n) : "-";
+    }
 
-    const removeIngredientButton = clonedRowTemplate
-        .querySelector(".removeIngredientButton");
+    function resetResult() {
+        resultBox.hidden = true;
+        errorBox.hidden = true;
+        resourceCost.textContent = "-";
+        targetCost.textContent = "-";
+        errorMessage.textContent = "-";
+    }
 
-    removeIngredientButton.addEventListener("click", (event) => {
-        const row = event.target.closest(".ingredient-row");
-        if (row) {
-            row.remove();
-        }
-        updateAddIngredientButton();
-        updateEstimateButton()
+    function getIngredientRowCount() {
+        return ingredientListContainer.querySelectorAll(".ingredient-row").length;
+    }
+
+    function updateButtons() {
+        const count = getIngredientRowCount();
+        addIngredientButton.disabled = count >= MAX_INGREDIENTS;
+        estimateFoodCostButton.disabled = count === 0;
+    }
+
+    function renderResult(result) {
+        resultBox.hidden = false;
+        errorBox.hidden = true;
+        resourceCost.textContent = formatEuro(result.resourceCost);
+        targetCost.textContent = formatEuro(result.targetCost);
+    }
+
+    function renderError(message) {
+        resultBox.hidden = true;
+        errorBox.hidden = false;
+        errorMessage.textContent = message || "Errore imprevisto";
+    }
+
+    function setBusy(busy) {
+        estimateFoodCostButton.disabled = busy || getIngredientRowCount() === 0;
+        addIngredientButton.disabled = busy || getIngredientRowCount() >= MAX_INGREDIENTS;
+    }
+
+    function addIngredientRow() {
         resetResult();
-    });
 
-    ingredientListContainer.appendChild(clonedRowTemplate);
-    updateAddIngredientButton();
-    updateEstimateButton();
-}
+        const count = getIngredientRowCount();
+        if (count >= MAX_INGREDIENTS) {
+            console.info("Troppi ingredienti");
+            return;
+        }
 
-// ==========================
-// == INGREDIENT FORM DATA ==
-// ==========================
+        const cloned = ingredientRowTemplate.content.cloneNode(true);
+        ingredientListContainer.appendChild(cloned);
+        updateButtons();
+    }
 
-function readFormData() {
-    const foodCostPercentValue = foodCostPercent.value;
+    function readFormData() {
+        const foodCost = sanitizeItNumber(foodCostPercent.value);
 
-    const rows = ingredientListContainer
-        .querySelectorAll(".ingredient-row");
-
-    const ingredientList = Array.from(rows)
-        .map(row => {
-            const name = row
-                .querySelector('input[name="ingredientName"]').value
-                .trim();
-
-            const quantity = sanitizeItNumber(
-                row.querySelector('input[name="ingredientQuantity"]').value
-            );
-
-            const pricePerKgEur = sanitizeItNumber(
-                row.querySelector('input[name="ingredientPricePerKg"]').value
-            );
+        const rows = ingredientListContainer.querySelectorAll(".ingredient-row");
+        const ingredientList = Array.from(rows).map((row) => {
+            const name = row.querySelector('input[name="ingredientName"]').value.trim();
+            const quantity = sanitizeItNumber(row.querySelector('input[name="ingredientQuantity"]').value);
+            const pricePerKgEur = sanitizeItNumber(row.querySelector('input[name="ingredientPricePerKg"]').value);
 
             return { name, quantity, unit: "GRAMS", pricePerKgEur };
         });
 
-    return { foodCostPercentValue, ingredientList}
-}
+        return { foodCost, ingredientList };
+    }
 
-// ============================
-// == FOOD COST ESTIMATE API ==
-// ============================
-async function callFoodCostEstimate(data) {
-    const payload = {
-        foodCost: data.foodCostPercentValue,
-        ingredientList: data.ingredientList
-    };
+    function validate(data) {
+        if (!Number.isFinite(data.foodCost) || data.foodCost < 1 || data.foodCost > 100) {
+            return "Food cost non valido: inserisci un numero tra 1 e 100.";
+        }
+        if (!data.ingredientList.length) {
+            return "Aggiungi almeno un ingrediente.";
+        }
+        if (data.ingredientList.length > MAX_INGREDIENTS) {
+            return `Puoi inserire massimo ${MAX_INGREDIENTS} ingredienti.`;
+        }
 
-    const responseAPI = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        for (let i = 0; i < data.ingredientList.length; i++) {
+            const ing = data.ingredientList[i];
+            if (!ing.name) return `Ingrediente #${i + 1}: nome mancante.`;
+            if (!Number.isFinite(ing.quantity) || ing.quantity <= 0) return `Ingrediente #${i + 1}: quantità non valida.`;
+            if (!Number.isFinite(ing.pricePerKgEur) || ing.pricePerKgEur < 0) return `Ingrediente #${i + 1}: prezzo non valido.`;
+        }
+
+        return null;
+    }
+
+    async function callFoodCostEstimate(data) {
+        const payload = {
+            foodCost: data.foodCost,
+            ingredientList: data.ingredientList,
+        };
+
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            let msg = `HTTP ${response.status}`;
+            try {
+                const err = await response.json();
+                if (err?.message) msg += `: ${err.message}`;
+            } catch { /* ignore */ }
+            throw new Error(msg);
+        }
+
+        return response.json();
+    }
+
+    // Events
+    addIngredientButton.addEventListener("click", addIngredientRow);
+
+    // Event delegation: rimuovi ingrediente
+    ingredientListContainer.addEventListener("click", (event) => {
+        const btn = event.target.closest(".removeIngredientButton");
+        if (!btn) return;
+
+        const row = btn.closest(".ingredient-row");
+        if (row) row.remove();
+
+        resetResult();
+        updateButtons();
     });
 
-    // passaggio da capire
-    if (!responseAPI.ok) {
-        let errorMessage = `${responseAPI.status}`;
+    // Reset result on any input change inside the form
+    foodCostForm.addEventListener("input", () => resetResult());
+
+    foodCostForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        resetResult();
+
+        const data = readFormData();
+        const err = validate(data);
+        if (err) {
+            renderError(err);
+            return;
+        }
+
+        setBusy(true);
         try {
-            const errorResponse = await responseAPI.json();
-            if (errorResponse?.message) {
-                errorMessage += `: ${errorResponse.message}`;
-            }
-        } catch (ignored) {
-            // errore ignorato, capire quali tipi di errori potrebbero presentarsi
+            const result = await callFoodCostEstimate(data);
+            renderResult(result);
+        } catch (error) {
+            console.error(error);
+            renderError(error?.message);
+        } finally {
+            setBusy(false);
+            updateButtons();
         }
-        throw new Error(errorMessage);
-    }
+    });
 
-    return responseAPI.json();
-}
-
-// ==========================
-// == EVENTI LEGATI A HTML ==
-// ==========================
-
-// attacca al bottone + l'aggiunta di una nuova riga
-addIngredientButton.addEventListener("click", addIngredientRow);
-
-// attacca al form l'evento di submit per inviare i dati all'api
-// di calcolo
-foodCostForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
+    // Boot
+    addIngredientRow();
+    updateButtons();
     resetResult();
-
-    const data = readFormData();
-    // gestione degli errori nel form eventuali
-
-    try {
-        let result;
-        if (API_URL && API_URL.trim().length > 0) {
-            result = await callFoodCostEstimate(data);
-        } else {
-            throw new Error("API not ready")
-        }
-        renderResult(result);
-    } catch (error) {
-        console.error(error);
-        renderError(error?.message)
-    }
-});
-
-// ==============
-// == PARTENZA ==
-// ==============
-addIngredientRow();
-updateAddIngredientButton();
-updateEstimateButton();
-resetResult();
+})();

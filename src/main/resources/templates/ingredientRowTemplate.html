@@ -6,7 +6,8 @@
 
             <label>
                 Nome
-                <input type="text"
+                <input class="input"
+                       type="text"
                        name="ingredientName"
                        placeholder="Es. Farina 00"
                        maxlength="60"
@@ -16,7 +17,8 @@
 
             <label>
                 Quantità (g)
-                <input type="number"
+                <input class="input"
+                       type="number"
                        name="ingredientQuantity"
                        inputmode="decimal"
                        min="1"
@@ -27,16 +29,15 @@
 
             <label>
                 Prezzo (€/kg)
-                <input type="number"
+                <input class="input"
+                       type="text"
                        name="ingredientPricePerKg"
                        inputmode="decimal"
-                       min="0"
-                       step="0.01"
-                       placeholder="1.60"
+                       placeholder="1,60"
                        required/>
             </label>
 
-            <button type="button" class="removeIngredientButton">
+            <button type="button" class="btn btn--danger btn--sm removeIngredientButton">
                 Rimuovi
             </button>
         </fieldset>
