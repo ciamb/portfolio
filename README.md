@@ -1,59 +1,23 @@
-# portfolio
+# Andrea Ciambella - **Portfolio**
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Questo portfolio utilizza attualmente il seguente stack tecnologico:
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+DB - **NeonDB** con Postgres16 
 
-## Running the application in dev mode
+BE - **Quarkus Framework** e Java 21
 
-You can run your application in dev mode that enables live coding using:
+FE - **Qute** (Quarkus) e **JS** nativo
 
-```shell script
-./mvnw quarkus:dev
-```
+Deploy - **Render**
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+## Integrazioni 
 
-## Packaging and running the application
+All'interno del portfolio ho integrato diversi plugin e dipendenze:
 
-The application can be packaged using:
+**JaCoCo** - un plugin utile per la coverage dei test. 
 
-```shell script
-./mvnw package
-```
+**Spotless** - un plugin che permette di uniformare lo stile del codice, in modo
+che sia di piu facile lettura per chiunque.
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/portfolio-1.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Related Guides
-
-- REST Qute ([guide](https://quarkus.io/guides/qute-reference#rest_integration)): Qute integration for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- Quarkus Extension for Spring Data JPA API ([guide](https://quarkus.io/guides/spring-data-jpa)): Use Spring Data JPA annotations to create your data access layer
+**OpenAi** - dipendenza per l'utilizzo dei modelli LLM di Open Ai all'interno del
+portfolio. 
