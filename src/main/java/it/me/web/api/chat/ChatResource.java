@@ -17,6 +17,12 @@ import java.util.concurrent.CompletionStage;
 @Path("api/chat")
 public class ChatResource {
 
+    // TEXT
+    public static final String FALLBACK_MSG = """
+                Posso rispondere sola a domande sul mio lavoro/progetti.
+                Prova a chiedermi del mio stack, esperienza o contatti!
+            """;
+
     @Inject
     AskChatService askChatService;
 
@@ -28,11 +34,9 @@ public class ChatResource {
     @Produces(MediaType.APPLICATION_JSON)
     public CompletionStage<Response> askChat(@Valid ChatRequest chatRequest) {
         if (validator.isMessageOutOfScope(chatRequest.message())) {
-            return CompletableFuture.completedStage(
-                    Response.status(Response.Status.BAD_REQUEST).entity("""
-                    Posso rispondere sola a domande su di me/il mio lavoro/progetti.
-                    Prova a chiedermi del mio stack, esperienza o contatti!
-                    """).build());
+            return CompletableFuture.completedStage(Response.status(Response.Status.BAD_REQUEST)
+                    .entity(FALLBACK_MSG)
+                    .build());
         }
         CompletionStage<String> promise = askChatService.askChat(chatRequest);
         return promise.thenApply(response -> Response.ok(response).build());

@@ -21,12 +21,12 @@ import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
             query = " delete from ContactMeEntity cme where cme.status = 'PROCESSED'")
 })
 public class ContactMeEntity {
-    public static final String READ_ALL_BY_STATUS_PENDING = "ContactMe.readAllByStatusPending";
-    public static final String COUNT_BY_EMAIL_AND_STATUS_PENDING = "ContactMe.countByEmailAndStatusPending";
-    public static final String DELETE_ALL_BY_STATUS_PROCESSED = "ContactMe.deleteAllByStatusProcessed";
+    public static final String READ_ALL_BY_STATUS_PENDING = "ContactMeEntity.readAllByStatusPending";
+    public static final String COUNT_BY_EMAIL_AND_STATUS_PENDING = "ContactMeEntity.countByEmailAndStatusPending";
+    public static final String DELETE_ALL_BY_STATUS_PROCESSED = "ContactMeEntity.deleteAllByStatusProcessed";
 
     /**
-     * Represent the status of a ContactMe record of DB. Actual mapped status are {@code PENDING},
+     * Represent the status of a ContactMeEntity record of DB. Actual mapped status are {@code PENDING},
      * {@code PROCESSED}, {@code ERROR}
      */
     public enum Status {

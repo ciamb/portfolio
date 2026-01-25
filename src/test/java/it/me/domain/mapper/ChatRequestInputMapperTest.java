@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
+import it.me.domain.dto.AssistantProfile;
 import it.me.domain.service.cv.knowledge.CvKnowledgeProvider;
 import it.me.web.dto.request.ChatRequest;
 import org.junit.jupiter.api.Test;
@@ -25,38 +26,58 @@ class ChatRequestInputMapperTest {
     @Mock
     ChatRequest chatRequestMock;
 
+    @Mock
+    AssistantProfile assistantProfileMock;
+
     @Test
     void shouldApplyCorrectly() {
         // given
         given(chatRequestMock.message()).willReturn("message");
         given(cvKnowledgeProvider.getCvFromResources()).willReturn("cv info");
+        given(assistantProfileMock.systemPrompt()).willReturn("system prompt");
 
         // when
-        String apply = sut.apply(chatRequestMock);
+        String apply = sut.apply(chatRequestMock, assistantProfileMock);
 
         // then
         assertThat(apply).contains("message");
         assertThat(apply).contains("cv info");
+        assertThat(apply).contains("system prompt");
     }
 
     @Test
     void shouldThrowException_whenMessageIsNull() {
         // given
+        given(assistantProfileMock.systemPrompt()).willReturn("system prompt");
         given(chatRequestMock.message()).willReturn(null);
 
         // when
-        IllegalArgumentException iae = assertThrows(IllegalArgumentException.class, () -> sut.apply(chatRequestMock));
+        IllegalArgumentException iae =
+                assertThrows(IllegalArgumentException.class, () -> sut.apply(chatRequestMock, assistantProfileMock));
         // then
         assertEquals("Invalid chat message", iae.getMessage());
     }
 
     @Test
-    void shouldThrowException_whenChatRequestIsNull() {
+    void shouldThrowException_whenAssistentPromoptIsNull() {
         // given
+        given(assistantProfileMock.systemPrompt()).willReturn(null);
 
         // when
-        IllegalArgumentException iae = assertThrows(IllegalArgumentException.class, () -> sut.apply(null));
+        IllegalArgumentException iae =
+                assertThrows(IllegalArgumentException.class, () -> sut.apply(chatRequestMock, assistantProfileMock));
         // then
-        assertEquals("chatRequest is null", iae.getMessage());
+        assertEquals("Assistant profile is null", iae.getMessage());
+    }
+
+    @Test
+    void shouldThrowException_whenChatRequestIsNull() {
+        // given
+        given(assistantProfileMock.systemPrompt()).willReturn("system prompt");
+        // when
+        IllegalArgumentException iae =
+                assertThrows(IllegalArgumentException.class, () -> sut.apply(null, assistantProfileMock));
+        // then
+        assertEquals("Invalid chat message", iae.getMessage());
     }
 }
