@@ -37,7 +37,7 @@ class ChatResourceTest {
     void shouldFailValidation() {
         // given
         given(chatRequest.message()).willReturn("message");
-        given(validator.isMessageOutOfScope(anyString())).willReturn(true);
+        given(validator.isMessageOutOfScope(anyString())).willReturn(CompletableFuture.completedStage(true));
 
         // when
         CompletionStage<Response> promiseRes = sut.askChat(chatRequest);
@@ -54,7 +54,7 @@ class ChatResourceTest {
     void shouldCallService() {
         // given
         given(chatRequest.message()).willReturn("message");
-        given(validator.isMessageOutOfScope(anyString())).willReturn(false);
+        given(validator.isMessageOutOfScope(anyString())).willReturn(CompletableFuture.completedStage(false));
         given(askChatService.askChat(chatRequest)).willReturn(CompletableFuture.completedFuture("answer"));
 
         // when

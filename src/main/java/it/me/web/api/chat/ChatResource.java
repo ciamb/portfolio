@@ -1,6 +1,7 @@
 package it.me.web.api.chat;
 
-import io.smallrye.common.annotation.Blocking;
+import static java.util.concurrent.CompletableFuture.completedStage;
+
 import it.me.domain.service.chat.AskChatService;
 import it.me.web.dto.request.ChatRequest;
 import it.me.web.validator.ChatRequestValidator;
@@ -12,7 +13,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 @Path("api/chat")
@@ -30,17 +30,19 @@ public class ChatResource {
     @Inject
     ChatRequestValidator validator;
 
-    @Blocking
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public CompletionStage<Response> askChat(@Valid ChatRequest chatRequest) {
-        if (validator.isMessageOutOfScope(chatRequest.message())) {
-            return CompletableFuture.completedStage(Response.status(Response.Status.BAD_REQUEST)
-                    .entity(FALLBACK_MSG)
+        return validator.isMessageOutOfScope(chatRequest.message()).thenCompose(result -> {
+            if (result) {
+                return completedStage(Response.status(Response.Status.BAD_REQUEST)
+                        .entity(FALLBACK_MSG)
+                        .build());
+            }
+            return askChatService.askChat(chatRequest).thenApply(response -> Response.status(Response.Status.OK)
+                    .entity(response)
                     .build());
-        }
-        CompletionStage<String> promise = askChatService.askChat(chatRequest);
-        return promise.thenApply(response -> Response.ok(response).build());
+        });
     }
 }
