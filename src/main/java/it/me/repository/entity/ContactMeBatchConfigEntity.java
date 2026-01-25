@@ -14,8 +14,8 @@ import jakarta.validation.constraints.NotNull;
             query = " update ContactMeBatchConfigEntity cmbce set cmbce.isActive = :isActive where cmbce.id = 1")
 })
 public class ContactMeBatchConfigEntity {
-    public static final String READ_BY_ID = "ContactMeBatchConfig.readById";
-    public static final String UPDATE_BY_ID = "ContactMeBatchConfig.updateById";
+    public static final String READ_BY_ID = "ContactMeBatchConfigEntity.readById";
+    public static final String UPDATE_BY_ID = "ContactMeBatchConfigEntity.updateById";
 
     @Id
     private Integer id;

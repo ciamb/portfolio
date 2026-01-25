@@ -1,38 +1,43 @@
 package it.me.domain.mapper;
 
-import it.me.domain.PortfolioPublicK;
+import it.me.domain.dto.AssistantProfile;
 import it.me.domain.service.cv.knowledge.CvKnowledgeProvider;
 import it.me.web.dto.request.ChatRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 @ApplicationScoped
-public class ChatRequestInputMapper implements Function<ChatRequest, String> {
+public class ChatRequestInputMapper implements BiFunction<ChatRequest, AssistantProfile, String> {
 
     @Inject
     CvKnowledgeProvider cvKnowledgeProvider;
 
     @Override
-    public String apply(ChatRequest chatRequest) {
+    public String apply(ChatRequest chatRequest, AssistantProfile assistantProfile) {
+        String systemPrompt = Optional.ofNullable(assistantProfile)
+                .map(AssistantProfile::systemPrompt)
+                .filter(sp -> !sp.isBlank())
+                .orElseThrow(() -> new IllegalArgumentException("Assistant profile is null"));
+
         String userMessage = Optional.ofNullable(chatRequest)
-                .map(cr -> Optional.ofNullable(cr.message())
-                        .filter(message -> !message.isEmpty())
-                        .orElseThrow(() -> new IllegalArgumentException("Invalid chat message")))
-                .orElseThrow(() -> new IllegalArgumentException("chatRequest is null"));
+                .map(ChatRequest::message)
+                .filter(message -> !message.isBlank())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid chat message"));
 
         String cv4Input = cvKnowledgeProvider.getCvFromResources();
 
         String input = """
+                <<<SYSTEM PROMPT>>>
                 %s
 
-                ### CV / PROFILO UFFICIALE (fonte unica)
+                <<<CV - FONTE AUTORIZZATA UNICA>>>
                 %s
 
-                ### DOMANDA UTENTE
+                <<<DOMANDA UTENTE>>>
                 %s
-                """.formatted(PortfolioPublicK.OpenAi.SYSTEM_PROMPT, cv4Input, userMessage);
+                """.formatted(systemPrompt, cv4Input, userMessage);
 
         return input;
     }

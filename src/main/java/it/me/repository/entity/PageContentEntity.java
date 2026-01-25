@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
         name = PageContentEntity.READ_BY_SLUG,
         query = " select pce from PageContentEntity pce " + " where pce.slug = :slug ")
 public class PageContentEntity {
-    public static final String READ_BY_SLUG = "PageContent.readBySlug";
+    public static final String READ_BY_SLUG = "PageContentEntity.readBySlug";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
