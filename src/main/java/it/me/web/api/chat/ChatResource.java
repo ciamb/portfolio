@@ -1,5 +1,6 @@
 package it.me.web.api.chat;
 
+import io.smallrye.common.annotation.Blocking;
 import it.me.domain.service.chat.AskChatService;
 import it.me.web.dto.request.ChatRequest;
 import it.me.web.validator.ChatRequestValidator;
@@ -29,6 +30,7 @@ public class ChatResource {
     @Inject
     ChatRequestValidator validator;
 
+    @Blocking
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
