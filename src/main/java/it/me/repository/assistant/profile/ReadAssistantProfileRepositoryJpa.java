@@ -7,6 +7,7 @@ import it.me.repository.entity.AssistantProfileEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 public class ReadAssistantProfileRepositoryJpa implements ReadAssistantProfileRepository {
@@ -17,6 +18,7 @@ public class ReadAssistantProfileRepositoryJpa implements ReadAssistantProfileRe
     @Inject
     AssistantProfileEntity2RecordMapper mapper;
 
+    @Transactional
     @Override
     public AssistantProfile readAssistantProfile() {
         return em.createNamedQuery(AssistantProfileEntity.READ_ASSISTANT_PROFILE, AssistantProfileEntity.class)

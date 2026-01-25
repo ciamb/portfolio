@@ -14,6 +14,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.concurrent.CompletionStage;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.context.ManagedExecutor;
 import org.jboss.logging.Logger;
 
 @ApplicationScoped
@@ -21,6 +22,9 @@ public class AskChatService {
     private static final Logger logger = Logger.getLogger(AskChatService.class.getName());
 
     private final OpenAIClient openAIClient;
+
+    @Inject
+    ManagedExecutor executor;
 
     @Inject
     ChatRequestInputMapper chatRequestInputMapper;
@@ -39,7 +43,7 @@ public class AskChatService {
     public CompletionStage<String> askChat(ChatRequest chatRequest) {
         logger.infof("Ask to %s chat request: %s", model, chatRequest.message());
 
-        var promise = supplyAsync(() -> readAssistantProfileRepository.readAssistantProfile())
+        var promise = supplyAsync(() -> readAssistantProfileRepository.readAssistantProfile(), executor)
                 .exceptionally(ex -> {
                     Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
                     logger.errorf(
