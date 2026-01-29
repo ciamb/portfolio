@@ -17,6 +17,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.microprofile.context.ManagedExecutor;
 import org.jboss.logging.Logger;
 
+/**
+ * <p>implementazione di {@link AssistantRuleCacheService} che legge dal db i valori di
+ * {@link AssistantRuleEntity} e li salva in una cache in-memory per 10 minuti (costante salvata in {@link PortfolioPublicK})</p>
+ * <p>Quando e presente una cache valida, il metodo ritorna direttamente la lista salvata nella cache, altrimenti]
+ * procede alla lettura dal db delle regole e le salva di nuovo nella cache</p>
+ *
+ * @author Ciamb
+ * @since 1.3.5
+ */
 @ApplicationScoped
 public class AssistantRuleCacheServiceImpl implements AssistantRuleCacheService {
     private static final Logger log = Logger.getLogger(AssistantRuleCacheServiceImpl.class.getName());
