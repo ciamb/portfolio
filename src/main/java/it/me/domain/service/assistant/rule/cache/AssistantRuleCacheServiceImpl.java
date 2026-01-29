@@ -42,6 +42,7 @@ public class AssistantRuleCacheServiceImpl implements AssistantRuleCacheService 
     @Override
     public CompletionStage<List<AssistantRule>> getAssistantRuleByRuleType(AssistantRuleEntity.RuleType ruleType) {
         CachedAssistantRuleByRuleType entry = assistantRuleByRuleTypeCache.get(ruleType);
+        log.infof("loaded cached entry -> %s", entry);
 
         long now = System.currentTimeMillis();
         boolean isCacheValid = entry != null && now - entry.loadedAt() < PortfolioPublicK.CacheTTL.TEN_MINUTE;
@@ -57,6 +58,7 @@ public class AssistantRuleCacheServiceImpl implements AssistantRuleCacheService 
             AssistantRuleEntity.RuleType ruleType, CachedAssistantRuleByRuleType previousCache) {
         return supplyAsync(() -> readAssistantRuleByRuleTypeRepository.readByRuleType(ruleType), executor)
                 .thenApply(assistantRules -> {
+                    log.infof("update cached assistantRules %s", ruleType);
                     assistantRuleByRuleTypeCache.put(
                             ruleType,
                             CachedAssistantRuleByRuleType.builder()
