@@ -1,7 +1,6 @@
 package it.me.web.api.chat;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
@@ -37,7 +36,7 @@ class ChatResourceTest {
     void shouldFailValidation() {
         // given
         given(chatRequest.message()).willReturn("message");
-        given(validator.isMessageOutOfScope(anyString())).willReturn(CompletableFuture.completedStage(true));
+        given(validator.isUserMessageInScope(anyString())).willReturn(CompletableFuture.completedStage(false));
 
         // when
         CompletionStage<Response> promiseRes = sut.askChat(chatRequest);
@@ -54,7 +53,7 @@ class ChatResourceTest {
     void shouldCallService() {
         // given
         given(chatRequest.message()).willReturn("message");
-        given(validator.isMessageOutOfScope(anyString())).willReturn(CompletableFuture.completedStage(false));
+        given(validator.isUserMessageInScope(anyString())).willReturn(CompletableFuture.completedStage(true));
         given(askChatService.askChat(chatRequest)).willReturn(CompletableFuture.completedFuture("answer"));
 
         // when
