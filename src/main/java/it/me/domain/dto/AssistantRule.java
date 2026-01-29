@@ -1,9 +1,7 @@
 package it.me.domain.dto;
 
 import it.me.repository.entity.AssistantRuleEntity;
-
 import java.time.OffsetDateTime;
-
 import lombok.Builder;
 import lombok.Generated;
 import org.jetbrains.annotations.NotNull;
@@ -21,17 +19,15 @@ public record AssistantRule(
         OffsetDateTime updatedAt) {
     @Override
     public @NotNull String toString() {
-        String assistantProfileName = (assistantProfile == null) ?
-                "null" : String.valueOf(assistantProfile.name());
-        return "AssistantRule{" +
-                "id=" + id +
-                ", assistantProfile=" + assistantProfileName +
-                ", ruleType=" + ruleType +
-                ", keyword='" + keyword + '\'' +
-                ", priority=" + priority +
-                ", enabled=" + enabled +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
+        String assistantProfileName = (assistantProfile == null) ? "null" : String.valueOf(assistantProfile.name());
+        return "AssistantRule{" + "id="
+                + id + ", assistantProfile="
+                + assistantProfileName + ", ruleType="
+                + ruleType + ", keyword='"
+                + keyword + '\'' + ", priority="
+                + priority + ", enabled="
+                + enabled + ", createdAt="
+                + createdAt + ", updatedAt="
+                + updatedAt + '}';
     }
 }
