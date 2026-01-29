@@ -7,4 +7,8 @@ public final class PortfolioPublicK {
     public static final class Github {
         public static final String PORTFOLIO_URL = "https://github.com/ciamb/portfolio";
     }
+
+    public static final class CacheTTL {
+        public static final long TEN_MINUTE = 600_000;
+    }
 }
