@@ -20,8 +20,8 @@ public class ChatResource {
 
     // TEXT
     public static final String FALLBACK_MSG = """
-                Posso rispondere sola a domande sul mio lavoro/progetti.
-                Prova a chiedermi del mio stack, esperienza o contatti!
+            Posso rispondere sola a domande sul mio lavoro/progetti.
+            Prova a chiedermi del mio stack, esperienza o contatti!
             """;
 
     @Inject
@@ -34,8 +34,8 @@ public class ChatResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public CompletionStage<Response> askChat(@Valid ChatRequest chatRequest) {
-        return validator.isMessageOutOfScope(chatRequest.message()).thenCompose(result -> {
-            if (result) {
+        return validator.isUserMessageInScope(chatRequest.message()).thenCompose(isInScope -> {
+            if (!isInScope) {
                 return completedStage(Response.status(Response.Status.BAD_REQUEST)
                         .entity(FALLBACK_MSG)
                         .build());

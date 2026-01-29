@@ -8,14 +8,13 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 
 import it.me.domain.dto.AssistantRule;
-import it.me.domain.repository.assistant.rule.ReadAssistantRuleByRuleTypeRepository;
+import it.me.domain.service.assistant.rule.cache.AssistantRuleCacheService;
 import it.me.repository.entity.AssistantRuleEntity;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 import org.assertj.core.api.ObjectAssert;
-import org.eclipse.microprofile.context.ManagedExecutor;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,81 +28,95 @@ class ChatRequestValidatorTest {
     @InjectMocks
     private ChatRequestValidator sut;
 
-    private ManagedExecutor executor;
-
     @Mock
-    ReadAssistantRuleByRuleTypeRepository readAssistantRuleByRuleTypeRepository;
-
-    @BeforeEach
-    void setUp() {
-        executor =
-                ManagedExecutor.builder().maxAsync(1).maxQueued(10).propagated().build();
-        sut.executor = executor;
-    }
+    AssistantRuleCacheService assistantRuleCacheService;
 
     @Test
-    void returnFalseInScope() {
+    void returnFalse_whenOutOfScope() {
         // given
-        AssistantRule rule1 = AssistantRule.builder().keyword("inscope").build();
         AssistantRule rule2 = AssistantRule.builder().keyword("outofscope").build();
-        given(readAssistantRuleByRuleTypeRepository.readByRuleType(eq(AssistantRuleEntity.RuleType.OUT_OF_SCOPE)))
-                .willReturn(List.of(rule2));
-        given(readAssistantRuleByRuleTypeRepository.readByRuleType(eq(AssistantRuleEntity.RuleType.IN_SCOPE)))
-                .willReturn(List.of(rule1));
+        given(assistantRuleCacheService.getAssistantRuleByRuleType(eq(AssistantRuleEntity.RuleType.OUT_OF_SCOPE)))
+                .willReturn(CompletableFuture.completedStage(List.of(rule2)));
+
         // when
-        CompletionStage<Boolean> res = sut.isMessageOutOfScope("inscope");
+        CompletionStage<Boolean> res = sut.isUserMessageInScope("outofscope");
         // then
         ObjectAssert<Boolean> out = assertThat(res.toCompletableFuture()).succeedsWithin(1, TimeUnit.SECONDS);
         assertFalse(out.actual());
     }
 
     @Test
-    void returnTrueOutOfScope() {
-        AssistantRule rule1 = AssistantRule.builder().keyword("outscope").build();
-        given(readAssistantRuleByRuleTypeRepository.readByRuleType(eq(AssistantRuleEntity.RuleType.OUT_OF_SCOPE)))
-                .willReturn(List.of(rule1));
+    void returnTrue_whenInScope() {
+        AssistantRule rule1 = AssistantRule.builder().keyword("inscope").build();
+        AssistantRule rule2 = AssistantRule.builder().keyword("outofscope").build();
+
+        given(assistantRuleCacheService.getAssistantRuleByRuleType(eq(AssistantRuleEntity.RuleType.OUT_OF_SCOPE)))
+                .willReturn(CompletableFuture.completedStage(List.of(rule2)));
+        given(assistantRuleCacheService.getAssistantRuleByRuleType(eq(AssistantRuleEntity.RuleType.IN_SCOPE)))
+                .willReturn(CompletableFuture.completedStage(List.of(rule1)));
 
         // when
-        CompletionStage<Boolean> result = sut.isMessageOutOfScope("outscope");
+        CompletionStage<Boolean> result = sut.isUserMessageInScope("inscope");
+
         // then
         ObjectAssert<Boolean> out = assertThat(result.toCompletableFuture()).succeedsWithin(1, TimeUnit.SECONDS);
         assertTrue(out.actual());
 
-        var inOrder = Mockito.inOrder(readAssistantRuleByRuleTypeRepository);
-        inOrder.verify(readAssistantRuleByRuleTypeRepository, times(1))
-                .readByRuleType(eq(AssistantRuleEntity.RuleType.OUT_OF_SCOPE));
+        var inOrder = Mockito.inOrder(assistantRuleCacheService);
+        inOrder.verify(assistantRuleCacheService, times(1))
+                .getAssistantRuleByRuleType(eq(AssistantRuleEntity.RuleType.OUT_OF_SCOPE));
+        inOrder.verify(assistantRuleCacheService, times(1))
+                .getAssistantRuleByRuleType(eq(AssistantRuleEntity.RuleType.IN_SCOPE));
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    void returnTrueByDefault() {
+    void returnFalse_whenNoKeywordWasFound() {
         AssistantRule rule1 = AssistantRule.builder().keyword("inscope").build();
-        AssistantRule rule2 = AssistantRule.builder().keyword("outscope").build();
-        given(readAssistantRuleByRuleTypeRepository.readByRuleType(eq(AssistantRuleEntity.RuleType.OUT_OF_SCOPE)))
-                .willReturn(List.of(rule2));
-        given(readAssistantRuleByRuleTypeRepository.readByRuleType(eq(AssistantRuleEntity.RuleType.IN_SCOPE)))
-                .willReturn(List.of(rule1));
-        // when
-        CompletionStage<Boolean> res = sut.isMessageOutOfScope("noscope");
-        // then
-        ObjectAssert<Boolean> out = assertThat(res).succeedsWithin(1, TimeUnit.SECONDS);
-        assertTrue(out.actual());
+        AssistantRule rule2 = AssistantRule.builder().keyword("outofscope").build();
 
-        var inOrder = Mockito.inOrder(readAssistantRuleByRuleTypeRepository);
-        inOrder.verify(readAssistantRuleByRuleTypeRepository, times(1))
-                .readByRuleType(eq(AssistantRuleEntity.RuleType.OUT_OF_SCOPE));
-        inOrder.verify(readAssistantRuleByRuleTypeRepository, times(1))
-                .readByRuleType(eq(AssistantRuleEntity.RuleType.IN_SCOPE));
+        given(assistantRuleCacheService.getAssistantRuleByRuleType(eq(AssistantRuleEntity.RuleType.OUT_OF_SCOPE)))
+                .willReturn(CompletableFuture.completedStage(List.of(rule2)));
+        given(assistantRuleCacheService.getAssistantRuleByRuleType(eq(AssistantRuleEntity.RuleType.IN_SCOPE)))
+                .willReturn(CompletableFuture.completedStage(List.of(rule1)));
+
+        // when
+        CompletionStage<Boolean> result = sut.isUserMessageInScope("none");
+
+        // then
+        ObjectAssert<Boolean> out = assertThat(result.toCompletableFuture()).succeedsWithin(1, TimeUnit.SECONDS);
+        assertFalse(out.actual());
+
+        var inOrder = Mockito.inOrder(assistantRuleCacheService);
+        inOrder.verify(assistantRuleCacheService, times(1))
+                .getAssistantRuleByRuleType(eq(AssistantRuleEntity.RuleType.OUT_OF_SCOPE));
+        inOrder.verify(assistantRuleCacheService, times(1))
+                .getAssistantRuleByRuleType(eq(AssistantRuleEntity.RuleType.IN_SCOPE));
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    void returnFalse_whenAssistantRuleDoesNotExist() {
+        // given
+        given(assistantRuleCacheService.getAssistantRuleByRuleType(eq(AssistantRuleEntity.RuleType.OUT_OF_SCOPE)))
+                .willReturn(CompletableFuture.completedStage(List.of()));
+        given(assistantRuleCacheService.getAssistantRuleByRuleType(eq(AssistantRuleEntity.RuleType.IN_SCOPE)))
+                .willReturn(CompletableFuture.completedStage(null));
+
+        // when
+        CompletionStage<Boolean> res = sut.isUserMessageInScope("outofscope");
+        // then
+        ObjectAssert<Boolean> out = assertThat(res.toCompletableFuture()).succeedsWithin(1, TimeUnit.SECONDS);
+        assertFalse(out.actual());
     }
 
     @Test
     void returnTrue_whenNullMessage() {
         // given
         // when
-        CompletionStage<Boolean> res = sut.isMessageOutOfScope(null);
+        CompletionStage<Boolean> res = sut.isUserMessageInScope(null);
         // then
         ObjectAssert<Boolean> out = assertThat(res).succeedsWithin(1, TimeUnit.SECONDS);
-        assertTrue(out.actual());
+        assertFalse(out.actual());
     }
 }
