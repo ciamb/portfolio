@@ -90,7 +90,7 @@
         <dependency>
             <groupId>com.openai</groupId>
             <artifactId>openai-java</artifactId>
-            <version>4.17.0</version>
+            <version>4.21.0</version>
         </dependency>
 
         <!-- test -->
